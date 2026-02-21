@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthQuest – About</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <header>
+      <div class="brand" onclick="window.location.href = 'index.html'">
+        <div class="logo-box">HQ</div>
+        <span>HealthQuest</span>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-tab">Home</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
+        <a href="training.html" class="nav-tab">Training</a>
+        <a href="achievements.html" class="nav-tab">Achievements</a>
+        <a href="about.html" class="nav-tab active">About</a>
+        <a href="settings.html" class="nav-tab">Settings</a>
+      </nav>
+      <div class="header-right">
+        <div class="user-stats" id="userStats">
+          <div class="stat-pill" title="Streak">
+            🔥 <span id="headerStreak">0</span>
+          </div>
+          <div class="stat-pill" title="Stars">
+            ⭐ <span id="headerStars">0</span>
+          </div>
+          <div class="stat-pill" title="Rank">
+            🏅 <span id="headerRank">Seedling</span>
+          </div>
+        </div>
+        <div
+          class="avatar-btn"
+          id="avatarBtn"
+          onclick="openModal('signModal')"
+        ></div>
+        <button
+          class="btn-signout"
+          id="signoutBtn"
+          onclick="signOut()"
+          style="display: none"
+        >
+          Sign Out
+        </button>
+        <button
+          class="btn-signin"
+          id="signinBtn"
+          onclick="openModal('signModal')"
+        >
+          Sign In
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-inner">
+        <div class="about-hero">
+          <h2>Built for <em>real life.</em></h2>
+          <p>
+            HealthQuest is a passion project built by three people who believe
+            small, consistent habits are the foundation of lasting health.
+          </p>
+        </div>
+
+        <div class="team-grid">
+          <div class="team-card">
+            <div class="team-avatar">P</div>
+            <div class="team-name">Presiyan</div>
+            <div class="team-role">Co-Founder & CEO</div>
+            <p class="team-bio">
+              Visionary behind HealthQuest. Passionate about making wellness
+              accessible to everyone, everywhere.
+            </p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">A</div>
+            <div class="team-name">Alexandar</div>
+            <div class="team-role">Co-Founder & CTO</div>
+            <p class="team-bio">
+              The tech architect. Builds the intelligent pose-tracking system
+              and makes the magic happen under the hood.
+            </p>
+          </div>
+          <div class="team-card">
+            <div class="team-avatar">V</div>
+            <div class="team-name">Vilian</div>
+            <div class="team-role">Co-Founder & Design Lead</div>
+            <p class="team-bio">
+              Crafts every pixel with purpose. Believes beautiful design and
+              usability are never at odds.
+            </p>
+          </div>
+        </div>
+
+        <div class="about-values mt2">
+          <h2 class="section-title">Our <em>Values</em></h2>
+          <div class="values-grid mt1">
+            <div class="value-card">
+              <div class="value-icon">🌱</div>
+              <h4>Small Steps, Big Change</h4>
+              <p>
+                We believe in showing up — just a little — every single day.
+                That's where lasting health comes from.
+              </p>
+            </div>
+            <div class="value-card">
+              <div class="value-icon">🤝</div>
+              <h4>For Every Body</h4>
+              <p>
+                Whether you're 8 or 80, HealthQuest meets you where you are.
+                Always accessible, never patronizing.
+              </p>
+            </div>
+            <div class="value-card">
+              <div class="value-icon">🔒</div>
+              <h4>Privacy First</h4>
+              <p>
+                No data sold. No tracking. Your health journey belongs to you —
+                we just help you show up for it.
+              </p>
+            </div>
+            <div class="value-card">
+              <div class="value-icon">🎯</div>
+              <h4>Purposeful Design</h4>
+              <p>
+                Every feature serves a real human need. We cut the fluff and
+                keep what matters most.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- modals + toast + footer identical – copy from index.html -->
+
+    <script src="script.js"></script>
+  </body>
+</html>

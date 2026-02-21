@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthQuest – Achievements</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <header>
+      <div class="brand" onclick="window.location.href = 'index.html'">
+        <div class="logo-box">HQ</div>
+        <span>HealthQuest</span>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-tab">Home</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
+        <a href="training.html" class="nav-tab">Training</a>
+        <a href="achievements.html" class="nav-tab active">Achievements</a>
+        <a href="about.html" class="nav-tab">About</a>
+        <a href="settings.html" class="nav-tab">Settings</a>
+      </nav>
+      <div class="header-right">
+        <div class="user-stats" id="userStats">
+          <div class="stat-pill" title="Streak">
+            🔥 <span id="headerStreak">0</span>
+          </div>
+          <div class="stat-pill" title="Stars">
+            ⭐ <span id="headerStars">0</span>
+          </div>
+          <div class="stat-pill" title="Rank">
+            🏅 <span id="headerRank">Seedling</span>
+          </div>
+        </div>
+        <div
+          class="avatar-btn"
+          id="avatarBtn"
+          onclick="openModal('signModal')"
+        ></div>
+        <button
+          class="btn-signout"
+          id="signoutBtn"
+          onclick="signOut()"
+          style="display: none"
+        >
+          Sign Out
+        </button>
+        <button
+          class="btn-signin"
+          id="signinBtn"
+          onclick="openModal('signModal')"
+        >
+          Sign In
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-inner">
+        <h1 class="page-heading"><em>Achievements</em></h1>
+        <p class="page-sub">
+          Unlock badges by completing quests and training sessions.
+        </p>
+
+        <div class="rank-showcase">
+          <div class="rank-current">
+            <div class="rank-badge" id="currentRankIcon">🌱</div>
+            <div class="rank-info">
+              <h3 id="currentRankName">Seedling</h3>
+              <p id="currentRankDesc">
+                Just getting started — every champion was once here.
+              </p>
+            </div>
+          </div>
+          <div class="rank-xp">
+            <span id="xpCurrent">0</span> / <span id="xpNext">100</span> XP to
+            next rank
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="xpBar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <h2 class="section-title mt2">Ranks</h2>
+        <div class="ranks-list mt1" id="ranksList"></div>
+
+        <h2 class="section-title mt2">Badges</h2>
+        <div class="achievements-grid mt1" id="achievementsGrid"></div>
+      </div>
+    </main>
+
+    <!-- modals + toast + footer identical – copy from index.html -->
+
+    <script src="script.js"></script>
+  </body>
+</html>

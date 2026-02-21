@@ -3,45 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HealthQuest</title>
+    <title>HealthQuest – Home</title>
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
-
   <body>
     <canvas id="bg"></canvas>
 
-    <!-- ── HEADER ── -->
+    <!-- HEADER -->
     <header>
-      <div class="brand" onclick="showPage('home')">
+      <div class="brand" onclick="window.location.href = 'index.html'">
         <div class="logo-box">HQ</div>
         <span>HealthQuest</span>
       </div>
 
       <nav class="header-nav">
-        <button class="nav-tab active" onclick="showPage('home', this)">
-          Home
-        </button>
-        <button class="nav-tab" onclick="showPage('quests', this)">
-          Quests
-        </button>
-        <button class="nav-tab" onclick="showPage('training', this)">
-          Training
-        </button>
-        <button class="nav-tab" onclick="showPage('achievements', this)">
-          Achievements
-        </button>
-        <button class="nav-tab" onclick="showPage('about', this)">About</button>
-        <button class="nav-tab" onclick="showPage('settings', this)">
-          Settings
-        </button>
+        <a href="index.html" class="nav-tab active">Home</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
+        <a href="training.html" class="nav-tab">Training</a>
+        <a href="achievements.html" class="nav-tab">Achievements</a>
+        <a href="about.html" class="nav-tab">About</a>
+        <a href="settings.html" class="nav-tab">Settings</a>
       </nav>
 
       <div class="header-right">
-        <!-- shown when signed in -->
         <div class="user-stats" id="userStats">
           <div class="stat-pill" title="Streak">
             🔥 <span id="headerStreak">0</span>
@@ -66,8 +54,6 @@
         >
           Sign Out
         </button>
-
-        <!-- shown when not signed in -->
         <button
           class="btn-signin"
           id="signinBtn"
@@ -78,20 +64,15 @@
       </div>
     </header>
 
-    <!-- ── HOME PAGE ── -->
-    <div class="page active" id="page-home">
+    <!-- MAIN CONTENT – HOME -->
+    <main>
       <section class="hero">
         <h1>Your health,<br /><em>one quest</em><br />at a time.</h1>
         <p class="hero-sub">
           A single small challenge every day. No gym required. No excuses
           needed. Just you, growing a little bit healthier.
         </p>
-        <button
-          class="hero-cta"
-          onclick="
-            showPage('quests', document.querySelector('.nav-tab:nth-child(2)'))
-          "
-        >
+        <button class="hero-cta" onclick="window.location.href = 'quests.html'">
           Start Today's Quest <span class="arrow">→</span>
         </button>
       </section>
@@ -116,339 +97,9 @@
           </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <!-- ── QUESTS PAGE ── -->
-    <div class="page" id="page-quests">
-      <div class="page-inner">
-        <h1 class="page-heading">Your <em>Quests</em></h1>
-        <p class="page-sub">
-          Complete quests to earn ⭐ stars and climb the ranks.
-        </p>
-
-        <div class="quest-tabs">
-          <button
-            class="quest-tab-btn active"
-            onclick="filterQuests('daily', this)"
-          >
-            Daily
-          </button>
-          <button class="quest-tab-btn" onclick="filterQuests('weekly', this)">
-            Weekly
-          </button>
-          <button class="quest-tab-btn" onclick="filterQuests('monthly', this)">
-            Monthly
-          </button>
-        </div>
-
-        <div class="quests-grid" id="questsGrid"></div>
-      </div>
-    </div>
-
-    <!-- ── TRAINING PAGE ── -->
-    <div class="page" id="page-training">
-      <div class="page-inner">
-        <h1 class="page-heading"><em>Training</em> Plan</h1>
-        <p class="page-sub">
-          AI-powered pose tracking via QuickPose API to count your reps and
-          check your form.
-        </p>
-
-        <div class="training-hero">
-          <h3>Live Rep Counter</h3>
-          <p>
-            Select an exercise, then start tracking. QuickPose will detect your
-            form and count each rep automatically.
-          </p>
-
-          <div class="camera-box">
-            <video id="webcam" autoplay playsinline muted></video>
-            <div class="camera-overlay" id="cameraOverlay">
-              <div style="font-size: 3rem">📷</div>
-              <p style="color: white; font-size: 0.9rem">
-                Select an exercise below, then press Start Tracking
-              </p>
-            </div>
-          </div>
-
-          <div class="rep-counter" id="repCounter">0</div>
-          <div class="rep-label" id="repLabel">reps</div>
-          <div class="exercise-status" id="exerciseStatus"></div>
-
-          <div
-            class="flex mt2"
-            style="justify-content: center; gap: 1rem; flex-wrap: wrap"
-          >
-            <button
-              class="btn-primary"
-              id="btnStart"
-              onclick="startTracking()"
-              disabled
-            >
-              Start Tracking
-            </button>
-            <button class="btn-stop" id="btnStop" onclick="stopTracking()">
-              Stop Session
-            </button>
-          </div>
-        </div>
-
-        <h2 class="section-title mt2">Choose <em>Exercise</em></h2>
-        <div class="training-grid mt1">
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Push-Ups', this, '💪')"
-          >
-            <div class="icon">💪</div>
-            <h4>Push-Ups</h4>
-            <p>Upper body strength + chest</p>
-          </div>
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Squats', this, '🦵')"
-          >
-            <div class="icon">🦵</div>
-            <h4>Squats</h4>
-            <p>Lower body power + core</p>
-          </div>
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Jumping Jacks', this, '⚡')"
-          >
-            <div class="icon">⚡</div>
-            <h4>Jumping Jacks</h4>
-            <p>Cardio + full body warm-up</p>
-          </div>
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Sit-Ups', this, '🔥')"
-          >
-            <div class="icon">🔥</div>
-            <h4>Sit-Ups</h4>
-            <p>Core strength + endurance</p>
-          </div>
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Lunges', this, '🏃')"
-          >
-            <div class="icon">🏃</div>
-            <h4>Lunges</h4>
-            <p>Balance + leg strength</p>
-          </div>
-          <div
-            class="exercise-card"
-            onclick="selectExercise('Plank Hold', this, '🧘')"
-          >
-            <div class="icon">🧘</div>
-            <h4>Plank Hold</h4>
-            <p>Core stability + posture</p>
-          </div>
-        </div>
-
-        <div class="session-log mt2" id="sessionLog" style="display: none">
-          <h4>📋 Session Log</h4>
-          <div id="sessionLogItems"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── ACHIEVEMENTS PAGE ── -->
-    <div class="page" id="page-achievements">
-      <div class="page-inner">
-        <h1 class="page-heading"><em>Achievements</em></h1>
-        <p class="page-sub">
-          Unlock badges by completing quests and training sessions.
-        </p>
-
-        <div class="rank-showcase">
-          <div class="rank-current">
-            <div class="rank-badge" id="currentRankIcon">🌱</div>
-            <div class="rank-info">
-              <h3 id="currentRankName">Seedling</h3>
-              <p id="currentRankDesc">
-                Just getting started — every champion was once here.
-              </p>
-            </div>
-          </div>
-          <div class="rank-xp">
-            <span id="xpCurrent">0</span> / <span id="xpNext">100</span> XP to
-            next rank
-          </div>
-          <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="xpBar" style="width: 0%"></div>
-          </div>
-        </div>
-
-        <h2 class="section-title mt2">Ranks</h2>
-        <div class="ranks-list mt1" id="ranksList"></div>
-
-        <h2 class="section-title mt2">Badges</h2>
-        <div class="achievements-grid mt1" id="achievementsGrid"></div>
-      </div>
-    </div>
-
-    <!-- ── ABOUT PAGE ── -->
-    <div class="page" id="page-about">
-      <div class="page-inner">
-        <div class="about-hero">
-          <h2>Built for <em>real life.</em></h2>
-          <p>
-            HealthQuest is a passion project built by three people who believe
-            small, consistent habits are the foundation of lasting health.
-          </p>
-        </div>
-
-        <div class="team-grid">
-          <div class="team-card">
-            <div class="team-avatar">P</div>
-            <div class="team-name">Presiyan</div>
-            <div class="team-role">Co-Founder & CEO</div>
-            <p class="team-bio">
-              Visionary behind HealthQuest. Passionate about making wellness
-              accessible to everyone, everywhere.
-            </p>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">A</div>
-            <div class="team-name">Alexandar</div>
-            <div class="team-role">Co-Founder & CTO</div>
-            <p class="team-bio">
-              The tech architect. Builds the intelligent pose-tracking system
-              and makes the magic happen under the hood.
-            </p>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">V</div>
-            <div class="team-name">Vilian</div>
-            <div class="team-role">Co-Founder & Design Lead</div>
-            <p class="team-bio">
-              Crafts every pixel with purpose. Believes beautiful design and
-              usability are never at odds.
-            </p>
-          </div>
-        </div>
-
-        <div class="about-values mt2">
-          <h2 class="section-title">Our <em>Values</em></h2>
-          <div class="values-grid mt1">
-            <div class="value-card">
-              <div class="value-icon">🌱</div>
-              <h4>Small Steps, Big Change</h4>
-              <p>
-                We believe in showing up — just a little — every single day.
-                That's where lasting health comes from.
-              </p>
-            </div>
-            <div class="value-card">
-              <div class="value-icon">🤝</div>
-              <h4>For Every Body</h4>
-              <p>
-                Whether you're 8 or 80, HealthQuest meets you where you are.
-                Always accessible, never patronizing.
-              </p>
-            </div>
-            <div class="value-card">
-              <div class="value-icon">🔒</div>
-              <h4>Privacy First</h4>
-              <p>
-                No data sold. No tracking. Your health journey belongs to you —
-                we just help you show up for it.
-              </p>
-            </div>
-            <div class="value-card">
-              <div class="value-icon">🎯</div>
-              <h4>Purposeful Design</h4>
-              <p>
-                Every feature serves a real human need. We cut the fluff and
-                keep what matters most.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SETTINGS PAGE ── -->
-    <div class="page" id="page-settings">
-      <div class="page-inner">
-        <h1 class="page-heading"><em>Settings</em></h1>
-        <p class="page-sub">Customize your HealthQuest experience.</p>
-
-        <div class="settings-wrap">
-          <div class="settings-group">
-            <h4>🎨 Theme</h4>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">Choose Theme</div>
-                <div class="setting-desc">
-                  Switch between light and dark modes
-                </div>
-              </div>
-              <div class="theme-options">
-                <button
-                  class="theme-btn active"
-                  id="themeLight"
-                  onclick="setTheme('light')"
-                >
-                  ☀️ Light
-                </button>
-                <button
-                  class="theme-btn"
-                  id="themeDark"
-                  onclick="setTheme('dark')"
-                >
-                  🌙 Dark
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="settings-group">
-            <h4>⚙️ Account</h4>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">Account Status</div>
-                <div class="setting-desc" id="settingsAccountDesc">
-                  Not signed in
-                </div>
-              </div>
-              <button
-                class="btn-primary"
-                style="padding: 0.5rem 1.2rem; font-size: 0.85rem"
-                id="settingsSignBtn"
-                onclick="openModal('signModal')"
-              >
-                Sign In
-              </button>
-            </div>
-          </div>
-
-          <div class="settings-group">
-            <h4>ℹ️ About</h4>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">Version</div>
-                <div class="setting-desc">HealthQuest v1.0.0</div>
-              </div>
-            </div>
-            <div class="setting-row">
-              <div>
-                <div class="setting-label">QuickPose API</div>
-                <div class="setting-desc">
-                  Pose tracking for exercise detection
-                </div>
-              </div>
-              <span
-                style="font-size: 0.8rem; color: var(--green); font-weight: 600"
-                >Active</span
-              >
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- ── SIGN IN / SIGN UP MODAL ── -->
+    <!-- MODALS -->
     <div class="modal-overlay" id="signModal">
       <div class="modal">
         <button class="modal-close" onclick="closeModal('signModal')">✕</button>
@@ -532,7 +183,6 @@
       </div>
     </div>
 
-    <!-- Quest Complete Modal -->
     <div class="modal-overlay" id="questCompleteModal">
       <div class="modal" style="text-align: center">
         <button class="modal-close" onclick="closeModal('questCompleteModal')">
@@ -551,12 +201,13 @@
       </div>
     </div>
 
-    <!-- Toast -->
+    <!-- TOAST -->
     <div class="toast" id="toast">
       <div class="toast-icon" id="toastIcon">✅</div>
       <div class="toast-msg" id="toastMsg"></div>
     </div>
 
+    <!-- FOOTER -->
     <footer>
       <span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores
     </footer>

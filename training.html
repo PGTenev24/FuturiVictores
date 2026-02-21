@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthQuest – Training</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <header>
+      <div class="brand" onclick="window.location.href = 'index.html'">
+        <div class="logo-box">HQ</div>
+        <span>HealthQuest</span>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-tab">Home</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
+        <a href="training.html" class="nav-tab active">Training</a>
+        <a href="achievements.html" class="nav-tab">Achievements</a>
+        <a href="about.html" class="nav-tab">About</a>
+        <a href="settings.html" class="nav-tab">Settings</a>
+      </nav>
+      <div class="header-right">
+        <div class="user-stats" id="userStats">
+          <div class="stat-pill" title="Streak">
+            🔥 <span id="headerStreak">0</span>
+          </div>
+          <div class="stat-pill" title="Stars">
+            ⭐ <span id="headerStars">0</span>
+          </div>
+          <div class="stat-pill" title="Rank">
+            🏅 <span id="headerRank">Seedling</span>
+          </div>
+        </div>
+        <div
+          class="avatar-btn"
+          id="avatarBtn"
+          onclick="openModal('signModal')"
+        ></div>
+        <button
+          class="btn-signout"
+          id="signoutBtn"
+          onclick="signOut()"
+          style="display: none"
+        >
+          Sign Out
+        </button>
+        <button
+          class="btn-signin"
+          id="signinBtn"
+          onclick="openModal('signModal')"
+        >
+          Sign In
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-inner">
+        <h1 class="page-heading"><em>Training</em> Plan</h1>
+        <p class="page-sub">
+          AI-powered pose tracking via QuickPose API to count your reps and
+          check your form.
+        </p>
+
+        <div class="training-hero">
+          <h3>Live Rep Counter</h3>
+          <p>
+            Select an exercise, then start tracking. QuickPose will detect your
+            form and count each rep automatically.
+          </p>
+
+          <div class="camera-box">
+            <video id="webcam" autoplay playsinline muted></video>
+            <div class="camera-overlay" id="cameraOverlay">
+              <div style="font-size: 3rem">📷</div>
+              <p style="color: white; font-size: 0.9rem">
+                Select an exercise below, then press Start Tracking
+              </p>
+            </div>
+          </div>
+
+          <div class="rep-counter" id="repCounter">0</div>
+          <div class="rep-label" id="repLabel">reps</div>
+          <div class="exercise-status" id="exerciseStatus"></div>
+
+          <div
+            class="flex mt2"
+            style="justify-content: center; gap: 1rem; flex-wrap: wrap"
+          >
+            <button
+              class="btn-primary"
+              id="btnStart"
+              onclick="startTracking()"
+              disabled
+            >
+              Start Tracking
+            </button>
+            <button class="btn-stop" id="btnStop" onclick="stopTracking()">
+              Stop Session
+            </button>
+          </div>
+        </div>
+
+        <h2 class="section-title mt2">Choose <em>Exercise</em></h2>
+        <div class="training-grid mt1">
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Push-Ups', this, '💪')"
+          >
+            <div class="icon">💪</div>
+            <h4>Push-Ups</h4>
+            <p>Upper body strength + chest</p>
+          </div>
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Squats', this, '🦵')"
+          >
+            <div class="icon">🦵</div>
+            <h4>Squats</h4>
+            <p>Lower body power + core</p>
+          </div>
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Jumping Jacks', this, '⚡')"
+          >
+            <div class="icon">⚡</div>
+            <h4>Jumping Jacks</h4>
+            <p>Cardio + full body warm-up</p>
+          </div>
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Sit-Ups', this, '🔥')"
+          >
+            <div class="icon">🔥</div>
+            <h4>Sit-Ups</h4>
+            <p>Core strength + endurance</p>
+          </div>
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Lunges', this, '🏃')"
+          >
+            <div class="icon">🏃</div>
+            <h4>Lunges</h4>
+            <p>Balance + leg strength</p>
+          </div>
+          <div
+            class="exercise-card"
+            onclick="selectExercise('Plank Hold', this, '🧘')"
+          >
+            <div class="icon">🧘</div>
+            <h4>Plank Hold</h4>
+            <p>Core stability + posture</p>
+          </div>
+        </div>
+
+        <div class="session-log mt2" id="sessionLog" style="display: none">
+          <h4>📋 Session Log</h4>
+          <div id="sessionLogItems"></div>
+        </div>
+      </div>
+    </main>
+
+    <!-- modals + toast + footer identical to index.html – copy-paste them here -->
+
+    <script src="script.js"></script>
+  </body>
+</html>
