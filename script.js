@@ -2,7 +2,7 @@
 // STATE
 // ══════════════════════════════════════════
 const state = {
-  user: null, // { name, username, stars, xp, streak, completedQuests: Set }
+  user: null,
   currentExercise: null,
   reps: 0,
   tracking: false,
@@ -11,9 +11,6 @@ const state = {
   currentQuestFilter: "daily",
 };
 
-// Simulated user DB (in-memory)
-const userDB = {};
-
 // ══════════════════════════════════════════
 // DATA
 // ══════════════════════════════════════════
@@ -21,201 +18,313 @@ const QUESTS = {
   daily: [
     {
       id: "d1",
-      name: "10 Push-Ups",
-      icon: "💪",
-      desc: "Complete 10 push-ups with good form.",
-      reward: 15,
-      difficulty: "Easy",
+      name: "Morning Walk",
+      desc: "Walk for 15 minutes outside.",
+      icon: "🚶",
+      reward: 10,
       xp: 20,
+      difficulty: "Easy",
     },
     {
       id: "d2",
-      name: "Walk 5k Steps",
-      icon: "🚶",
-      desc: "Hit 5,000 steps today. Every step counts!",
-      reward: 10,
-      difficulty: "Easy",
+      name: "Drink Water",
+      desc: "Drink 8 glasses of water today.",
+      icon: "💧",
+      reward: 8,
       xp: 15,
+      difficulty: "Easy",
     },
     {
       id: "d3",
-      name: "20 Squats",
-      icon: "🦵",
-      desc: "Drop low! Complete 20 bodyweight squats.",
-      reward: 15,
+      name: "10 Push-Ups",
+      desc: "Complete 10 push-ups in one session.",
+      icon: "💪",
+      reward: 12,
+      xp: 25,
       difficulty: "Medium",
-      xp: 20,
     },
     {
       id: "d4",
-      name: "5-min Stretch",
+      name: "Stretch Break",
+      desc: "Do a 5-minute full-body stretch.",
       icon: "🧘",
-      desc: "Spend 5 minutes stretching your body.",
       reward: 8,
+      xp: 15,
       difficulty: "Easy",
-      xp: 10,
+    },
+    {
+      id: "d5",
+      name: "No Screen Hour",
+      desc: "Go one hour without any screens.",
+      icon: "📵",
+      reward: 15,
+      xp: 30,
+      difficulty: "Medium",
+    },
+    {
+      id: "d6",
+      name: "Healthy Meal",
+      desc: "Eat at least one home-cooked healthy meal.",
+      icon: "🥗",
+      reward: 10,
+      xp: 20,
+      difficulty: "Easy",
     },
   ],
   weekly: [
     {
       id: "w1",
-      name: "3-Day Workout Streak",
-      icon: "🔥",
-      desc: "Complete any workout 3 days in a row this week.",
+      name: "5K Steps Daily",
+      desc: "Hit 5,000 steps every day this week.",
+      icon: "👟",
       reward: 50,
+      xp: 100,
       difficulty: "Medium",
-      xp: 60,
     },
     {
       id: "w2",
-      name: "100 Push-Ups Total",
-      icon: "💪",
-      desc: "Accumulate 100 push-ups across the week.",
+      name: "3 Workouts",
+      desc: "Complete 3 training sessions this week.",
+      icon: "🏋️",
       reward: 60,
+      xp: 120,
       difficulty: "Hard",
-      xp: 80,
     },
     {
       id: "w3",
-      name: "Hydration Week",
-      icon: "💧",
-      desc: "Drink 8 glasses of water every day this week.",
+      name: "Sleep 7hrs",
+      desc: "Get at least 7 hours of sleep 5 nights.",
+      icon: "😴",
       reward: 40,
+      xp: 80,
       difficulty: "Medium",
-      xp: 50,
+    },
+    {
+      id: "w4",
+      name: "No Junk Food",
+      desc: "Avoid junk food for the entire week.",
+      icon: "🚫",
+      reward: 70,
+      xp: 140,
+      difficulty: "Hard",
     },
   ],
   monthly: [
     {
       id: "m1",
       name: "30-Day Streak",
-      icon: "🏆",
-      desc: "Complete at least one quest every single day for 30 days.",
+      desc: "Complete at least one quest every day for 30 days.",
+      icon: "🔥",
       reward: 200,
+      xp: 400,
       difficulty: "Legendary",
-      xp: 250,
     },
     {
       id: "m2",
-      name: "Master Trainer",
-      icon: "🥋",
-      desc: "Complete 50 training sessions this month.",
+      name: "100 Workouts",
+      desc: "Log 100 total reps across all training sessions.",
+      icon: "🏆",
       reward: 150,
+      xp: 300,
       difficulty: "Hard",
-      xp: 180,
+    },
+    {
+      id: "m3",
+      name: "Mindful Month",
+      desc: "Complete a mindfulness activity every week this month.",
+      icon: "🌿",
+      reward: 120,
+      xp: 250,
+      difficulty: "Medium",
     },
   ],
 };
+
+const RANKS = [
+  {
+    name: "Seedling",
+    icon: "🌱",
+    minXp: 0,
+    desc: "Just getting started — every champion was once here.",
+  },
+  {
+    name: "Sprout",
+    icon: "🌿",
+    minXp: 100,
+    desc: "You're growing. Keep it up!",
+  },
+  {
+    name: "Runner",
+    icon: "🏃",
+    minXp: 300,
+    desc: "Building momentum and healthy habits.",
+  },
+  {
+    name: "Warrior",
+    icon: "⚔️",
+    minXp: 600,
+    desc: "Discipline is your superpower.",
+  },
+  {
+    name: "Champion",
+    icon: "🏆",
+    minXp: 1000,
+    desc: "You inspire others just by showing up.",
+  },
+  {
+    name: "Legend",
+    icon: "🌟",
+    minXp: 2000,
+    desc: "Elite. You've redefined what's possible.",
+  },
+];
 
 const ACHIEVEMENTS = [
   {
     id: "a1",
     name: "First Step",
-    icon: "👟",
-    desc: "Complete your very first quest.",
-    reward: 10,
-    xpReq: 0,
-    questReq: 1,
+    icon: "👣",
+    desc: "Complete your first quest.",
+    reward: 5,
   },
   {
     id: "a2",
-    name: "On Fire",
+    name: "On a Roll",
     icon: "🔥",
-    desc: "Maintain a 3-day streak.",
-    reward: 25,
-    xpReq: 30,
-    questReq: 3,
+    desc: "Complete 3 quests.",
+    reward: 10,
   },
   {
     id: "a3",
-    name: "Iron Will",
-    icon: "⚙️",
-    desc: "Complete 10 quests total.",
-    reward: 50,
-    xpReq: 100,
-    questReq: 10,
+    name: "Quest Master",
+    icon: "🗺️",
+    desc: "Complete 10 quests.",
+    reward: 25,
   },
-  {
-    id: "a4",
-    name: "Centurion",
-    icon: "🛡️",
-    desc: "Earn 100 XP.",
-    reward: 30,
-    xpReq: 100,
-    questReq: 0,
-  },
+  { id: "a4", name: "XP Hunter", icon: "⚡", desc: "Earn 100 XP.", reward: 15 },
   {
     id: "a5",
-    name: "Rep Beast",
-    icon: "💪",
-    desc: "Do 50 reps in a single training session.",
-    reward: 40,
-    xpReq: 0,
-    questReq: 0,
-    repReq: 50,
+    name: "Iron Will",
+    icon: "🦾",
+    desc: "Log a 50-rep training session.",
+    reward: 20,
   },
   {
     id: "a6",
-    name: "Legend",
-    icon: "⭐",
-    desc: "Earn 500 XP total.",
-    reward: 100,
-    xpReq: 500,
-    questReq: 0,
+    name: "Century Club",
+    icon: "💯",
+    desc: "Earn 500 XP.",
+    reward: 50,
   },
 ];
 
-const RANKS = [
-  { name: "Seedling", icon: "🌱", minXp: 0, maxXp: 100 },
-  { name: "Sprout", icon: "🌿", minXp: 100, maxXp: 250 },
-  { name: "Warrior", icon: "⚔️", minXp: 250, maxXp: 500 },
-  { name: "Champion", icon: "🏅", minXp: 500, maxXp: 1000 },
-  { name: "Legend", icon: "👑", minXp: 1000, maxXp: 99999 },
-];
+// ══════════════════════════════════════════
+// LOCALSTORAGE PERSISTENCE
+// ══════════════════════════════════════════
+function saveUserState() {
+  if (!state.user) return;
+  const copy = {
+    ...state.user,
+    completedQuests: [...state.user.completedQuests],
+    earnedAchievements: [...awardedAch],
+  };
+  localStorage.setItem(`hq_user_${state.user.username}`, JSON.stringify(copy));
+}
+
+function loadUserState(username) {
+  const data = localStorage.getItem(`hq_user_${username}`);
+  if (!data) return null;
+  const parsed = JSON.parse(data);
+  parsed.completedQuests = new Set(parsed.completedQuests || []);
+  return parsed;
+}
+
+function saveAccount(username, password, data) {
+  const accounts = JSON.parse(localStorage.getItem("hq_accounts") || "{}");
+  accounts[username] = {
+    password,
+    data: { ...data, completedQuests: [] },
+  };
+  localStorage.setItem("hq_accounts", JSON.stringify(accounts));
+}
+
+function getAccount(username) {
+  const accounts = JSON.parse(localStorage.getItem("hq_accounts") || "{}");
+  return accounts[username] || null;
+}
 
 // ══════════════════════════════════════════
 // AUTH
 // ══════════════════════════════════════════
 function signIn() {
-  const username = document.getElementById("siUsername").value.trim();
-  const password = document.getElementById("siPassword").value;
+  const usernameEl = document.getElementById("siUsername");
+  const passwordEl = document.getElementById("siPassword");
   const err = document.getElementById("siError");
+  if (!usernameEl || !passwordEl) return;
+  const username = usernameEl.value.trim().toLowerCase();
+  const password = passwordEl.value;
   if (!username || !password) {
-    err.textContent = "Please fill in all fields.";
+    if (err) err.textContent = "Please fill in all fields.";
     return;
   }
-  if (!userDB[username] || userDB[username].password !== password) {
-    err.textContent = "Invalid username or password.";
+  const account = getAccount(username);
+  if (!account || account.password !== password) {
+    if (err) err.textContent = "Invalid username or password.";
     return;
   }
-  err.textContent = "";
-  state.user = userDB[username].data;
-  afterSignIn();
-  closeModal("signModal");
-  showToast("👋", `Welcome back, ${state.user.name}!`);
+  if (err) err.textContent = "";
+
+  try {
+    state.user = loadUserState(username) || account.data;
+    state.user.completedQuests =
+      state.user.completedQuests instanceof Set
+        ? state.user.completedQuests
+        : new Set(
+            Array.isArray(state.user.completedQuests)
+              ? state.user.completedQuests
+              : [],
+          );
+
+    awardedAch.clear();
+    if (Array.isArray(state.user.earnedAchievements)) {
+      state.user.earnedAchievements.forEach((id) => awardedAch.add(id));
+    }
+
+    localStorage.setItem("hq_active_user", username);
+    afterSignIn();
+    closeModal("signModal");
+    showToast("👋", `Welcome back, ${state.user.name || username}!`);
+  } catch (e) {
+    console.error("Sign in error:", e);
+    if (err) err.textContent = "Something went wrong. Please try again.";
+  }
 }
 
 function signUp() {
-  const name = document.getElementById("suName").value.trim();
-  const username = document
-    .getElementById("suUsername")
-    .value.trim()
-    .toLowerCase();
-  const password = document.getElementById("suPassword").value;
+  const nameEl = document.getElementById("suName");
+  const usernameEl = document.getElementById("suUsername");
+  const passwordEl = document.getElementById("suPassword");
   const err = document.getElementById("suError");
+  if (!nameEl || !usernameEl || !passwordEl) return;
+
+  const name = nameEl.value.trim();
+  const username = usernameEl.value.trim().toLowerCase();
+  const password = passwordEl.value;
+
   if (!name || !username || !password) {
-    err.textContent = "Please fill in all fields.";
+    if (err) err.textContent = "Please fill in all fields.";
     return;
   }
-  if (userDB[username]) {
-    err.textContent = "Username already taken.";
+  if (getAccount(username)) {
+    if (err) err.textContent = "Username already taken.";
     return;
   }
   if (password.length < 4) {
-    err.textContent = "Password too short (min 4 chars).";
+    if (err) err.textContent = "Password too short (min 4 chars).";
     return;
   }
-  err.textContent = "";
+  if (err) err.textContent = "";
+
   const userData = {
     name,
     username,
@@ -223,9 +332,15 @@ function signUp() {
     xp: 0,
     streak: 1,
     completedQuests: new Set(),
+    earnedAchievements: [],
   };
-  userDB[username] = { password, data: userData };
+
+  saveAccount(username, password, userData);
   state.user = userData;
+  awardedAch.clear();
+  localStorage.setItem("hq_active_user", username);
+  saveUserState();
+
   afterSignIn();
   closeModal("signModal");
   showToast("🎉", `Welcome to HealthQuest, ${name}!`);
@@ -233,15 +348,33 @@ function signUp() {
 
 function afterSignIn() {
   const u = state.user;
-  document.getElementById("signinBtn").style.display = "none";
-  document.getElementById("userStats").classList.add("visible");
-  document.getElementById("avatarBtn").classList.add("visible");
-  document.getElementById("avatarBtn").textContent = u.name[0].toUpperCase();
-  document.getElementById("signoutBtn").style.display = "inline-block";
-  document.getElementById("settingsSignBtn").textContent = "Signed In ✓";
-  document.getElementById("settingsSignBtn").disabled = true;
-  document.getElementById("settingsAccountDesc").textContent =
-    `Signed in as ${u.username}`;
+  if (!u) return;
+
+  const signinBtn = document.getElementById("signinBtn");
+  if (signinBtn) signinBtn.style.display = "none";
+
+  const userStats = document.getElementById("userStats");
+  if (userStats) userStats.classList.add("visible");
+
+  const avatarBtn = document.getElementById("avatarBtn");
+  if (avatarBtn) {
+    avatarBtn.classList.add("visible");
+    avatarBtn.textContent = u.name ? u.name[0].toUpperCase() : "?";
+  }
+
+  const signoutBtn = document.getElementById("signoutBtn");
+  if (signoutBtn) signoutBtn.style.display = "inline-block";
+
+  const settingsSignBtn = document.getElementById("settingsSignBtn");
+  if (settingsSignBtn) {
+    settingsSignBtn.textContent = "Signed In ✓";
+    settingsSignBtn.disabled = true;
+  }
+
+  const settingsAccountDesc = document.getElementById("settingsAccountDesc");
+  if (settingsAccountDesc)
+    settingsAccountDesc.textContent = `Signed in as ${u.username}`;
+
   updateHeaderStats();
   renderQuestsGrid();
   renderAchievements();
@@ -249,47 +382,66 @@ function afterSignIn() {
 
 function signOut() {
   state.user = null;
-  document.getElementById("signinBtn").style.display = "inline-block";
-  document.getElementById("userStats").classList.remove("visible");
-  document.getElementById("avatarBtn").classList.remove("visible");
-  document.getElementById("signoutBtn").style.display = "none";
-  document.getElementById("settingsSignBtn").textContent = "Sign In";
-  document.getElementById("settingsSignBtn").disabled = false;
-  document.getElementById("settingsAccountDesc").textContent = "Not signed in";
-  document.getElementById("siUsername").value = "";
-  document.getElementById("siPassword").value = "";
+  awardedAch.clear();
+  localStorage.removeItem("hq_active_user");
+
+  const signinBtn = document.getElementById("signinBtn");
+  if (signinBtn) signinBtn.style.display = "inline-block";
+
+  const userStats = document.getElementById("userStats");
+  if (userStats) userStats.classList.remove("visible");
+
+  const avatarBtn = document.getElementById("avatarBtn");
+  if (avatarBtn) {
+    avatarBtn.classList.remove("visible");
+    avatarBtn.textContent = "";
+  }
+
+  const signoutBtn = document.getElementById("signoutBtn");
+  if (signoutBtn) signoutBtn.style.display = "none";
+
+  const settingsSignBtn = document.getElementById("settingsSignBtn");
+  if (settingsSignBtn) {
+    settingsSignBtn.textContent = "Sign In";
+    settingsSignBtn.disabled = false;
+  }
+
+  const settingsAccountDesc = document.getElementById("settingsAccountDesc");
+  if (settingsAccountDesc) settingsAccountDesc.textContent = "Not signed in";
+
+  const siUsername = document.getElementById("siUsername");
+  const siPassword = document.getElementById("siPassword");
+  if (siUsername) siUsername.value = "";
+  if (siPassword) siPassword.value = "";
+
   renderQuestsGrid();
+  renderAchievements();
   showToast("👋", "Signed out. See you soon!");
 }
 
 function updateHeaderStats() {
   if (!state.user) return;
   const rank = getRank(state.user.xp);
-  document.getElementById("headerStreak").textContent = state.user.streak;
-  document.getElementById("headerStars").textContent = state.user.stars;
-  document.getElementById("headerRank").textContent = rank.name;
+
+  const headerStreak = document.getElementById("headerStreak");
+  if (headerStreak) headerStreak.textContent = state.user.streak;
+
+  const headerStars = document.getElementById("headerStars");
+  if (headerStars) headerStars.textContent = state.user.stars;
+
+  const headerRank = document.getElementById("headerRank");
+  if (headerRank) headerRank.textContent = rank.name;
 }
 
 // ══════════════════════════════════════════
-// NAVIGATION
+// RANKS
 // ══════════════════════════════════════════
-function showPage(id, btn) {
-  document
-    .querySelectorAll(".page")
-    .forEach((p) => p.classList.remove("active"));
-  document
-    .querySelectorAll(".nav-tab")
-    .forEach((t) => t.classList.remove("active"));
-  document.getElementById("page-" + id).classList.add("active");
-  if (btn) btn.classList.add("active");
-  else {
-    document.querySelectorAll(".nav-tab").forEach((t) => {
-      if (t.textContent.toLowerCase().startsWith(id.toLowerCase()))
-        t.classList.add("active");
-    });
+function getRank(xp) {
+  let rank = RANKS[0];
+  for (const r of RANKS) {
+    if (xp >= r.minXp) rank = r;
   }
-  if (id === "quests") renderQuestsGrid();
-  if (id === "achievements") renderAchievements();
+  return rank;
 }
 
 // ══════════════════════════════════════════
@@ -300,13 +452,14 @@ function filterQuests(type, btn) {
   document
     .querySelectorAll(".quest-tab-btn")
     .forEach((b) => b.classList.remove("active"));
-  btn.classList.add("active");
+  if (btn) btn.classList.add("active");
   renderQuestsGrid();
 }
 
 function renderQuestsGrid() {
   const grid = document.getElementById("questsGrid");
-  const quests = QUESTS[state.currentQuestFilter];
+  if (!grid) return;
+  const quests = QUESTS[state.currentQuestFilter] || [];
   const completed = state.user ? state.user.completedQuests : new Set();
   grid.innerHTML = quests
     .map((q) => {
@@ -323,27 +476,123 @@ function renderQuestsGrid() {
         <button class="btn-start-quest" ${done || !state.user ? "disabled" : ""} onclick="completeQuest('${q.id}')">
           ${done ? "Completed" : state.user ? "Mark Complete" : "Sign in to track"}
         </button>
-      </div>
-    `;
+      </div>`;
     })
     .join("");
 }
 
+// ══════════════════════════════════════════
+// COMPLETE QUEST
+// ══════════════════════════════════════════
 function completeQuest(qid) {
-  if (!state.user || state.user.completedQuests.has(qid)) return;
-  const allQ = [...QUESTS.daily, ...QUESTS.weekly, ...QUESTS.monthly];
-  const q = allQ.find((x) => x.id === qid);
+  if (!state.user) return;
+  if (state.user.completedQuests.has(qid)) return;
+
+  const allQuests = [...QUESTS.daily, ...QUESTS.weekly, ...QUESTS.monthly];
+  const q = allQuests.find((x) => x.id === qid);
   if (!q) return;
+
   state.user.completedQuests.add(qid);
   state.user.stars += q.reward;
   state.user.xp += q.xp;
   state.user.streak = Math.max(state.user.streak, 1);
+
   updateHeaderStats();
   renderQuestsGrid();
   checkAchievements();
-  document.getElementById("questCompleteMsg").textContent =
-    `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
+  saveUserState();
+
+  const msgEl = document.getElementById("questCompleteMsg");
+  if (msgEl)
+    msgEl.textContent = `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
   openModal("questCompleteModal");
+}
+
+// ══════════════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════════════
+const awardedAch = new Set();
+
+function checkAchievements(repSession) {
+  if (!state.user) return;
+  const u = state.user;
+  ACHIEVEMENTS.forEach((a) => {
+    if (a.id === "a1" && u.completedQuests.size >= 1) awardAch(a);
+    if (a.id === "a2" && u.completedQuests.size >= 3) awardAch(a);
+    if (a.id === "a3" && u.completedQuests.size >= 10) awardAch(a);
+    if (a.id === "a4" && u.xp >= 100) awardAch(a);
+    if (a.id === "a6" && u.xp >= 500) awardAch(a);
+    if (a.id === "a5" && repSession) awardAch(a);
+  });
+}
+
+function awardAch(a) {
+  if (!state.user) return;
+  if (awardedAch.has(a.id)) return;
+  awardedAch.add(a.id);
+  state.user.stars += a.reward;
+  state.user.earnedAchievements = [...awardedAch];
+  updateHeaderStats();
+  renderAchievements();
+  showToast("🏆", `Achievement unlocked: ${a.name}! +${a.reward} ⭐`);
+  saveUserState();
+}
+
+function renderAchievements() {
+  const grid = document.getElementById("achievementsGrid");
+  const ranksList = document.getElementById("ranksList");
+  const xpBar = document.getElementById("xpBar");
+  const xpCurrent = document.getElementById("xpCurrent");
+  const xpNext = document.getElementById("xpNext");
+  const currentRankIcon = document.getElementById("currentRankIcon");
+  const currentRankName = document.getElementById("currentRankName");
+  const currentRankDesc = document.getElementById("currentRankDesc");
+
+  const xp = state.user ? state.user.xp : 0;
+  const currentRank = getRank(xp);
+  const currentRankIdx = RANKS.indexOf(currentRank);
+  const nextRank = RANKS[currentRankIdx + 1];
+
+  if (currentRankIcon) currentRankIcon.textContent = currentRank.icon;
+  if (currentRankName) currentRankName.textContent = currentRank.name;
+  if (currentRankDesc) currentRankDesc.textContent = currentRank.desc;
+
+  if (xpCurrent) xpCurrent.textContent = xp;
+  if (xpNext) xpNext.textContent = nextRank ? nextRank.minXp : "MAX";
+  if (xpBar) {
+    const pct = nextRank
+      ? Math.min(
+          100,
+          ((xp - currentRank.minXp) / (nextRank.minXp - currentRank.minXp)) *
+            100,
+        )
+      : 100;
+    xpBar.style.width = pct + "%";
+  }
+
+  if (ranksList) {
+    ranksList.innerHTML = RANKS.map((r) => {
+      const achieved = xp >= r.minXp;
+      const isCurrent = r.name === currentRank.name;
+      return `<div class="rank-item ${isCurrent ? "current" : achieved ? "achieved" : "locked-rank"}">
+        <div class="rank-item-icon">${r.icon}</div>
+        <div class="rank-item-name">${r.name}</div>
+      </div>`;
+    }).join("");
+  }
+
+  if (grid) {
+    grid.innerHTML = ACHIEVEMENTS.map((a) => {
+      const unlocked = awardedAch.has(a.id);
+      return `<div class="ach-card ${unlocked ? "" : "locked"}">
+        <div class="ach-badge ${unlocked ? "" : "locked-badge"}">${unlocked ? "Unlocked" : "Locked"}</div>
+        <div class="ach-icon">${a.icon}</div>
+        <div class="ach-name">${a.name}</div>
+        <div class="ach-desc">${a.desc}</div>
+        <div class="ach-reward">+${a.reward} ⭐</div>
+      </div>`;
+    }).join("");
+  }
 }
 
 // ══════════════════════════════════════════
@@ -355,21 +604,23 @@ function selectExercise(name, el, icon) {
     .forEach((c) => c.classList.remove("selected"));
   el.classList.add("selected");
   state.currentExercise = { name, icon };
-  document.getElementById("repLabel").textContent =
-    name === "Plank Hold" ? "seconds" : "reps";
-  document.getElementById("btnStart").disabled = false;
+  const repLabel = document.getElementById("repLabel");
+  if (repLabel)
+    repLabel.textContent = name === "Plank Hold" ? "seconds" : "reps";
+  const btnStart = document.getElementById("btnStart");
+  if (btnStart) btnStart.disabled = false;
 }
+
+let poseTimer = null;
 
 async function startTracking() {
   if (!state.currentExercise) return;
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({
-      video: true,
-    });
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true });
     state.webcamStream = stream;
     const video = document.getElementById("webcam");
-    video.srcObject = stream;
-    document.getElementById("cameraOverlay").classList.add("hidden");
+    if (video) video.srcObject = stream;
+    document.getElementById("cameraOverlay")?.classList.add("hidden");
   } catch (e) {
     showToast("📷", "Camera not available — using simulated mode!");
   }
@@ -377,48 +628,53 @@ async function startTracking() {
   state.reps = 0;
   state.tracking = true;
   document.getElementById("repCounter").textContent = "0";
-  document.getElementById("btnStart").style.display = "none";
-  document.getElementById("btnStop").classList.add("visible");
-  document.getElementById("exerciseStatus").textContent =
-    "👁️ Tracking... Keep going!";
-  document.getElementById("exerciseStatus").className = "exercise-status";
+  const btnStart = document.getElementById("btnStart");
+  if (btnStart) btnStart.style.display = "none";
+  document.getElementById("btnStop")?.classList.add("visible");
+  const statusEl = document.getElementById("exerciseStatus");
+  if (statusEl) {
+    statusEl.textContent = "👁️ Tracking... Keep going!";
+    statusEl.className = "exercise-status";
+  }
 
-  // QuickPose API simulation — in production, replace with real QuickPose SDK calls
-  // QuickPose detects pose landmarks and counts reps based on joint angle thresholds
   simulateQuickPose();
 }
 
 function simulateQuickPose() {
   if (!state.tracking) return;
   const delay = 1800 + Math.random() * 1200;
-  setTimeout(() => {
+  poseTimer = setTimeout(() => {
     if (!state.tracking) return;
     state.reps++;
     const isGoodForm = Math.random() > 0.25;
-    document.getElementById("repCounter").textContent = state.reps;
     const statusEl = document.getElementById("exerciseStatus");
-    if (isGoodForm) {
-      statusEl.textContent = "✅ Good form!";
-      statusEl.className = "exercise-status";
-    } else {
-      statusEl.textContent = "⚠️ Fix your form!";
-      statusEl.className = "exercise-status bad";
+    if (statusEl) {
+      statusEl.textContent = isGoodForm ? "✅ Good form!" : "⚠️ Fix your form!";
+      statusEl.className = isGoodForm
+        ? "exercise-status"
+        : "exercise-status bad";
     }
+    const repCounter = document.getElementById("repCounter");
+    if (repCounter) repCounter.textContent = state.reps;
     simulateQuickPose();
   }, delay);
 }
 
 function stopTracking() {
   state.tracking = false;
-  if (state.webcamStream) {
-    state.webcamStream.getTracks().forEach((t) => t.stop());
-    state.webcamStream = null;
+  clearTimeout(poseTimer);
+  state.webcamStream?.getTracks().forEach((t) => t.stop());
+  state.webcamStream = null;
+
+  document.getElementById("cameraOverlay")?.classList.remove("hidden");
+  const btnStart = document.getElementById("btnStart");
+  if (btnStart) {
+    btnStart.style.display = "inline-block";
+    btnStart.disabled = !state.currentExercise;
   }
-  document.getElementById("cameraOverlay").classList.remove("hidden");
-  document.getElementById("btnStart").style.display = "inline-block";
-  document.getElementById("btnStart").disabled = !state.currentExercise;
-  document.getElementById("btnStop").classList.remove("visible");
-  document.getElementById("exerciseStatus").textContent = "";
+  document.getElementById("btnStop")?.classList.remove("visible");
+  const statusEl = document.getElementById("exerciseStatus");
+  if (statusEl) statusEl.textContent = "";
 
   const reps = state.reps;
   const exercise = state.currentExercise;
@@ -437,6 +693,7 @@ function stopTracking() {
         `Session done! +${earned} ⭐ for ${reps} ${exercise.name}`,
       );
       if (reps >= 50) checkAchievements(true);
+      saveUserState();
     } else {
       showToast(
         "🏋️",
@@ -445,252 +702,172 @@ function stopTracking() {
     }
   }
   state.reps = 0;
-  document.getElementById("repCounter").textContent = "0";
+  const repCounter = document.getElementById("repCounter");
+  if (repCounter) repCounter.textContent = "0";
 }
 
 function renderSessionLog() {
   const log = document.getElementById("sessionLog");
   const items = document.getElementById("sessionLogItems");
+  if (!log || !items) return;
   log.style.display = "block";
   items.innerHTML = state.sessionLog
     .slice()
     .reverse()
     .map(
       (e) =>
-        `<div class="log-item"><span>${e.icon} ${e.exercise}</span><span class="log-reps">${e.reps} ${e.exercise === "Plank Hold" ? "sec" : "reps"}</span></div>`,
+        `<div class="log-item"><span>${e.icon} ${e.exercise}</span><span class="log-reps">${e.reps} ${
+          e.exercise === "Plank Hold" ? "sec" : "reps"
+        }</span></div>`,
     )
     .join("");
-}
-
-// ══════════════════════════════════════════
-// ACHIEVEMENTS & RANKS
-// ══════════════════════════════════════════
-function getRank(xp) {
-  for (let i = RANKS.length - 1; i >= 0; i--) {
-    if (xp >= RANKS[i].minXp) return RANKS[i];
-  }
-  return RANKS[0];
-}
-
-function renderAchievements() {
-  const u = state.user;
-  const rank = u ? getRank(u.xp) : RANKS[0];
-  const rankIdx = RANKS.indexOf(rank);
-  const nextRank = RANKS[rankIdx + 1];
-  const xpInRank = u ? u.xp - rank.minXp : 0;
-  const xpForNext = nextRank ? nextRank.minXp - rank.minXp : 999;
-  const pct = nextRank ? Math.min((xpInRank / xpForNext) * 100, 100) : 100;
-
-  document.getElementById("currentRankIcon").textContent = rank.icon;
-  document.getElementById("currentRankName").textContent = rank.name;
-  document.getElementById("currentRankDesc").textContent =
-    rank.name === "Legend"
-      ? "You are at the pinnacle. A true champion."
-      : `Keep earning XP to reach ${nextRank ? nextRank.name : "max"}`;
-  document.getElementById("xpCurrent").textContent = u ? xpInRank : 0;
-  document.getElementById("xpNext").textContent = xpForNext;
-  document.getElementById("xpBar").style.width = pct + "%";
-
-  const ranksList = document.getElementById("ranksList");
-  ranksList.innerHTML = RANKS.map((r, i) => {
-    const achieved = u && u.xp >= r.minXp;
-    const isCurrent = achieved && (!RANKS[i + 1] || u.xp < RANKS[i + 1].minXp);
-    return `<div class="rank-item ${isCurrent ? "current" : achieved ? "achieved" : "locked-rank"}">
-        <div class="rank-item-icon">${r.icon}</div>
-        <div class="rank-item-name">${r.name}</div>
-      </div>`;
-  }).join("");
-
-  const completedCount = u ? u.completedQuests.size : 0;
-  const xp = u ? u.xp : 0;
-  const maxReps = state.sessionLog.reduce((max, s) => Math.max(max, s.reps), 0);
-  const grid = document.getElementById("achievementsGrid");
-  grid.innerHTML = ACHIEVEMENTS.map((a) => {
-    const unlocked =
-      u &&
-      completedCount >= (a.questReq || 0) &&
-      xp >= (a.xpReq || 0) &&
-      maxReps >= (a.repReq || 0);
-    return `<div class="ach-card ${unlocked ? "" : "locked"}">
-        <div class="${unlocked ? "ach-badge" : "ach-badge locked-badge"}">${unlocked ? "✓ Unlocked" : "🔒 Locked"}</div>
-        <div class="ach-icon">${a.icon}</div>
-        <div class="ach-name">${a.name}</div>
-        <div class="ach-desc">${a.desc}</div>
-        <div class="ach-reward">⭐ +${a.reward} stars</div>
-      </div>`;
-  }).join("");
-}
-
-function checkAchievements(repSession) {
-  if (!state.user) return;
-  const u = state.user;
-  ACHIEVEMENTS.forEach((a) => {
-    if (a.id === "a1" && u.completedQuests.size >= 1) awardAch(a);
-    if (a.id === "a3" && u.completedQuests.size >= 10) awardAch(a);
-    if (a.id === "a4" && u.xp >= 100) awardAch(a);
-    if (a.id === "a6" && u.xp >= 500) awardAch(a);
-    if (a.id === "a5" && repSession) awardAch(a);
-  });
-}
-
-const awardedAch = new Set();
-function awardAch(a) {
-  if (awardedAch.has(a.id)) return;
-  awardedAch.add(a.id);
-  state.user.stars += a.reward;
-  updateHeaderStats();
-  showToast("🏆", `Achievement unlocked: ${a.name}! +${a.reward} ⭐`);
-}
-
-// ══════════════════════════════════════════
-// THEME
-// ══════════════════════════════════════════
-function setTheme(t) {
-  document.documentElement.setAttribute("data-theme", t);
-  document
-    .getElementById("themeLight")
-    .classList.toggle("active", t === "light");
-  document.getElementById("themeDark").classList.toggle("active", t === "dark");
 }
 
 // ══════════════════════════════════════════
 // MODALS
 // ══════════════════════════════════════════
 function openModal(id) {
-  document.getElementById(id).classList.add("visible");
+  const el = document.getElementById(id);
+  if (el) el.classList.add("visible");
 }
+
 function closeModal(id) {
-  document.getElementById(id).classList.remove("visible");
-  document.getElementById("siError") &&
-    (document.getElementById("siError").textContent = "");
-  document.getElementById("suError") &&
-    (document.getElementById("suError").textContent = "");
+  const el = document.getElementById(id);
+  if (el) el.classList.remove("visible");
 }
-function toggleSignMode() {
-  const si = document.getElementById("signInView");
-  const su = document.getElementById("signUpView");
-  const siVisible = si.style.display !== "none";
-  si.style.display = siVisible ? "none" : "block";
-  su.style.display = siVisible ? "block" : "none";
-}
-document.querySelectorAll(".modal-overlay").forEach((o) => {
-  o.addEventListener("click", (e) => {
-    if (e.target === o) closeModal(o.id);
-  });
+
+// Close modal when clicking the overlay background
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal-overlay")) {
+    e.target.classList.remove("visible");
+  }
 });
+
+function toggleSignMode() {
+  const signIn = document.getElementById("signInView");
+  const signUp = document.getElementById("signUpView");
+  if (!signIn || !signUp) return;
+  const showingSignIn = signIn.style.display !== "none";
+  signIn.style.display = showingSignIn ? "none" : "block";
+  signUp.style.display = showingSignIn ? "block" : "none";
+}
 
 // ══════════════════════════════════════════
 // TOAST
 // ══════════════════════════════════════════
-let toastTimer;
+let toastTimer = null;
+
 function showToast(icon, msg) {
+  const toast = document.getElementById("toast");
+  const toastIcon = document.getElementById("toastIcon");
+  const toastMsg = document.getElementById("toastMsg");
+  if (!toast) return;
+  if (toastIcon) toastIcon.textContent = icon;
+  if (toastMsg) toastMsg.textContent = msg;
+  toast.classList.add("show");
   clearTimeout(toastTimer);
-  document.getElementById("toastIcon").textContent = icon;
-  document.getElementById("toastMsg").textContent = msg;
-  const t = document.getElementById("toast");
-  t.classList.add("show");
-  toastTimer = setTimeout(() => t.classList.remove("show"), 3500);
+  toastTimer = setTimeout(() => toast.classList.remove("show"), 3500);
+}
+
+// ══════════════════════════════════════════
+// THEME
+// ══════════════════════════════════════════
+function setTheme(theme) {
+  document.documentElement.setAttribute("data-theme", theme);
+  localStorage.setItem("hq_theme", theme);
+
+  const lightBtn = document.getElementById("themeLight");
+  const darkBtn = document.getElementById("themeDark");
+  if (lightBtn) lightBtn.classList.toggle("active", theme === "light");
+  if (darkBtn) darkBtn.classList.toggle("active", theme === "dark");
 }
 
 // ══════════════════════════════════════════
 // CANVAS BACKGROUND
 // ══════════════════════════════════════════
-const canvas = document.getElementById("bg");
-const ctx = canvas.getContext("2d");
-let W, H;
-const stagesLight = [
-  { base: [245, 240, 232], o1: [180, 220, 190], o2: [255, 235, 160] },
-  { base: [236, 245, 238], o1: [120, 200, 140], o2: [200, 235, 210] },
-  { base: [232, 240, 250], o1: [160, 195, 240], o2: [190, 230, 200] },
-  { base: [245, 235, 248], o1: [210, 175, 230], o2: [150, 210, 170] },
-];
-const stagesDark = [
-  { base: [13, 20, 14], o1: [20, 50, 28], o2: [30, 45, 20] },
-  { base: [10, 22, 12], o1: [15, 45, 25], o2: [25, 40, 18] },
-  { base: [12, 18, 22], o1: [18, 35, 48], o2: [20, 45, 30] },
-  { base: [18, 12, 22], o1: [35, 20, 45], o2: [20, 42, 28] },
-];
-let o1x = 0.2,
-  o1y = 0.25,
-  v1x = 0.00014,
-  v1y = 0.00009;
-let o2x = 0.78,
-  o2y = 0.7,
-  v2x = -0.00011,
-  v2y = 0.00014;
-function resize() {
-  W = canvas.width = innerWidth;
-  H = canvas.height = innerHeight;
-}
-resize();
-addEventListener("resize", resize);
-const lerp = (a, b, t) => a + (b - a) * t;
-const lerpRGB = (a, b, t) => [
-  lerp(a[0], b[0], t),
-  lerp(a[1], b[1], t),
-  lerp(a[2], b[2], t),
-];
-const rgba = (c, a) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
-function progress() {
-  const max = document.documentElement.scrollHeight - innerHeight;
-  return max > 0 ? Math.min(scrollY / max, 1) : 0;
-}
-function blend(t, stages) {
-  const n = stages.length - 1,
-    s = t * n,
-    i = Math.min(Math.floor(s), n - 1),
-    f = s - i;
-  const a = stages[i],
-    b = stages[Math.min(i + 1, n)];
-  return {
-    base: lerpRGB(a.base, b.base, f),
-    o1: lerpRGB(a.o1, b.o1, f),
-    o2: lerpRGB(a.o2, b.o2, f),
-  };
-}
-function draw() {
-  o1x += v1x;
-  o1y += v1y;
-  o2x += v2x;
-  o2y += v2y;
-  if (o1x < 0.05 || o1x > 0.95) v1x *= -1;
-  if (o1y < 0.05 || o1y > 0.95) v1y *= -1;
-  if (o2x < 0.05 || o2x > 0.95) v2x *= -1;
-  if (o2y < 0.05 || o2y > 0.95) v2y *= -1;
-  const isDark = document.documentElement.getAttribute("data-theme") === "dark";
-  const stages = isDark ? stagesDark : stagesLight;
-  const p = progress(),
-    { base, o1, o2 } = blend(p, stages);
-  ctx.fillStyle = rgba(base, 1);
-  ctx.fillRect(0, 0, W, H);
-  const g1 = ctx.createRadialGradient(
-    o1x * W,
-    o1y * H,
-    0,
-    o1x * W,
-    o1y * H,
-    Math.max(W, H) * 0.65,
-  );
-  g1.addColorStop(0, rgba(o1, 0.55));
-  g1.addColorStop(1, rgba(o1, 0));
-  ctx.fillStyle = g1;
-  ctx.fillRect(0, 0, W, H);
-  const g2 = ctx.createRadialGradient(
-    o2x * W,
-    o2y * H,
-    0,
-    o2x * W,
-    o2y * H,
-    Math.max(W, H) * 0.5,
-  );
-  g2.addColorStop(0, rgba(o2, 0.45));
-  g2.addColorStop(1, rgba(o2, 0));
-  ctx.fillStyle = g2;
-  ctx.fillRect(0, 0, W, H);
-  requestAnimationFrame(draw);
-}
-draw();
+function initCanvas() {
+  const canvas = document.getElementById("bg");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let w, h, particles;
 
-// Init
-renderQuestsGrid();
-renderAchievements();
+  function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+  }
+
+  function makeParticles() {
+    particles = Array.from({ length: 28 }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: 1.5 + Math.random() * 3,
+      dx: (Math.random() - 0.5) * 0.4,
+      dy: (Math.random() - 0.5) * 0.4,
+      alpha: 0.12 + Math.random() * 0.2,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark";
+    const color = isDark ? "106,191,123" : "61,122,79";
+    particles.forEach((p) => {
+      p.x += p.dx;
+      p.y += p.dy;
+      if (p.x < 0) p.x = w;
+      if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h;
+      if (p.y > h) p.y = 0;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${color},${p.alpha})`;
+      ctx.fill();
+    });
+    requestAnimationFrame(draw);
+  }
+
+  resize();
+  makeParticles();
+  draw();
+  window.addEventListener("resize", () => {
+    resize();
+    makeParticles();
+  });
+}
+
+// ══════════════════════════════════════════
+// INIT — runs on every page load
+// ══════════════════════════════════════════
+document.addEventListener("DOMContentLoaded", () => {
+  // Restore theme
+  const savedTheme = localStorage.getItem("hq_theme") || "light";
+  setTheme(savedTheme);
+
+  // Restore session
+  const lastUser = localStorage.getItem("hq_active_user");
+  if (lastUser) {
+    const acc = getAccount(lastUser);
+    if (acc) {
+      state.user = loadUserState(lastUser) || acc.data;
+      state.user.completedQuests =
+        state.user.completedQuests instanceof Set
+          ? state.user.completedQuests
+          : new Set(state.user.completedQuests || []);
+
+      awardedAch.clear();
+      if (state.user.earnedAchievements) {
+        state.user.earnedAchievements.forEach((id) => awardedAch.add(id));
+      }
+
+      afterSignIn();
+    }
+  }
+
+  // Always render these so pages show content even when not signed in
+  renderQuestsGrid();
+  renderAchievements();
+
+  // Start canvas
+  initCanvas();
+});
