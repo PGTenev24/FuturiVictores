@@ -318,6 +318,10 @@ header {
   font-size: 0.95rem;
 }
 
+.page-heading, .page-sub {
+  text-align: center;
+}
+
 .quest-tabs {
   display: flex;
   gap: 0.5rem;
@@ -872,6 +876,7 @@ header {
 /* ── SETTINGS PAGE ── */
 .settings-wrap {
   max-width: 600px;
+  margin: 0 auto;
 }
 .settings-group {
   background: var(--card);

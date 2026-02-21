@@ -1,4 +1,10 @@
 // ══════════════════════════════════════════
+// API KEY — paste your Gemini key here
+// Get one free at: aistudio.google.com
+// ══════════════════════════════════════════
+const GEMINI_API_KEY = "AIzaSyD-ZE_44v0j1sodBc985y64np9HD9FkXQQ";
+
+// ══════════════════════════════════════════
 // STATE
 // ══════════════════════════════════════════
 const state = {
@@ -300,6 +306,9 @@ function signIn() {
   }
 }
 
+// Temporary store for step 1 data while user fills step 2
+let _pendingSignUp = null;
+
 function signUp() {
   const nameEl = document.getElementById("suName");
   const usernameEl = document.getElementById("suUsername");
@@ -325,6 +334,58 @@ function signUp() {
   }
   if (err) err.textContent = "";
 
+  // Store step 1 and show body profile step
+  _pendingSignUp = { name, username, password };
+  showBodyProfileStep();
+}
+
+function showBodyProfileStep() {
+  const signUpView = document.getElementById("signUpView");
+  const bodyProfileView = document.getElementById("bodyProfileView");
+  if (!signUpView || !bodyProfileView) return;
+  signUpView.style.display = "none";
+  bodyProfileView.style.display = "block";
+}
+
+function finishSignUp() {
+  if (!_pendingSignUp) return;
+
+  const age = document.getElementById("bpAge")?.value?.trim();
+  const weight = document.getElementById("bpWeight")?.value?.trim();
+  const weightUnit = document.getElementById("bpWeightUnit")?.value || "kg";
+  const height = document.getElementById("bpHeight")?.value?.trim();
+  const heightUnit = document.getElementById("bpHeightUnit")?.value || "cm";
+  const bodyType = document.querySelector(
+    ".bp-option-btn.active[data-group=\'bodyType\']",
+  )?.dataset.value;
+  const goal = document.querySelector(
+    ".bp-option-btn.active[data-group=\'goal\']",
+  )?.dataset.value;
+  const activity = document.querySelector(
+    ".bp-option-btn.active[data-group=\'activity\']",
+  )?.dataset.value;
+  const bpErr = document.getElementById("bpError");
+
+  if (!age || !weight || !height || !bodyType || !goal || !activity) {
+    if (bpErr) bpErr.textContent = "Please complete all fields and selections.";
+    return;
+  }
+  if (bpErr) bpErr.textContent = "";
+
+  const { name, username, password } = _pendingSignUp;
+  _pendingSignUp = null;
+
+  const profile = {
+    age: +age,
+    weight: +weight,
+    weightUnit,
+    height: +height,
+    heightUnit,
+    bodyType,
+    goal,
+    activity,
+  };
+
   const userData = {
     name,
     username,
@@ -333,6 +394,7 @@ function signUp() {
     streak: 1,
     completedQuests: new Set(),
     earnedAchievements: [],
+    profile,
   };
 
   saveAccount(username, password, userData);
@@ -343,7 +405,11 @@ function signUp() {
 
   afterSignIn();
   closeModal("signModal");
-  showToast("🎉", `Welcome to HealthQuest, ${name}!`);
+  showToast(
+    "\u{1F389}",
+    `Welcome to HealthQuest, ${name}! Generating your quests...`,
+  );
+  generateAIQuests();
 }
 
 function afterSignIn() {
@@ -375,9 +441,15 @@ function afterSignIn() {
   if (settingsAccountDesc)
     settingsAccountDesc.textContent = `Signed in as ${u.username}`;
 
+  // Show body profile section in settings
+  const profileGroup = document.getElementById("profileGroup");
+  if (profileGroup) profileGroup.style.display = "block";
+
   updateHeaderStats();
+  loadAIQuestsIfSaved();
   renderQuestsGrid();
   renderAchievements();
+  populateProfileSettings();
 }
 
 function signOut() {
@@ -409,6 +481,9 @@ function signOut() {
   const settingsAccountDesc = document.getElementById("settingsAccountDesc");
   if (settingsAccountDesc) settingsAccountDesc.textContent = "Not signed in";
 
+  const profileGroup = document.getElementById("profileGroup");
+  if (profileGroup) profileGroup.style.display = "none";
+
   const siUsername = document.getElementById("siUsername");
   const siPassword = document.getElementById("siPassword");
   if (siUsername) siUsername.value = "";
@@ -431,6 +506,225 @@ function updateHeaderStats() {
 
   const headerRank = document.getElementById("headerRank");
   if (headerRank) headerRank.textContent = rank.name;
+}
+
+// ══════════════════════════════════════════
+// AI QUEST GENERATION
+// ══════════════════════════════════════════
+async function generateAIQuests() {
+  if (!state.user?.profile) return;
+
+  const grid = document.getElementById("questsGrid");
+  if (grid) {
+    grid.innerHTML = `<div class="quest-generating">
+      <div class="quest-gen-spinner"></div>
+      <p>AI is crafting your personalised quests...</p>
+    </div>`;
+  }
+
+  const p = state.user.profile;
+  const weightDisplay = `${p.weight}${p.weightUnit}`;
+  const heightDisplay = `${p.height}${p.heightUnit}`;
+
+  const prompt = `You are a personal health coach creating customised fitness quests for a user.
+
+User profile:
+- Name: ${state.user.name}
+- Age: ${p.age}
+- Weight: ${weightDisplay}
+- Height: ${heightDisplay}
+- Body type: ${p.bodyType}
+- Fitness goal: ${p.goal}
+- Activity level: ${p.activity}
+
+Generate exactly 13 quests total: 6 daily, 4 weekly, and 3 monthly. Each quest must be realistically achievable for this specific person given their body type, age, and goal. A heavy-set sedentary person should NOT get the same quests as a lean very active person.
+
+Respond ONLY with a valid JSON object, no markdown, no explanation:
+{
+  "daily": [
+    {"id":"d1","name":"...","desc":"...","icon":"<single emoji>","reward":<5-20>,"xp":<10-40>,"difficulty":"Easy|Medium|Hard"},
+    ... 6 items total
+  ],
+  "weekly": [
+    {"id":"w1","name":"...","desc":"...","icon":"<single emoji>","reward":<30-80>,"xp":<60-160>,"difficulty":"Easy|Medium|Hard|Legendary"},
+    ... 4 items total
+  ],
+  "monthly": [
+    {"id":"m1","name":"...","desc":"...","icon":"<single emoji>","reward":<100-250>,"xp":<200-500>,"difficulty":"Hard|Legendary"},
+    ... 3 items total
+  ]
+}`;
+
+  if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_KEY_HERE") {
+    console.warn(
+      "No Gemini API key set. Open script.js and replace YOUR_GEMINI_KEY_HERE.",
+    );
+    renderQuestsGrid();
+    showToast(
+      "🔑",
+      "Add your Gemini API key in script.js to enable AI quests.",
+    );
+    return;
+  }
+
+  try {
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: { temperature: 0.7, maxOutputTokens: 1200 },
+        }),
+      },
+    );
+
+    if (!response.ok) {
+      const errData = await response.json();
+      console.error(
+        "Gemini API error:",
+        response.status,
+        JSON.stringify(errData),
+      );
+      throw new Error(
+        `API error ${response.status}: ${errData?.error?.message || "unknown"}`,
+      );
+    }
+
+    const data = await response.json();
+    console.log("Gemini raw response:", JSON.stringify(data));
+
+    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    if (!text) throw new Error("Empty response from Gemini");
+
+    const clean = text.replace(/```json|```/g, "").trim();
+    console.log("Cleaned text:", clean);
+
+    const generated = JSON.parse(clean);
+
+    if (generated.daily && generated.weekly && generated.monthly) {
+      state.user.aiQuests = generated;
+      saveUserState();
+      QUESTS.daily = generated.daily;
+      QUESTS.weekly = generated.weekly;
+      QUESTS.monthly = generated.monthly;
+      renderQuestsGrid();
+      showToast("🤖", "Your personalised quests are ready!");
+    } else {
+      throw new Error(
+        "Invalid quest format — missing daily/weekly/monthly keys",
+      );
+    }
+  } catch (e) {
+    console.error("AI quest generation failed:", e.message);
+    renderQuestsGrid();
+    showToast("⚠️", `Quest generation failed: ${e.message}`);
+  }
+}
+
+// Load AI quests from saved state if available
+function loadAIQuestsIfSaved() {
+  if (state.user?.aiQuests) {
+    const q = state.user.aiQuests;
+    if (q.daily?.length) QUESTS.daily = q.daily;
+    if (q.weekly?.length) QUESTS.weekly = q.weekly;
+    if (q.monthly?.length) QUESTS.monthly = q.monthly;
+  }
+}
+
+// ══════════════════════════════════════════
+// BODY PROFILE — option button picker
+// ══════════════════════════════════════════
+function selectBpOption(btn, group) {
+  document
+    .querySelectorAll(`.bp-option-btn[data-group="${group}"]`)
+    .forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+function selectSpOption(btn, group) {
+  document
+    .querySelectorAll(`.sp-option-btn[data-group="${group}"]`)
+    .forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+}
+
+// Save profile from settings page
+async function saveProfile() {
+  if (!state.user) return;
+  const age = document.getElementById("spAge")?.value?.trim();
+  const weight = document.getElementById("spWeight")?.value?.trim();
+  const weightUnit = document.getElementById("spWeightUnit")?.value || "kg";
+  const height = document.getElementById("spHeight")?.value?.trim();
+  const heightUnit = document.getElementById("spHeightUnit")?.value || "cm";
+  const bodyType = document.querySelector(
+    ".sp-option-btn.active[data-group='bodyType']",
+  )?.dataset.value;
+  const goal = document.querySelector(
+    ".sp-option-btn.active[data-group='goal']",
+  )?.dataset.value;
+  const activity = document.querySelector(
+    ".sp-option-btn.active[data-group='activity']",
+  )?.dataset.value;
+  const msg = document.getElementById("profileSaveMsg");
+
+  if (!age || !weight || !height || !bodyType || !goal || !activity) {
+    if (msg) {
+      msg.textContent = "Please fill in all fields.";
+      msg.style.color = "#e07a5f";
+    }
+    return;
+  }
+
+  state.user.profile = {
+    age: +age,
+    weight: +weight,
+    weightUnit,
+    height: +height,
+    heightUnit,
+    bodyType,
+    goal,
+    activity,
+  };
+  // Clear old AI quests so they get regenerated
+  state.user.aiQuests = null;
+  saveUserState();
+
+  if (msg) {
+    msg.textContent = "Saved! Regenerating your quests...";
+    msg.style.color = "var(--green)";
+  }
+  await generateAIQuests();
+  if (msg) {
+    msg.textContent = "Profile saved and quests updated ✓";
+  }
+}
+
+// Populate settings profile fields from saved state
+function populateProfileSettings() {
+  if (!state.user?.profile) return;
+  const p = state.user.profile;
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+  set("spAge", p.age);
+  set("spWeight", p.weight);
+  set("spWeightUnit", p.weightUnit);
+  set("spHeight", p.height);
+  set("spHeightUnit", p.heightUnit);
+
+  // Activate the right option buttons
+  ["bodyType", "goal", "activity"].forEach((group) => {
+    const val = p[group];
+    if (!val) return;
+    document
+      .querySelectorAll(`.sp-option-btn[data-group="${group}"]`)
+      .forEach((b) => {
+        b.classList.toggle("active", b.dataset.value === val);
+      });
+  });
 }
 
 // ══════════════════════════════════════════
@@ -482,6 +776,218 @@ function renderQuestsGrid() {
 }
 
 // ══════════════════════════════════════════
+// CONFETTI BURST
+// ══════════════════════════════════════════
+function launchConfetti() {
+  const canvas = document.getElementById("confettiCanvas");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  canvas.style.display = "block";
+
+  const colors = [
+    "#3d7a4f",
+    "#6abf7b",
+    "#f59e0b",
+    "#ef4444",
+    "#3b82f6",
+    "#a855f7",
+    "#ec4899",
+    "#ffffff",
+  ];
+  const pieces = Array.from({ length: 140 }, () => ({
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 200,
+    w: 6 + Math.random() * 8,
+    h: 10 + Math.random() * 8,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * Math.PI * 2,
+    rotSpeed: (Math.random() - 0.5) * 0.18,
+    vx: (Math.random() - 0.5) * 4,
+    vy: 2.5 + Math.random() * 3.5,
+    opacity: 1,
+  }));
+
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    let alive = false;
+    pieces.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.07; // gravity
+      p.rotation += p.rotSpeed;
+      if (frame > 80) p.opacity -= 0.018;
+      if (p.y < canvas.height && p.opacity > 0) alive = true;
+
+      ctx.save();
+      ctx.globalAlpha = Math.max(0, p.opacity);
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (alive) {
+      requestAnimationFrame(draw);
+    } else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = "none";
+    }
+  }
+  draw();
+}
+
+// ══════════════════════════════════════════
+// LEVEL-UP ANIMATION
+// ══════════════════════════════════════════
+function showLevelUp(newRank) {
+  // Remove any existing level-up overlay
+  const existing = document.getElementById("levelUpOverlay");
+  if (existing) existing.remove();
+
+  const overlay = document.createElement("div");
+  overlay.id = "levelUpOverlay";
+  overlay.innerHTML = `
+    <div class="lu-card">
+      <div class="lu-rays"></div>
+      <div class="lu-content">
+        <div class="lu-label">RANK UP!</div>
+        <div class="lu-icon">${newRank.icon}</div>
+        <div class="lu-name">${newRank.name}</div>
+        <div class="lu-desc">${newRank.desc}</div>
+        <button class="lu-btn" onclick="document.getElementById('levelUpOverlay').remove()">Keep Going 🔥</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  // Inject styles if not already present
+  if (!document.getElementById("levelUpStyles")) {
+    const style = document.createElement("style");
+    style.id = "levelUpStyles";
+    style.textContent = `
+      #levelUpOverlay {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: rgba(0,0,0,0.75);
+        backdrop-filter: blur(8px);
+        animation: lu-fadein 0.4s ease forwards;
+      }
+      @keyframes lu-fadein { from { opacity:0 } to { opacity:1 } }
+
+      .lu-card {
+        position: relative;
+        background: var(--surface);
+        border: 2px solid var(--green);
+        border-radius: 32px;
+        padding: 3.5rem 3rem;
+        text-align: center;
+        max-width: 380px;
+        width: 90%;
+        box-shadow: 0 0 80px var(--green-glow), 0 24px 64px rgba(0,0,0,0.4);
+        animation: lu-popin 0.5s cubic-bezier(0.34,1.56,0.64,1) forwards;
+        overflow: hidden;
+      }
+      @keyframes lu-popin {
+        from { transform: scale(0.6); opacity:0; }
+        to   { transform: scale(1);   opacity:1; }
+      }
+
+      .lu-rays {
+        position: absolute;
+        inset: 0;
+        background: conic-gradient(
+          from 0deg,
+          transparent 0deg, var(--green-glow) 10deg,
+          transparent 20deg, var(--green-glow) 30deg,
+          transparent 40deg, var(--green-glow) 50deg,
+          transparent 60deg, var(--green-glow) 70deg,
+          transparent 80deg, var(--green-glow) 90deg,
+          transparent 100deg, var(--green-glow) 110deg,
+          transparent 120deg, var(--green-glow) 130deg,
+          transparent 140deg, var(--green-glow) 150deg,
+          transparent 160deg, var(--green-glow) 170deg,
+          transparent 180deg, var(--green-glow) 190deg,
+          transparent 200deg, var(--green-glow) 210deg,
+          transparent 220deg, var(--green-glow) 230deg,
+          transparent 240deg, var(--green-glow) 250deg,
+          transparent 260deg, var(--green-glow) 270deg,
+          transparent 280deg, var(--green-glow) 290deg,
+          transparent 300deg, var(--green-glow) 310deg,
+          transparent 320deg, var(--green-glow) 330deg,
+          transparent 340deg, var(--green-glow) 350deg,
+          transparent 360deg
+        );
+        animation: lu-spin 8s linear infinite;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      @keyframes lu-spin { to { transform: rotate(360deg); } }
+
+      .lu-content { position: relative; z-index: 1; }
+
+      .lu-label {
+        font-size: 0.72rem;
+        font-weight: 800;
+        letter-spacing: 0.2em;
+        color: var(--green);
+        text-transform: uppercase;
+        margin-bottom: 1.2rem;
+      }
+      .lu-icon {
+        font-size: 5rem;
+        line-height: 1;
+        margin-bottom: 0.8rem;
+        animation: lu-bounce 0.8s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
+      }
+      @keyframes lu-bounce {
+        from { transform: scale(0) rotate(-20deg); }
+        to   { transform: scale(1) rotate(0deg); }
+      }
+      .lu-name {
+        font-family: "DM Serif Display", serif;
+        font-size: 2.4rem;
+        color: var(--text);
+        margin-bottom: 0.6rem;
+      }
+      .lu-desc {
+        font-size: 0.88rem;
+        color: var(--text-muted);
+        line-height: 1.6;
+        margin-bottom: 2rem;
+      }
+      .lu-btn {
+        background: var(--green);
+        color: white;
+        border: none;
+        padding: 0.85rem 2.2rem;
+        border-radius: 999px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .lu-btn:hover {
+        background: var(--green-light);
+        transform: translateY(-2px);
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  // Also fire confetti for level-up
+  launchConfetti();
+}
+
+// ══════════════════════════════════════════
 // COMPLETE QUEST
 // ══════════════════════════════════════════
 function completeQuest(qid) {
@@ -492,20 +998,35 @@ function completeQuest(qid) {
   const q = allQuests.find((x) => x.id === qid);
   if (!q) return;
 
+  // Capture rank before applying XP
+  const rankBefore = getRank(state.user.xp);
+
   state.user.completedQuests.add(qid);
   state.user.stars += q.reward;
   state.user.xp += q.xp;
   state.user.streak = Math.max(state.user.streak, 1);
+
+  // Check for rank-up
+  const rankAfter = getRank(state.user.xp);
+  const didLevelUp = rankAfter.name !== rankBefore.name;
 
   updateHeaderStats();
   renderQuestsGrid();
   checkAchievements();
   saveUserState();
 
-  const msgEl = document.getElementById("questCompleteMsg");
-  if (msgEl)
-    msgEl.textContent = `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
-  openModal("questCompleteModal");
+  // Confetti on every quest complete
+  launchConfetti();
+
+  if (didLevelUp) {
+    // Delay level-up screen slightly so confetti fires first
+    setTimeout(() => showLevelUp(rankAfter), 600);
+  } else {
+    const msgEl = document.getElementById("questCompleteMsg");
+    if (msgEl)
+      msgEl.textContent = `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
+    openModal("questCompleteModal");
+  }
 }
 
 // ══════════════════════════════════════════
@@ -685,9 +1206,15 @@ function stopTracking() {
 
     if (state.user) {
       const earned = Math.floor(reps * 2);
+      const rankBefore = getRank(state.user.xp);
       state.user.stars += earned;
       state.user.xp += Math.floor(reps * 1.5);
+      const rankAfter = getRank(state.user.xp);
       updateHeaderStats();
+      launchConfetti();
+      if (rankAfter.name !== rankBefore.name) {
+        setTimeout(() => showLevelUp(rankAfter), 600);
+      }
       showToast(
         "🏋️",
         `Session done! +${earned} ⭐ for ${reps} ${exercise.name}`,
@@ -840,6 +1367,65 @@ function initCanvas() {
 // INIT — runs on every page load
 // ══════════════════════════════════════════
 document.addEventListener("DOMContentLoaded", () => {
+  // Inject shared styles for body profile modal step + quest spinner
+  if (!document.getElementById("hqSharedStyles")) {
+    const s = document.createElement("style");
+    s.id = "hqSharedStyles";
+    s.textContent = `
+      /* Body profile step inside modal */
+      #bodyProfileView { display: none; }
+      .bp-section-label {
+        font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+        text-transform: uppercase; color: var(--text-muted); margin: 1.2rem 0 0.6rem;
+      }
+      .bp-options {
+        display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.4rem;
+      }
+      .bp-option-btn, .sp-option-btn {
+        background: var(--surface2); border: 2px solid var(--card-border);
+        border-radius: 10px; padding: 0.5rem 0.9rem;
+        font-family: "DM Sans", sans-serif; font-size: 0.82rem; font-weight: 600;
+        color: var(--text-muted); cursor: pointer; transition: all 0.2s;
+      }
+      .bp-option-btn:hover, .sp-option-btn:hover { border-color: var(--green); color: var(--green); }
+      .bp-option-btn.active, .sp-option-btn.active {
+        background: var(--green-glow); border-color: var(--green); color: var(--green);
+      }
+      .bp-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; }
+      .bp-row .form-group { flex: 1; margin-bottom: 0; }
+      .bp-row select, .sp-row select {
+        width: 100%; padding: 0.65rem 0.75rem; border-radius: 12px;
+        border: 1.5px solid var(--card-border); background: var(--input-bg);
+        font-family: "DM Sans", sans-serif; font-size: 0.88rem; color: var(--text);
+        outline: none; transition: border-color 0.2s;
+      }
+      .bp-row select:focus, .sp-row select:focus { border-color: var(--green); }
+      .bp-scroll { max-height: 65vh; overflow-y: auto; padding-right: 4px; }
+      .bp-scroll::-webkit-scrollbar { width: 4px; }
+      .bp-scroll::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+      /* Quest generating state */
+      .quest-generating {
+        grid-column: 1 / -1; text-align: center; padding: 4rem 2rem;
+        display: flex; flex-direction: column; align-items: center; gap: 1rem;
+        color: var(--text-muted); font-size: 0.9rem;
+      }
+      .quest-gen-spinner {
+        width: 44px; height: 44px; border-radius: 50%;
+        border: 3px solid var(--card-border);
+        border-top-color: var(--green);
+        animation: spin 0.8s linear infinite;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* Settings profile section */
+      .sp-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: flex-end; }
+      .sp-row .form-group { flex: 1; margin-bottom: 0; }
+      #profileSaveMsg { font-size: 0.82rem; margin-top: 0.75rem; min-height: 1.2em; }
+    `;
+    document.head.appendChild(s);
+  }
+
   // Restore theme
   const savedTheme = localStorage.getItem("hq_theme") || "light";
   setTheme(savedTheme);
@@ -870,4 +1456,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Start canvas
   initCanvas();
-});
+}); 
