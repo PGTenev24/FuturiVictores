@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en" data-theme="light">
   <head>
+    <script>
+      !(function () {
+        var t = localStorage.getItem("hq_theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HealthQuest – Settings</title>
@@ -346,46 +352,75 @@
           </div>
         </div>
         <div id="signUpView" style="display: none">
-  <h3>Create account</h3>
-  <p>Join HealthQuest and start your journey.</p>
-  <div class="form-group">
-    <label class="form-label">Username</label>
-    <input class="form-input" id="suUsername" type="text" placeholder="choose_a_username" />
-  </div>
-  <div class="form-group">
-    <label class="form-label">Password</label>
-    <input class="form-input" id="suPassword" type="password" placeholder="••••••••" />
-  </div>
-  <div class="form-group">
-    <label class="form-label">Age</label>
-    <input class="form-input" id="suAge" type="number" placeholder="25" />
-  </div>
-  <div class="form-group">
-    <label class="form-label">Gender</label>
-    <select class="form-input" id="suGender">
-      <option value="">Select gender</option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-      <option value="other">Other</option>
-    </select>
-  </div>
-  <div class="form-group">
-    <label class="form-label">Height (cm)</label>
-    <input class="form-input" id="suHeight" type="number" placeholder="170" />
-  </div>
-  <div class="form-group">
-    <label class="form-label">Weight (kg)</label>
-    <input class="form-input" id="suWeight" type="number" placeholder="70" />
-  </div>
-  <div class="form-error" id="suError"></div>
-  <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signUp()">
-    Create Account
-  </button>
-  <div class="form-footer">
-    Have an account?
-    <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
-  </div>
-</div>
+          <h3>Create account</h3>
+          <p>Join HealthQuest and start your journey.</p>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input
+              class="form-input"
+              id="suUsername"
+              type="text"
+              placeholder="choose_a_username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input
+              class="form-input"
+              id="suPassword"
+              type="password"
+              placeholder="••••••••"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input
+              class="form-input"
+              id="suAge"
+              type="number"
+              placeholder="25"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-input" id="suGender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Height (cm)</label>
+            <input
+              class="form-input"
+              id="suHeight"
+              type="number"
+              placeholder="170"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Weight (kg)</label>
+            <input
+              class="form-input"
+              id="suWeight"
+              type="number"
+              placeholder="70"
+            />
+          </div>
+          <div class="form-error" id="suError"></div>
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signUp()"
+          >
+            Create Account
+          </button>
+          <div class="form-footer">
+            Have an account?
+            <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
+          </div>
+        </div>
         <!-- STEP 2: BODY PROFILE -->
         <div id="bodyProfileView" style="display: none">
           <h3>Your Body Profile</h3>

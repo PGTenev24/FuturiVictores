@@ -425,7 +425,14 @@ function afterSignIn() {
   const avatarBtn = document.getElementById("avatarBtn");
   if (avatarBtn) {
     avatarBtn.classList.add("visible");
-    avatarBtn.textContent = u.name ? u.name[0].toUpperCase() : "?";
+    avatarBtn.textContent = u.name
+      ? u.name[0].toUpperCase()
+      : u.username
+        ? u.username[0].toUpperCase()
+        : "?";
+    avatarBtn.onclick = function () {
+      window.location.href = "settings.html";
+    };
   }
 
   const signoutBtn = document.getElementById("signoutBtn");
@@ -1399,7 +1406,8 @@ function updateFriendBadge() {
   const myData = getSocialData(state.user.username);
   const count = myData.incoming.length;
   badge.textContent = count;
-  badge.style.display = count > 0 ? "inline-flex" : "none";
+  badge.style.visibility = count > 0 ? "visible" : "hidden";
+  badge.style.display = "inline-flex";
 }
 
 // Search users
@@ -1778,7 +1786,7 @@ document.addEventListener("DOMContentLoaded", () => {
       .decline-btn,.remove-btn { background:var(--surface2); color:var(--text-muted); }
       .decline-btn:hover,.remove-btn:hover { background:#fee2e2; color:#dc2626; }
       .friend-btn,.pending-btn { background:var(--surface2); color:var(--text-muted); cursor:default; }
-      .friend-badge { display:none; align-items:center; justify-content:center; background:#ef4444; color:white; font-size:0.65rem; font-weight:800; width:16px; height:16px; border-radius:50%; margin-left:4px; vertical-align:middle; }
+      .friend-badge { display:inline-flex; visibility:hidden; align-items:center; justify-content:center; background:#ef4444; color:white; font-size:0.65rem; font-weight:800; width:16px; height:16px; border-radius:50%; margin-left:4px; vertical-align:middle; }
       .lb-tab-btn { background:var(--surface2); border:1px solid var(--card-border); border-radius:99px; padding:0.45rem 1.2rem; font-family:"DM Sans",sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; color:var(--text-muted); transition:all 0.2s; }
       .lb-tab-btn.active { background:var(--green); color:white; border-color:var(--green); }
     `;
@@ -1815,4 +1823,4 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Start canvas
   initCanvas();
-}); 
+});

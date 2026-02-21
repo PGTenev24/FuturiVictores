@@ -1,6 +1,12 @@
 <!doctype html>
 <html lang="en" data-theme="light">
   <head>
+    <script>
+      !(function () {
+        var t = localStorage.getItem("hq_theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>HealthQuest – Home</title>
@@ -943,15 +949,30 @@
           <p>Join HealthQuest and start your journey.</p>
           <div class="form-group">
             <label class="form-label">Username</label>
-            <input class="form-input" id="suUsername" type="text" placeholder="choose_a_username" />
+            <input
+              class="form-input"
+              id="suUsername"
+              type="text"
+              placeholder="choose_a_username"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Password</label>
-            <input class="form-input" id="suPassword" type="password" placeholder="••••••••" />
+            <input
+              class="form-input"
+              id="suPassword"
+              type="password"
+              placeholder="••••••••"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Age</label>
-            <input class="form-input" id="suAge" type="number" placeholder="25" />
+            <input
+              class="form-input"
+              id="suAge"
+              type="number"
+              placeholder="25"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Gender</label>
@@ -964,14 +985,28 @@
           </div>
           <div class="form-group">
             <label class="form-label">Height (cm)</label>
-            <input class="form-input" id="suHeight" type="number" placeholder="170" />
+            <input
+              class="form-input"
+              id="suHeight"
+              type="number"
+              placeholder="170"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Weight (kg)</label>
-            <input class="form-input" id="suWeight" type="number" placeholder="70" />
+            <input
+              class="form-input"
+              id="suWeight"
+              type="number"
+              placeholder="70"
+            />
           </div>
           <div class="form-error" id="suError"></div>
-          <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signUp()">
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signUp()"
+          >
             Create Account
           </button>
           <div class="form-footer">
