@@ -1824,3 +1824,110 @@ document.addEventListener("DOMContentLoaded", () => {
   // Start canvas
   initCanvas();
 });
+const foodLog = [];
+const CALORIE_GOAL = 2000;
+const customQuickFoods = JSON.parse(localStorage.getItem("hq_custom_foods") || "[]");
+
+function updateCalorieUI() {
+  const total = foodLog.reduce((sum, f) => sum + f.calories, 0);
+  const remaining = Math.max(0, CALORIE_GOAL - total);
+  const pct = Math.min(100, (total / CALORIE_GOAL) * 100);
+
+  const consumed = document.getElementById("calorieConsumed");
+  const rem = document.getElementById("calorieRemaining");
+  const bar = document.getElementById("calorieBar");
+  if (consumed) consumed.textContent = total;
+  if (rem) rem.textContent = remaining;
+  if (bar) {
+    bar.style.width = pct + "%";
+    bar.style.background = pct > 100 ? "#e07a5f" : pct > 75 ? "#f0a500" : "var(--green)";
+  }
+
+  const logCard = document.getElementById("foodLogCard");
+  const logItems = document.getElementById("foodLogItems");
+  const logTotal = document.getElementById("foodLogTotal");
+
+  if (foodLog.length > 0) {
+    if (logCard) logCard.style.display = "block";
+    if (logItems) logItems.innerHTML = foodLog.slice().reverse().map((f, i) =>
+      `<div class="log-item">
+        <span>${f.name}</span>
+        <span class="log-reps">${f.calories} kcal
+          <button onclick="removeFood(${foodLog.length - 1 - i})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);margin-left:0.5rem;font-size:0.9rem;">✕</button>
+        </span>
+      </div>`
+    ).join("");
+    if (logTotal) logTotal.textContent = total;
+  } else {
+    if (logCard) logCard.style.display = "none";
+  }
+}
+
+function addFood() {
+  const nameEl = document.getElementById("foodName");
+  const calEl = document.getElementById("foodCalories");
+  const name = nameEl.value.trim();
+  const calories = parseInt(calEl.value);
+  if (!name || isNaN(calories) || calories <= 0) {
+    showToast("⚠️", "Please enter a valid food name and calories.");
+    return;
+  }
+  foodLog.push({ name, calories });
+  nameEl.value = "";
+  calEl.value = "";
+  updateCalorieUI();
+  showToast("🍽️", `Added ${name} — ${calories} kcal`);
+}
+
+function quickAdd(name, calories) {
+  foodLog.push({ name, calories });
+  updateCalorieUI();
+  showToast("🍽️", `Added ${name} — ${calories} kcal`);
+}
+
+function removeFood(index) {
+  foodLog.splice(index, 1);
+  updateCalorieUI();
+}
+
+function clearFoodLog() {
+  foodLog.length = 0;
+  updateCalorieUI();
+  showToast("🗑️", "Food log cleared.");
+}
+
+function renderCustomQuickFoods() {
+  const container = document.getElementById("quickFoodsContainer");
+  if (!container) return;
+  const existing = container.querySelectorAll(".custom-quick-btn");
+  existing.forEach(e => e.remove());
+  customQuickFoods.forEach((f, i) => {
+    const btn = document.createElement("button");
+    btn.className = "quick-food-btn custom-quick-btn";
+    btn.innerHTML = `🍴 ${f.name} <span>${f.calories}</span> <span onclick="removeCustomQuickFood(${i})" style="color:var(--text-muted);margin-left:0.3rem;">✕</span>`;
+    btn.onclick = () => quickAdd(f.name, f.calories);
+    container.appendChild(btn);
+  });
+}
+
+function addCustomQuickFood() {
+  const name = document.getElementById("customFoodName").value.trim();
+  const calories = parseInt(document.getElementById("customFoodCalories").value);
+  if (!name || isNaN(calories) || calories <= 0) {
+    showToast("⚠️", "Please enter a valid name and calories.");
+    return;
+  }
+  customQuickFoods.push({ name, calories });
+  localStorage.setItem("hq_custom_foods", JSON.stringify(customQuickFoods));
+  document.getElementById("customFoodName").value = "";
+  document.getElementById("customFoodCalories").value = "";
+  renderCustomQuickFoods();
+  showToast("✅", `${name} added to Quick Add!`);
+}
+
+function removeCustomQuickFood(index) {
+  customQuickFoods.splice(index, 1);
+  localStorage.setItem("hq_custom_foods", JSON.stringify(customQuickFoods));
+  renderCustomQuickFoods();
+}
+renderCustomQuickFoods();

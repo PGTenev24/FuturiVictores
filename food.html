@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HealthQuest – Food</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+
+    <header>
+      <div class="brand" onclick="window.location.href = 'index.html'">
+        <div class="logo-box">
+          <img src="logo.png" alt="logo" />
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-tab">Home</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
+        <a href="training.html" class="nav-tab">Training</a>
+        <a href="food.html" class="nav-tab active">Food</a>
+        <a href="achievements.html" class="nav-tab">Achievements</a>
+        <a href="about.html" class="nav-tab">About</a>
+        <a href="social.html" class="nav-tab"
+          >Social <span class="friend-badge" id="friendBadge"></span
+        ></a>
+        <a href="settings.html" class="nav-tab">Settings</a>
+      </nav>
+      <div class="header-right">
+        <div class="user-stats" id="userStats">
+          <div class="stat-pill" title="Streak">
+            🔥 <span id="headerStreak">0</span>
+          </div>
+          <div class="stat-pill" title="Stars">
+            ⭐ <span id="headerStars">0</span>
+          </div>
+          <div class="stat-pill" title="Rank">
+            🏅 <span id="headerRank">Seedling</span>
+          </div>
+        </div>
+        <div class="avatar-btn" id="avatarBtn" onclick="openModal('signModal')"></div>
+        <button class="btn-signout" id="signoutBtn" onclick="signOut()" style="display: none">Sign Out</button>
+        <button class="btn-signin" id="signinBtn" onclick="openModal('signModal')">Sign In</button>
+      </div>
+    </header>
+
+    <main>
+      <div class="page-inner">
+        <h1 class="page-heading" style="text-align:center"><em>Food</em> Tracker</h1>
+        <p class="page-sub" style="text-align:center">Log your meals and track your daily calorie intake.</p>
+
+        <div class="food-goal-bar">
+          <div class="food-goal-info">
+            <span>Daily Goal: <strong id="calorieGoal">2000</strong> kcal</span>
+            <span>Consumed: <strong id="calorieConsumed">0</strong> kcal</span>
+            <span>Remaining: <strong id="calorieRemaining">2000</strong> kcal</span>
+          </div>
+          <div class="progress-bar-wrap">
+            <div class="progress-bar-fill" id="calorieBar" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="food-add-card">
+          <h3>Add Food</h3>
+          <div class="food-inputs">
+            <input class="form-input" id="foodName" type="text" placeholder="Food name (e.g. Banana)" />
+            <input class="form-input" id="foodCalories" type="number" placeholder="Calories (kcal)" />
+            <button class="btn-primary" onclick="addFood()">Add</button>
+          </div>
+
+         <h4 style="margin: 1.5rem 0 1rem; font-family: 'DM Serif Display', serif;">Quick Add</h4>
+<div class="food-inputs" style="margin-bottom: 1rem;">
+  <input class="form-input" id="customFoodName" type="text" placeholder="Food name" />
+  <input class="form-input" id="customFoodCalories" type="number" placeholder="Calories (kcal)" />
+  <button class="btn-primary" onclick="addCustomQuickFood()">+ Save</button>
+</div>
+<div class="quick-foods" id="quickFoodsContainer">
+  <button class="quick-food-btn" onclick="quickAdd('Banana', 89)">🍌 Banana <span>89</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Apple', 72)">🍎 Apple <span>72</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Chicken Breast', 165)">🍗 Chicken Breast <span>165</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Rice (100g)', 130)">🍚 Rice <span>130</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Egg', 78)">🥚 Egg <span>78</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Oats (100g)', 389)">🥣 Oats <span>389</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Milk (250ml)', 122)">🥛 Milk <span>122</span></button>
+  <button class="quick-food-btn" onclick="quickAdd('Bread slice', 79)">🍞 Bread <span>79</span></button>
+</div>
+        </div>
+
+        <div class="food-log-card" id="foodLogCard" style="display:none">
+          <h3>Today's Log</h3>
+          <div id="foodLogItems"></div>
+          <div class="food-log-total">
+            Total: <strong id="foodLogTotal">0</strong> kcal
+          </div>
+          <button class="btn-signout" style="margin-top:1rem" onclick="clearFoodLog()">Clear Log</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- MODALS -->
+    <div class="modal-overlay" id="signModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeModal('signModal')">✕</button>
+        <div id="signInView">
+          <h3>Welcome back</h3>
+          <p>Sign in to track your quests and progress.</p>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" id="siUsername" type="text" placeholder="your_username" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" id="siPassword" type="password" placeholder="••••••••" />
+          </div>
+          <div class="form-error" id="siError"></div>
+          <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signIn()">Sign In</button>
+          <div class="form-footer">
+            No account? <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span>
+          </div>
+        </div>
+        <div id="signUpView" style="display: none">
+          <h3>Create account</h3>
+          <p>Join HealthQuest and start your journey.</p>
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" id="suUsername" type="text" placeholder="choose_a_username" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" id="suPassword" type="password" placeholder="••••••••" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Age</label>
+            <input class="form-input" id="suAge" type="number" placeholder="25" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Gender</label>
+            <select class="form-input" id="suGender">
+              <option value="">Select gender</option>
+              <option value="male">Male</option>
+              <option value="female">Female</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Height (cm)</label>
+            <input class="form-input" id="suHeight" type="number" placeholder="170" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Weight (kg)</label>
+            <input class="form-input" id="suWeight" type="number" placeholder="70" />
+          </div>
+          <div class="form-error" id="suError"></div>
+          <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signUp()">Create Account</button>
+          <div class="form-footer">
+            Have an account? <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="questCompleteModal">
+      <div class="modal" style="text-align: center">
+        <button class="modal-close" onclick="closeModal('questCompleteModal')">✕</button>
+        <div class="quest-complete-icon">🎉</div>
+        <h3>Quest Complete!</h3>
+        <p id="questCompleteMsg">You earned stars and XP!</p>
+        <button class="btn-primary" style="width: 100%; margin-top: 1rem" onclick="closeModal('questCompleteModal')">Awesome!</button>
+      </div>
+    </div>
+
+    <div class="toast" id="toast">
+      <div class="toast-icon" id="toastIcon">✅</div>
+      <div class="toast-msg" id="toastMsg"></div>
+    </div>
+
+    <footer>
+      <span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores
+    </footer>
+
+    <script src="script.js"></script>
+  </body>
+</html>
