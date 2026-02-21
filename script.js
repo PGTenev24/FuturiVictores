@@ -450,6 +450,10 @@ function afterSignIn() {
   renderQuestsGrid();
   renderAchievements();
   populateProfileSettings();
+  updateFriendBadge();
+  renderFriendsList();
+  renderPendingRequests();
+  renderLeaderboard();
 }
 
 function signOut() {
@@ -1251,6 +1255,320 @@ function renderSessionLog() {
 }
 
 // ══════════════════════════════════════════
+// SOCIAL SYSTEM
+// ══════════════════════════════════════════
+
+// Get public profile of any user (safe — no password)
+function getPublicProfile(username) {
+  const saved = localStorage.getItem(`hq_user_${username}`);
+  if (!saved) return null;
+  const d = JSON.parse(saved);
+  return {
+    username,
+    name: d.name || username,
+    xp: d.xp || 0,
+    stars: d.stars || 0,
+    streak: d.streak || 0,
+    completedQuests: Array.isArray(d.completedQuests)
+      ? d.completedQuests.length
+      : 0,
+    rank: getRank(d.xp || 0),
+  };
+}
+
+// Get all registered usernames
+function getAllUsernames() {
+  const accounts = JSON.parse(localStorage.getItem("hq_accounts") || "{}");
+  return Object.keys(accounts);
+}
+
+// Social data helpers — stored per user
+function getSocialData(username) {
+  const raw = localStorage.getItem(`hq_social_${username}`);
+  return raw
+    ? JSON.parse(raw)
+    : { friends: [], incoming: [], outgoing: [], nudges: [] };
+}
+
+function saveSocialData(username, data) {
+  localStorage.setItem(`hq_social_${username}`, JSON.stringify(data));
+}
+
+// Send friend request
+function sendFriendRequest(toUsername) {
+  if (!state.user) return;
+  const me = state.user.username;
+  if (toUsername === me) {
+    showToast("😅", "You can't add yourself!");
+    return;
+  }
+
+  const myData = getSocialData(me);
+  const theirData = getSocialData(toUsername);
+
+  if (myData.friends.includes(toUsername)) {
+    showToast("👥", "Already friends!");
+    return;
+  }
+  if (myData.outgoing.includes(toUsername)) {
+    showToast("⏳", "Request already sent!");
+    return;
+  }
+  if (theirData.incoming.includes(me)) {
+    showToast("⏳", "Request already sent!");
+    return;
+  }
+
+  // If they already sent us a request, auto-accept
+  if (myData.incoming.includes(toUsername)) {
+    acceptFriendRequest(toUsername);
+    return;
+  }
+
+  myData.outgoing.push(toUsername);
+  theirData.incoming.push(me);
+  saveSocialData(me, myData);
+  saveSocialData(toUsername, theirData);
+
+  showToast("📨", `Friend request sent to ${toUsername}!`);
+  renderFriendsList();
+  renderPendingRequests();
+  updateFriendBadge();
+}
+
+// Accept friend request
+function acceptFriendRequest(fromUsername) {
+  if (!state.user) return;
+  const me = state.user.username;
+  const myData = getSocialData(me);
+  const theirData = getSocialData(fromUsername);
+
+  myData.incoming = myData.incoming.filter((u) => u !== fromUsername);
+  theirData.outgoing = theirData.outgoing.filter((u) => u !== me);
+
+  if (!myData.friends.includes(fromUsername)) myData.friends.push(fromUsername);
+  if (!theirData.friends.includes(me)) theirData.friends.push(me);
+
+  saveSocialData(me, myData);
+  saveSocialData(fromUsername, theirData);
+
+  showToast("🎉", `You and ${fromUsername} are now friends!`);
+  renderFriendsList();
+  renderPendingRequests();
+  updateFriendBadge();
+}
+
+// Decline friend request
+function declineFriendRequest(fromUsername) {
+  if (!state.user) return;
+  const me = state.user.username;
+  const myData = getSocialData(me);
+  const theirData = getSocialData(fromUsername);
+
+  myData.incoming = myData.incoming.filter((u) => u !== fromUsername);
+  theirData.outgoing = theirData.outgoing.filter((u) => u !== me);
+
+  saveSocialData(me, myData);
+  saveSocialData(fromUsername, theirData);
+
+  renderPendingRequests();
+  updateFriendBadge();
+}
+
+// Remove friend
+function removeFriend(username) {
+  if (!state.user) return;
+  const me = state.user.username;
+  const myData = getSocialData(me);
+  const theirData = getSocialData(username);
+
+  myData.friends = myData.friends.filter((u) => u !== username);
+  theirData.friends = theirData.friends.filter((u) => u !== me);
+
+  saveSocialData(me, myData);
+  saveSocialData(username, theirData);
+
+  showToast("👋", `Removed ${username} from friends.`);
+  renderFriendsList();
+}
+
+// Update notification badge on nav
+function updateFriendBadge() {
+  const badge = document.getElementById("friendBadge");
+  if (!badge || !state.user) return;
+  const myData = getSocialData(state.user.username);
+  const count = myData.incoming.length;
+  badge.textContent = count;
+  badge.style.display = count > 0 ? "inline-flex" : "none";
+}
+
+// Search users
+function searchUsers() {
+  const input = document.getElementById("userSearchInput");
+  const results = document.getElementById("searchResults");
+  if (!input || !results || !state.user) return;
+
+  const query = input.value.trim().toLowerCase();
+  if (!query) {
+    results.innerHTML = "";
+    return;
+  }
+
+  const me = state.user.username;
+  const myData = getSocialData(me);
+  const allUsers = getAllUsernames().filter(
+    (u) => u !== me && u.includes(query),
+  );
+
+  if (allUsers.length === 0) {
+    results.innerHTML = `<div class="search-empty">No users found for "${query}"</div>`;
+    return;
+  }
+
+  results.innerHTML = allUsers
+    .map((u) => {
+      const profile = getPublicProfile(u);
+      if (!profile) return "";
+      const isFriend = myData.friends.includes(u);
+      const isPending = myData.outgoing.includes(u);
+      const hasRequested = myData.incoming.includes(u);
+      let btn = "";
+      if (isFriend)
+        btn = `<button class="social-btn friend-btn" disabled>✓ Friends</button>`;
+      else if (isPending)
+        btn = `<button class="social-btn pending-btn" disabled>⏳ Pending</button>`;
+      else if (hasRequested)
+        btn = `<button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}');searchUsers()">Accept</button>`;
+      else
+        btn = `<button class="social-btn add-btn" onclick="sendFriendRequest('${u}');searchUsers()">+ Add</button>`;
+
+      return `<div class="search-result-card">
+      <div class="sr-avatar">${profile.name[0].toUpperCase()}</div>
+      <div class="sr-info">
+        <div class="sr-name">${profile.name}</div>
+        <div class="sr-username">@${u}</div>
+        <div class="sr-stats">${profile.rank.icon} ${profile.rank.name} · 🔥 ${profile.streak} · ⭐ ${profile.stars}</div>
+      </div>
+      ${btn}
+    </div>`;
+    })
+    .join("");
+}
+
+// Render friends list
+function renderFriendsList() {
+  const container = document.getElementById("friendsList");
+  if (!container || !state.user) return;
+
+  const myData = getSocialData(state.user.username);
+  if (myData.friends.length === 0) {
+    container.innerHTML = `<div class="social-empty">No friends yet. Search for users above to get started! 👆</div>`;
+    return;
+  }
+
+  const friends = myData.friends
+    .map((u) => getPublicProfile(u))
+    .filter(Boolean)
+    .sort((a, b) => b.xp - a.xp);
+
+  container.innerHTML = friends
+    .map(
+      (f, i) => `
+    <div class="friend-card">
+      <div class="friend-rank-num">#${i + 1}</div>
+      <div class="friend-avatar">${f.name[0].toUpperCase()}</div>
+      <div class="friend-info">
+        <div class="friend-name">${f.name} <span class="friend-username">@${f.username}</span></div>
+        <div class="friend-stats">
+          ${f.rank.icon} ${f.rank.name} &nbsp;·&nbsp; 🔥 ${f.streak} day streak &nbsp;·&nbsp; ✅ ${f.completedQuests} quests
+        </div>
+        <div class="friend-xp-bar-wrap">
+          <div class="friend-xp-bar" style="width:${Math.min(100, (f.xp / 2000) * 100)}%"></div>
+        </div>
+      </div>
+      <div class="friend-stars">⭐ ${f.stars}</div>
+      <button class="social-btn remove-btn" onclick="removeFriend('${f.username}')">✕</button>
+    </div>
+  `,
+    )
+    .join("");
+}
+
+// Render pending requests
+function renderPendingRequests() {
+  const container = document.getElementById("pendingRequests");
+  if (!container || !state.user) return;
+
+  const myData = getSocialData(state.user.username);
+  if (myData.incoming.length === 0) {
+    container.innerHTML = `<div class="social-empty">No pending requests.</div>`;
+    return;
+  }
+
+  container.innerHTML = myData.incoming
+    .map((u) => {
+      const profile = getPublicProfile(u);
+      if (!profile) return "";
+      return `<div class="request-card">
+      <div class="friend-avatar">${profile.name[0].toUpperCase()}</div>
+      <div class="friend-info">
+        <div class="friend-name">${profile.name} <span class="friend-username">@${u}</span></div>
+        <div class="friend-stats">${profile.rank.icon} ${profile.rank.name} · ⭐ ${profile.stars}</div>
+      </div>
+      <button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}')">✓ Accept</button>
+      <button class="social-btn decline-btn" onclick="declineFriendRequest('${u}')">✕</button>
+    </div>`;
+    })
+    .join("");
+}
+
+// Render leaderboard
+function renderLeaderboard(filterFriends = false) {
+  const container = document.getElementById("leaderboardList");
+  if (!container) return;
+
+  const all = getAllUsernames();
+  let users = all.map((u) => getPublicProfile(u)).filter(Boolean);
+
+  if (filterFriends && state.user) {
+    const myData = getSocialData(state.user.username);
+    const friendSet = new Set([...myData.friends, state.user.username]);
+    users = users.filter((u) => friendSet.has(u.username));
+  }
+
+  users.sort((a, b) => b.xp - a.xp);
+
+  if (users.length === 0) {
+    container.innerHTML = `<div class="social-empty">No users to show yet.</div>`;
+    return;
+  }
+
+  const medals = ["🥇", "🥈", "🥉"];
+  container.innerHTML = users
+    .map((u, i) => {
+      const isMe = state.user && u.username === state.user.username;
+      return `<div class="lb-card ${isMe ? "lb-me" : ""}">
+      <div class="lb-pos">${medals[i] || `#${i + 1}`}</div>
+      <div class="friend-avatar">${u.name[0].toUpperCase()}</div>
+      <div class="friend-info">
+        <div class="friend-name">${u.name} ${isMe ? "<span class='lb-you'>you</span>" : ""}</div>
+        <div class="friend-stats">${u.rank.icon} ${u.rank.name} · 🔥 ${u.streak} · ✅ ${u.completedQuests} quests</div>
+      </div>
+      <div class="friend-stars">⭐ ${u.stars}<br><span style="font-size:0.72rem;color:var(--text-muted)">${u.xp} XP</span></div>
+    </div>`;
+    })
+    .join("");
+}
+
+function switchLeaderboard(type, btn) {
+  document
+    .querySelectorAll(".lb-tab-btn")
+    .forEach((b) => b.classList.remove("active"));
+  btn.classList.add("active");
+  renderLeaderboard(type === "friends");
+}
+
+// ══════════════════════════════════════════
 // MODALS
 // ══════════════════════════════════════════
 function openModal(id) {
@@ -1422,6 +1740,47 @@ document.addEventListener("DOMContentLoaded", () => {
       .sp-row { display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: flex-end; }
       .sp-row .form-group { flex: 1; margin-bottom: 0; }
       #profileSaveMsg { font-size: 0.82rem; margin-top: 0.75rem; min-height: 1.2em; }
+
+      /* Social system */
+      .social-empty { color:var(--text-muted); font-size:0.88rem; padding:2rem; text-align:center; }
+      .search-result-card, .friend-card, .request-card, .lb-card {
+        display:flex; align-items:center; gap:1rem; padding:1rem 1.2rem;
+        background:var(--card); border:1px solid var(--card-border); border-radius:16px;
+        margin-bottom:0.75rem; transition:transform 0.2s,box-shadow 0.2s;
+      }
+      .friend-card:hover,.lb-card:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
+      .lb-me { border-color:var(--green); background:var(--green-glow); }
+      .friend-avatar,.sr-avatar {
+        width:44px; height:44px; min-width:44px; border-radius:50%;
+        background:linear-gradient(135deg,var(--green),var(--green-light));
+        display:flex; align-items:center; justify-content:center;
+        font-weight:700; font-size:1.1rem; color:white;
+      }
+      .friend-info { flex:1; min-width:0; }
+      .friend-name { font-weight:700; font-size:0.92rem; color:var(--text); }
+      .friend-username { font-weight:400; font-size:0.78rem; color:var(--text-muted); }
+      .friend-stats { font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem; }
+      .friend-stars { font-size:0.88rem; font-weight:700; color:var(--text); text-align:right; white-space:nowrap; }
+      .friend-xp-bar-wrap { height:4px; background:var(--card-border); border-radius:99px; margin-top:0.5rem; }
+      .friend-xp-bar { height:100%; background:var(--green); border-radius:99px; transition:width 0.6s ease; }
+      .friend-rank-num { font-size:0.8rem; font-weight:700; color:var(--text-muted); min-width:24px; }
+      .lb-pos { font-size:1.4rem; min-width:32px; text-align:center; }
+      .lb-you { background:var(--green); color:white; font-size:0.65rem; font-weight:700; padding:0.1rem 0.4rem; border-radius:99px; margin-left:0.4rem; vertical-align:middle; }
+      .sr-info { flex:1; }
+      .sr-name { font-weight:700; font-size:0.9rem; color:var(--text); }
+      .sr-username { font-size:0.78rem; color:var(--text-muted); }
+      .sr-stats { font-size:0.78rem; color:var(--text-muted); margin-top:0.2rem; }
+      .search-empty { color:var(--text-muted); font-size:0.85rem; padding:1rem; text-align:center; }
+      .social-btn { border:none; border-radius:99px; padding:0.45rem 1rem; font-family:"DM Sans",sans-serif; font-size:0.8rem; font-weight:700; cursor:pointer; transition:all 0.2s; white-space:nowrap; }
+      .add-btn { background:var(--green); color:white; }
+      .add-btn:hover { background:var(--green-light); }
+      .accept-btn { background:var(--green); color:white; }
+      .decline-btn,.remove-btn { background:var(--surface2); color:var(--text-muted); }
+      .decline-btn:hover,.remove-btn:hover { background:#fee2e2; color:#dc2626; }
+      .friend-btn,.pending-btn { background:var(--surface2); color:var(--text-muted); cursor:default; }
+      .friend-badge { display:none; align-items:center; justify-content:center; background:#ef4444; color:white; font-size:0.65rem; font-weight:800; width:16px; height:16px; border-radius:50%; margin-left:4px; vertical-align:middle; }
+      .lb-tab-btn { background:var(--surface2); border:1px solid var(--card-border); border-radius:99px; padding:0.45rem 1.2rem; font-family:"DM Sans",sans-serif; font-size:0.85rem; font-weight:600; cursor:pointer; color:var(--text-muted); transition:all 0.2s; }
+      .lb-tab-btn.active { background:var(--green); color:white; border-color:var(--green); }
     `;
     document.head.appendChild(s);
   }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HealthQuest – Quests</title>
+    <title>HealthQuest – Social</title>
     <link
       href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
       rel="stylesheet"
@@ -26,22 +26,19 @@
     <!-- HEADER -->
     <header>
       <div class="brand" onclick="window.location.href = 'index.html'">
-        <div class="logo-box">
-          <img src="logo.png" alt="logo" />
-        </div>
+        <div class="logo-box"><img src="logo.png" alt="logo" /></div>
       </div>
       <nav class="header-nav">
         <a href="index.html" class="nav-tab">Home</a>
-        <a href="quests.html" class="nav-tab active">Quests</a>
+        <a href="quests.html" class="nav-tab">Quests</a>
         <a href="training.html" class="nav-tab">Training</a>
         <a href="achievements.html" class="nav-tab">Achievements</a>
-        <a href="about.html" class="nav-tab">About</a>
-        <a href="social.html" class="nav-tab"
+        <a href="social.html" class="nav-tab active"
           >Social <span class="friend-badge" id="friendBadge"></span
         ></a>
+        <a href="about.html" class="nav-tab">About</a>
         <a href="settings.html" class="nav-tab">Settings</a>
       </nav>
-
       <div class="header-right">
         <div class="user-stats" id="userStats">
           <div class="stat-pill" title="Streak">
@@ -77,30 +74,109 @@
       </div>
     </header>
 
-    <!-- MAIN CONTENT – QUESTS -->
     <main>
       <div class="page-inner">
-        <h1 class="page-heading">Your <em>Quests</em></h1>
+        <h1 class="page-heading">Social <em>Hub</em></h1>
         <p class="page-sub">
-          Complete quests to earn ⭐ stars and climb the ranks.
+          Find friends, track their progress, and stay motivated together.
         </p>
 
-        <div class="quest-tabs">
-          <button
-            class="quest-tab-btn active"
-            onclick="filterQuests('daily', this)"
+        <div
+          id="socialSignedOut"
+          style="display: none; text-align: center; padding: 4rem 2rem"
+        >
+          <div style="font-size: 3rem; margin-bottom: 1rem">👥</div>
+          <h3
+            style="
+              font-family: &quot;DM Serif Display&quot;, serif;
+              margin-bottom: 0.5rem;
+            "
           >
-            Daily
-          </button>
-          <button class="quest-tab-btn" onclick="filterQuests('weekly', this)">
-            Weekly
-          </button>
-          <button class="quest-tab-btn" onclick="filterQuests('monthly', this)">
-            Monthly
+            Sign in to access Social
+          </h3>
+          <p style="color: var(--text-muted); margin-bottom: 1.5rem">
+            Connect with friends and see who's crushing their quests.
+          </p>
+          <button class="btn-primary" onclick="openModal('signModal')">
+            Sign In
           </button>
         </div>
 
-        <div class="quests-grid" id="questsGrid"></div>
+        <div id="socialContent">
+          <!-- FIND FRIENDS -->
+          <section class="home-sections" style="margin-bottom: 2.5rem">
+            <h2 class="section-title">Find <em>Friends</em></h2>
+            <div
+              style="
+                display: flex;
+                gap: 0.75rem;
+                margin-top: 1.5rem;
+                margin-bottom: 1rem;
+              "
+            >
+              <input
+                class="form-input"
+                id="userSearchInput"
+                type="text"
+                placeholder="Search by username..."
+                oninput="searchUsers()"
+                style="flex: 1"
+              />
+            </div>
+            <div id="searchResults"></div>
+          </section>
+
+          <!-- PENDING REQUESTS -->
+          <section
+            class="home-sections"
+            style="margin-bottom: 2.5rem"
+            id="pendingSection"
+          >
+            <h2 class="section-title">Friend <em>Requests</em></h2>
+            <div id="pendingRequests" style="margin-top: 1.5rem">
+              <div class="social-empty">No pending requests.</div>
+            </div>
+          </section>
+
+          <!-- FRIENDS LIST -->
+          <section class="home-sections" style="margin-bottom: 2.5rem">
+            <h2 class="section-title">My <em>Friends</em></h2>
+            <div id="friendsList" style="margin-top: 1.5rem">
+              <div class="social-empty">
+                No friends yet. Search for users above! 👆
+              </div>
+            </div>
+          </section>
+
+          <!-- LEADERBOARD -->
+          <section class="home-sections">
+            <h2 class="section-title">Leader<em>board</em></h2>
+            <div
+              style="
+                display: flex;
+                gap: 0.6rem;
+                margin-top: 1.5rem;
+                margin-bottom: 1.2rem;
+              "
+            >
+              <button
+                class="lb-tab-btn active"
+                onclick="switchLeaderboard('global', this)"
+              >
+                🌍 Global
+              </button>
+              <button
+                class="lb-tab-btn"
+                onclick="switchLeaderboard('friends', this)"
+              >
+                👥 Friends
+              </button>
+            </div>
+            <div id="leaderboardList">
+              <div class="social-empty">No users yet.</div>
+            </div>
+          </section>
+        </div>
       </div>
     </main>
 
@@ -362,18 +438,32 @@
       </div>
     </div>
 
-    <!-- TOAST -->
     <div class="toast" id="toast">
       <div class="toast-icon" id="toastIcon">✅</div>
       <div class="toast-msg" id="toastMsg"></div>
     </div>
 
-    <!-- FOOTER -->
     <footer>
       <span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores
     </footer>
 
-    <!-- SCRIPT -->
     <script src="script.js"></script>
+    <script>
+      // Show/hide social content based on sign-in state
+      function updateSocialVisibility() {
+        const signedOut = document.getElementById("socialSignedOut");
+        const content = document.getElementById("socialContent");
+        if (!signedOut || !content) return;
+        if (state.user) {
+          signedOut.style.display = "none";
+          content.style.display = "block";
+        } else {
+          signedOut.style.display = "block";
+          content.style.display = "none";
+        }
+      }
+      // Poll for state changes (simple approach for localStorage-based auth)
+      setInterval(updateSocialVisibility, 300);
+    </script>
   </body>
 </html>
