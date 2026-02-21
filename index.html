@@ -1,64 +1,488 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HealthQuest</title>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HealthQuest</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --green: #3d7a4f;
+      --green-light: #6abf7b;
+      --cream: #f5f0e8;
+      --ink: #1a1a1a;
+      --muted: #7a7267;
+    }
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  <body>
-    <header>
-      <div class="logo">HealthQuest</div>
-      <div class="header-tag">Good Health & Well-Being</div>
-    </header>
+    body {
+      font-family: 'DM Sans', sans-serif;
+      color: var(--ink);
+      overflow-x: hidden;
+      background: var(--cream);
+    }
 
-    <main>
-      <section class="hero">
-        <h1>Tiny Daily Habits.<br />Big Health Impact.</h1>
-        <p>
-          HealthQuest gives you one simple, achievable challenge each day to
-          support your physical and mental well-being — at any age.
-        </p>
-      </section>
+    canvas#bg {
+      position: fixed;
+      inset: 0;
+      z-index: -1;
+      width: 100%;
+      height: 100%;
+    }
 
-      <section class="age-section">
-        <div class="age-title">Who is HealthQuest for today?</div>
+    /* ── HEADER ── */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.4rem 2.5rem;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(245, 240, 232, 0.75);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(61,122,79,0.12);
+    }
 
-        <div class="age-cards">
-          <div class="age-card">
-            <div class="age-icon">🧒</div>
-            <h3>Child</h3>
-            <p>Fun, playful challenges that build healthy habits early.</p>
-          </div>
+    .logo {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      color: var(--green);
+      letter-spacing: -0.02em;
+    }
 
-          <div class="age-card">
-            <div class="age-icon">🧑</div>
-            <h3>Adult</h3>
-            <p>Quick moments of movement, focus, and self-care.</p>
-          </div>
+    .badge {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
 
-          <div class="age-card">
-            <div class="age-icon">👵</div>
-            <h3>Elder</h3>
-            <p>Gentle, respectful activities with accessibility support.</p>
-          </div>
-        </div>
-      </section>
+    /* ── HERO ── */
+    .hero {
+      min-height: 92vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 6rem 2.5rem 4rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
 
-      <section class="cta">
-        <button>Start Today’s Quest</button>
-      </section>
-    </main>
+    .hero-eyebrow {
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
 
-    <footer>
-      Built for <span>SDG 3 – Good Health & Well-Being</span> · Privacy-first ·
-      Hackathon Project
-    </footer>
-  </body>
+    .hero-eyebrow::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: var(--green-light);
+      border-radius: 2px;
+    }
+
+    .hero h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(3rem, 8vw, 6rem);
+      line-height: 1.05;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 2rem;
+      max-width: 720px;
+    }
+
+    .hero h1 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .hero-sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 440px;
+      line-height: 1.7;
+      margin-bottom: 3rem;
+    }
+
+    .hero-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 1rem 2rem;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border-radius: 999px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.2s;
+      text-decoration: none;
+    }
+
+    .hero-cta:hover {
+      background: #2e5e3c;
+      transform: translateY(-2px);
+    }
+
+    .hero-cta .arrow {
+      display: inline-block;
+      transition: transform 0.2s;
+    }
+
+    .hero-cta:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    /* ── SCROLL HINT ── */
+    .scroll-hint {
+      margin-top: 5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+      color: var(--muted);
+      font-size: 0.8rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .scroll-hint-line {
+      width: 40px;
+      height: 1px;
+      background: var(--muted);
+      animation: scrollPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollPulse {
+      0%, 100% { width: 40px; opacity: 0.5; }
+      50% { width: 60px; opacity: 1; }
+    }
+
+    /* ── ABOUT ── */
+    .about {
+      padding: 7rem 2.5rem;
+      max-width: 1000px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 5rem;
+      align-items: start;
+    }
+
+    .about-left {
+      position: sticky;
+      top: 6rem;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 1.2rem;
+    }
+
+    .about-left h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.8rem;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+    }
+
+    .about-left h2 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .about-right {
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .about-block {
+      background: rgba(255,255,255,0.55);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 2rem 2.2rem;
+      border: 1px solid rgba(61,122,79,0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .about-block:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.07);
+    }
+
+    .about-block-icon {
+      font-size: 1.8rem;
+      margin-bottom: 0.8rem;
+    }
+
+    .about-block h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.01em;
+    }
+
+    .about-block p {
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    /* ── AGE CARDS ── */
+    .who {
+      padding: 5rem 2.5rem 6rem;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .who-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .who-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2.2rem;
+      letter-spacing: -0.02em;
+    }
+
+    .who-cards {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .who-card {
+      background: rgba(255,255,255,0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(61,122,79,0.12);
+      border-radius: 24px;
+      padding: 2.2rem 1.8rem;
+      cursor: pointer;
+      transition: transform 0.25s, border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .who-card:hover {
+      transform: translateY(-6px);
+      border-color: var(--green-light);
+      box-shadow: 0 16px 40px rgba(61,122,79,0.12);
+    }
+
+    .who-card .icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .who-card h3 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.4rem;
+      margin-bottom: 0.5rem;
+    }
+    .who-card p { color: var(--muted); font-size: 0.9rem; line-height: 1.65; }
+
+    /* ── FINAL CTA ── */
+    .final-cta {
+      text-align: center;
+      padding: 6rem 2rem 8rem;
+    }
+
+    .final-cta h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: clamp(2rem, 5vw, 3.5rem);
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+      line-height: 1.1;
+    }
+
+    .final-cta h2 em {
+      font-style: italic;
+      color: var(--green);
+    }
+
+    .final-cta p {
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      text-align: center;
+      padding: 1.5rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px solid rgba(61,122,79,0.1);
+    }
+
+    footer span { color: var(--green); font-weight: 600; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 700px) {
+      .about { grid-template-columns: 1fr; gap: 2rem; }
+      .about-left { position: static; }
+      .who-cards { grid-template-columns: 1fr; }
+      .hero { padding: 4rem 1.5rem 2rem; }
+      .about, .who { padding-left: 1.5rem; padding-right: 1.5rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="bg"></canvas>
+
+  <header>
+    <div class="logo">HealthQuest</div>
+    <div class="badge">Good Health &amp; Well-Being</div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-eyebrow">SDG 3 — Daily Well-Being</div>
+    <h1>Your health,<br/><em>one quest</em><br/>at a time.</h1>
+    <p class="hero-sub">A single small challenge every day. No gym required. No excuses needed. Just you, growing a little bit healthier.</p>
+    <a href="#" class="hero-cta">Start Today's Quest <span class="arrow">→</span></a>
+    <div class="scroll-hint">
+      <span class="scroll-hint-line"></span>
+      Scroll to explore
+    </div>
+  </section>
+
+  <section class="about">
+    <div class="about-left">
+      <div class="section-label">About us</div>
+      <h2>Built for<br/><em>real life.</em></h2>
+    </div>
+    <div class="about-right">
+      <div class="about-block">
+        <div class="about-block-icon">🌱</div>
+        <h3>Small steps, big change</h3>
+        <p>We don't believe in overnight transformations. We believe in showing up — just a little — every single day. That's where lasting health actually comes from.</p>
+      </div>
+      <div class="about-block">
+        <div class="about-block-icon">🤝</div>
+        <h3>For every body, every age</h3>
+        <p>Whether you're 8 or 80, HealthQuest meets you where you are. Challenges adapt to your age, ability, and energy level — always accessible, never patronizing.</p>
+      </div>
+      <div class="about-block">
+        <div class="about-block-icon">🔒</div>
+        <h3>Privacy first, always</h3>
+        <p>No accounts required. No data sold. Your health journey belongs to you — we just help you show up for it.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="who">
+    <div class="who-header">
+      <h2>Who's it for?</h2>
+    </div>
+    <div class="who-cards">
+      <div class="who-card">
+        <div class="icon">🧒</div>
+        <h3>Children</h3>
+        <p>Playful quests that sneak healthy habits into their day — no lectures, just fun.</p>
+      </div>
+      <div class="who-card">
+        <div class="icon">🧑</div>
+        <h3>Adults</h3>
+        <p>Quick wins for busy people. Move, breathe, reset — without derailing your day.</p>
+      </div>
+      <div class="who-card">
+        <div class="icon">👵</div>
+        <h3>Elders</h3>
+        <p>Gentle, dignified challenges designed with accessibility and respect at the core.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="final-cta">
+    <h2>Ready for your<br/><em>first quest?</em></h2>
+    <p>It takes less than 5 minutes. That's the whole point.</p>
+    <a href="#" class="hero-cta">Let's go <span class="arrow">→</span></a>
+  </section>
+
+  <footer>
+    Built for <span>SDG 3 – Good Health & Well-Being</span> · Privacy-first · Hackathon Project
+  </footer>
+
+  <script>
+    // ── Scroll-morphing canvas background ──
+    const canvas = document.getElementById('bg');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    // Scroll stages: [bg base color, orb1 color, orb2 color]
+    const stages = [
+      { base: [245,240,232], o1: [180,220,190], o2: [255,235,160] }, // cream + mint + gold — hero
+      { base: [236,245,238], o1: [120,200,140], o2: [200,235,210] }, // fresh green — about
+      { base: [232,240,250], o1: [160,195,240], o2: [190,230,200] }, // cool blue — who
+      { base: [245,235,248], o1: [210,175,230], o2: [150,210,170] }, // dusk lavender — cta
+    ];
+
+    let o1x=0.2, o1y=0.25, v1x=0.00014, v1y=0.00009;
+    let o2x=0.78, o2y=0.7, v2x=-0.00011, v2y=0.00014;
+
+    function resize() { W = canvas.width = innerWidth; H = canvas.height = innerHeight; }
+    resize(); addEventListener('resize', resize);
+
+    const lerp = (a,b,t) => a+(b-a)*t;
+    const lerpRGB = (a,b,t) => [lerp(a[0],b[0],t), lerp(a[1],b[1],t), lerp(a[2],b[2],t)];
+    const rgba = (c,a) => `rgba(${c[0]|0},${c[1]|0},${c[2]|0},${a})`;
+
+    function progress() {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      return max > 0 ? Math.min(scrollY / max, 1) : 0;
+    }
+
+    function blend(t) {
+      const n = stages.length - 1;
+      const s = t * n, i = Math.min(Math.floor(s), n-1), f = s - i;
+      const a = stages[i], b = stages[Math.min(i+1,n)];
+      return { base: lerpRGB(a.base,b.base,f), o1: lerpRGB(a.o1,b.o1,f), o2: lerpRGB(a.o2,b.o2,f) };
+    }
+
+    function draw() {
+      // drift orbs
+      o1x+=v1x; o1y+=v1y; o2x+=v2x; o2y+=v2y;
+      if(o1x<0.05||o1x>0.95) v1x*=-1;
+      if(o1y<0.05||o1y>0.95) v1y*=-1;
+      if(o2x<0.05||o2x>0.95) v2x*=-1;
+      if(o2y<0.05||o2y>0.95) v2y*=-1;
+
+      const p = progress();
+      const { base, o1, o2 } = blend(p);
+
+      // solid base
+      ctx.fillStyle = rgba(base, 1);
+      ctx.fillRect(0, 0, W, H);
+
+      // orb 1
+      const g1 = ctx.createRadialGradient(o1x*W,o1y*H,0, o1x*W,o1y*H, Math.max(W,H)*0.65);
+      g1.addColorStop(0, rgba(o1,0.55)); g1.addColorStop(1, rgba(o1,0));
+      ctx.fillStyle=g1; ctx.fillRect(0,0,W,H);
+
+      // orb 2
+      const g2 = ctx.createRadialGradient(o2x*W,o2y*H,0, o2x*W,o2y*H, Math.max(W,H)*0.5);
+      g2.addColorStop(0, rgba(o2,0.45)); g2.addColorStop(1, rgba(o2,0));
+      ctx.fillStyle=g2; ctx.fillRect(0,0,W,H);
+
+      requestAnimationFrame(draw);
+    }
+    draw();
+  </script>
+</body>
 </html>
