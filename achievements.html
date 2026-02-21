@@ -12,6 +12,16 @@
   </head>
   <body>
     <canvas id="bg"></canvas>
+    <canvas
+      id="confettiCanvas"
+      style="
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        pointer-events: none;
+        display: none;
+      "
+    ></canvas>
 
     <header>
       <div class="brand" onclick="window.location.href = 'index.html'">
@@ -175,6 +185,162 @@
           <div class="form-footer">
             Have an account?
             <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
+          </div>
+        </div>
+        <!-- STEP 2: BODY PROFILE -->
+        <div id="bodyProfileView" style="display: none">
+          <h3>Your Body Profile</h3>
+          <p>Help us personalise your quests with AI.</p>
+          <div class="bp-scroll">
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Age</label>
+                <input
+                  class="form-input"
+                  id="bpAge"
+                  type="number"
+                  placeholder="25"
+                  min="8"
+                  max="99"
+                />
+              </div>
+            </div>
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Weight</label>
+                <input
+                  class="form-input"
+                  id="bpWeight"
+                  type="number"
+                  placeholder="70"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Unit</label>
+                <select id="bpWeightUnit">
+                  <option value="kg">kg</option>
+                  <option value="lbs">lbs</option>
+                </select>
+              </div>
+            </div>
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Height</label>
+                <input
+                  class="form-input"
+                  id="bpHeight"
+                  type="number"
+                  placeholder="175"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Unit</label>
+                <select id="bpHeightUnit">
+                  <option value="cm">cm</option>
+                  <option value="ft">ft</option>
+                </select>
+              </div>
+            </div>
+            <div class="bp-section-label">Body Type</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="lean"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                🪶 Lean
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="average"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                ⚖️ Average
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="heavy-set"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                🏋️ Heavy-set
+              </button>
+            </div>
+            <div class="bp-section-label">Fitness Goal</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="lose-weight"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                🔥 Lose Weight
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="build-strength"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                💪 Build Strength
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="stay-active"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                🏃 Stay Active
+              </button>
+            </div>
+            <div class="bp-section-label">Activity Level</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="sedentary"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                🛋️ Sedentary
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="lightly-active"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                🚶 Lightly Active
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="very-active"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                ⚡ Very Active
+              </button>
+            </div>
+            <div class="form-error" id="bpError"></div>
+            <button
+              class="btn-primary"
+              style="width: 100%; margin-top: 1.2rem"
+              onclick="finishSignUp()"
+            >
+              Generate My Quests 🤖
+            </button>
+            <div class="form-footer">
+              <span
+                class="form-toggle"
+                onclick="
+                  document.getElementById('bodyProfileView').style.display =
+                    'none';
+                  document.getElementById('signUpView').style.display = 'block';
+                "
+                >← Back</span
+              >
+            </div>
           </div>
         </div>
       </div>
