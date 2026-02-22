@@ -1,164 +1,190 @@
 <!doctype html>
 <html lang="en" data-theme="light">
   <head>
-    <script>
-      !(function () {
-        var t = localStorage.getItem("hq_theme");
-        if (t) document.documentElement.setAttribute("data-theme", t);
-      })();
-    </script>
+    <script>!(function(){var t=localStorage.getItem("hq_theme");if(t)document.documentElement.setAttribute("data-theme",t);})();</script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>HealthQuest – About</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap"
-      rel="stylesheet"
-    />
+    <title>StayFit – About</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
+    <style>
+      .about-page{max-width:1100px;margin:0 auto;padding:3rem 2rem 6rem}
+      .about-banner{position:relative;border-radius:28px;background:linear-gradient(135deg,var(--green) 0%,var(--green2) 50%,var(--green-light) 100%);padding:4rem 3rem;margin-bottom:3.5rem;overflow:hidden;text-align:center;box-shadow:0 16px 48px rgba(45,122,58,0.25)}
+      .about-banner::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 20% 50%,rgba(255,255,255,0.08) 0%,transparent 60%),radial-gradient(circle at 80% 20%,rgba(255,255,255,0.06) 0%,transparent 50%);pointer-events:none}
+      .about-banner-emoji{font-size:4rem;margin-bottom:1rem;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15))}
+      .about-banner h1{font-family:'Fredoka One',cursive;font-size:clamp(2.2rem,6vw,3.8rem);color:#fff;margin-bottom:1rem;line-height:1.1;text-shadow:0 3px 12px rgba(0,0,0,0.15)}
+      .about-banner h1 em{font-style:normal;color:#fffde0}
+      .about-banner p{font-size:1.05rem;color:rgba(255,255,255,0.9);max-width:560px;margin:0 auto;line-height:1.7;font-weight:600}
+      .about-banner-badges{display:flex;gap:0.6rem;justify-content:center;flex-wrap:wrap;margin-top:1.75rem}
+      .about-badge{background:rgba(255,255,255,0.18);backdrop-filter:blur(8px);border:1.5px solid rgba(255,255,255,0.3);border-radius:999px;padding:0.4rem 1rem;color:#fff;font-size:0.83rem;font-weight:800;letter-spacing:0.02em}
+      .about-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:1rem;margin-bottom:3.5rem}
+      .about-stat-card{background:var(--card);border:2px solid var(--card-border);border-radius:20px;padding:1.5rem 1rem;text-align:center;box-shadow:var(--shadow);transition:transform 0.2s ease,background-color 0.4s ease,border-color 0.4s ease}
+      .about-stat-card:hover{transform:translateY(-4px);border-color:var(--green)}
+      .about-stat-num{font-family:'Fredoka One',cursive;font-size:2.2rem;color:var(--green2);line-height:1;margin-bottom:0.3rem}
+      .about-stat-label{font-size:0.78rem;font-weight:800;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em}
+      .mission-strip{background:var(--card);border:2px solid var(--card-border);border-radius:24px;padding:2.25rem 2rem;margin-bottom:3.5rem;display:flex;gap:1.75rem;align-items:center;flex-wrap:wrap;box-shadow:var(--shadow);transition:background-color 0.4s ease,border-color 0.4s ease}
+      .mission-icon{font-size:3.2rem;flex-shrink:0}
+      .mission-text h3{font-family:'Fredoka One',cursive;font-size:1.5rem;color:var(--text);margin-bottom:0.5rem}
+      .mission-text p{font-size:0.95rem;color:var(--text-muted);line-height:1.7;font-weight:600;max-width:600px}
+      .about-section{margin-bottom:3.5rem}
+      .about-section-title{font-family:'Fredoka One',cursive;font-size:1.9rem;color:var(--text);margin-bottom:0.4rem}
+      .about-section-title em{font-style:normal;color:var(--green2)}
+      .about-section-sub{color:var(--text-muted);font-size:0.93rem;font-weight:600;margin-bottom:1.75rem}
+      .team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:1.5rem}
+      .team-card{background:var(--card);border:2px solid var(--card-border);border-radius:24px;padding:2rem 1.75rem;text-align:center;box-shadow:var(--shadow);transition:transform 0.25s ease,box-shadow 0.25s ease,border-color 0.25s ease,background-color 0.4s ease;position:relative;overflow:hidden}
+      .team-card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,var(--green),var(--green-light));border-radius:24px 24px 0 0}
+      .team-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(45,122,58,0.18);border-color:var(--green)}
+      .team-card-emoji{font-size:1.6rem;margin-bottom:0.75rem;display:block}
+      .team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--green2),var(--green-light));display:flex;align-items:center;justify-content:center;font-family:'Fredoka One',cursive;font-size:2.1rem;color:white;margin:0 auto 1.1rem;box-shadow:0 6px 20px var(--green-glow);border:3px solid rgba(255,255,255,0.25)}
+      .team-name{font-family:'Fredoka One',cursive;font-size:1.4rem;color:var(--text);margin-bottom:0.25rem}
+      .team-role{font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--green2);margin-bottom:0.9rem}
+      .team-bio{font-size:0.88rem;color:var(--text-muted);line-height:1.65;font-weight:600}
+      .values-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.2rem}
+      .value-card{background:var(--card);border:2px solid var(--card-border);border-radius:20px;padding:1.75rem 1.5rem;box-shadow:var(--shadow);transition:transform 0.25s ease,border-color 0.25s ease,background-color 0.4s ease}
+      .value-card:hover{transform:translateY(-4px);border-color:var(--green)}
+      .value-icon{font-size:2rem;margin-bottom:0.9rem}
+      .value-card h4{font-family:'Fredoka One',cursive;font-size:1.1rem;color:var(--text);margin-bottom:0.6rem}
+      .value-card p{font-size:0.87rem;color:var(--text-muted);line-height:1.65;font-weight:600}
+      .tech-grid{display:flex;flex-wrap:wrap;gap:0.65rem}
+      .tech-pill{background:var(--surface2);border:2px solid var(--card-border);border-radius:999px;padding:0.5rem 1.1rem;font-size:0.86rem;font-weight:800;color:var(--text);display:flex;align-items:center;gap:0.4rem;transition:border-color 0.2s ease,color 0.2s ease,background-color 0.4s ease,transform 0.2s ease}
+      .tech-pill:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+      .about-cta{text-align:center;padding:3rem 2rem;background:var(--card);border:2px solid var(--card-border);border-radius:28px;box-shadow:var(--shadow);transition:background-color 0.4s ease,border-color 0.4s ease}
+      .about-cta h3{font-family:'Fredoka One',cursive;font-size:2rem;color:var(--text);margin-bottom:0.75rem}
+      .about-cta p{color:var(--text-muted);font-size:0.95rem;font-weight:600;margin-bottom:1.75rem;line-height:1.6}
+      .about-cta-btns{display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap}
+      .about-cta-btn{padding:0.75rem 2rem;border-radius:999px;font-family:'Nunito',sans-serif;font-size:0.95rem;font-weight:800;cursor:pointer;border:2px solid transparent;transition:all 0.2s ease;text-decoration:none;display:inline-block}
+      .about-cta-btn.primary{background:linear-gradient(135deg,var(--green2),var(--green));color:white;box-shadow:0 4px 16px var(--green-glow)}
+      .about-cta-btn.primary:hover{transform:translateY(-2px);box-shadow:0 8px 24px var(--green-glow)}
+      .about-cta-btn.secondary{background:var(--surface2);color:var(--text);border-color:var(--card-border)}
+      .about-cta-btn.secondary:hover{border-color:var(--green);color:var(--green);transform:translateY(-2px)}
+      @media(max-width:600px){.about-banner{padding:2.5rem 1.5rem}.about-page{padding:1.5rem 1rem 4rem}.mission-strip{flex-direction:column;gap:1rem;text-align:center}.about-stats{grid-template-columns:repeat(3,1fr)}}
+    </style>
   </head>
   <body>
     <canvas id="bg"></canvas>
-    <canvas
-      id="confettiCanvas"
-      style="
-        position: fixed;
-        inset: 0;
-        z-index: 9998;
-        pointer-events: none;
-        display: none;
-      "
-    ></canvas>
+    <canvas id="confettiCanvas" style="position:fixed;inset:0;z-index:9998;pointer-events:none;display:none;"></canvas>
 
     <header>
-      <div class="brand" onclick="window.location.href = 'index.html'">
-        <div class="logo-box">
-          <img src="logo.png" alt="logo" />
-        </div>
+      <div class="brand" onclick="window.location.href='index.html'">
+        <div class="logo-box"><img src="logo.png" alt="StayFit" /></div>
       </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
       <nav class="header-nav">
-        <a href="index.html" class="nav-tab">Home</a>
-        <a href="quests.html" class="nav-tab">Quests</a>
-        <a href="training.html" class="nav-tab">Training</a>
-        <a href="food.html" class="nav-tab">Food</a>
-        <a href="achievements.html" class="nav-tab">Achievements</a>
-        <a href="about.html" class="nav-tab active">About</a>
-        <a href="social.html" class="nav-tab"
-          >Social <span class="friend-badge" id="friendBadge"></span
-        ></a>
-        <a href="settings.html" class="nav-tab">Settings</a>
+        <a href="index.html" class="nav-tab">🏠 Home</a>
+        <a href="quests.html" class="nav-tab">⚔️ Quests</a>
+        <a href="food.html" class="nav-tab">🍎 Food</a>
+        <a href="achievements.html" class="nav-tab">🏆 Achievements</a>
+        <a href="about.html" class="nav-tab active">🌿 About</a>
+        <a href="social.html" class="nav-tab">👥 Social <span class="friend-badge" id="friendBadge"></span></a>
+        <a href="settings.html" class="nav-tab">⚙️ Settings</a>
       </nav>
       <div class="header-right">
         <div class="user-stats" id="userStats">
-          <div class="stat-pill" title="Streak">
-            🔥 <span id="headerStreak">0</span>
-          </div>
-          <div class="stat-pill" title="Stars">
-            ⭐ <span id="headerStars">0</span>
-          </div>
-          <div class="stat-pill" title="Rank">
-            🏅 <span id="headerRank">Seedling</span>
-          </div>
+          <div class="stat-pill" title="Day Streak">🔥 <span id="headerStreak">0</span></div>
+          <div class="stat-pill" title="Stars">⭐ <span id="headerStars">0</span></div>
+          <div class="stat-pill" title="Rank">🏅 <span id="headerRank">Seedling</span></div>
         </div>
-        <div
-          class="avatar-btn"
-          id="avatarBtn"
-          onclick="openModal('signModal')"
-        ></div>
-        <button
-          class="btn-signout"
-          id="signoutBtn"
-          onclick="signOut()"
-          style="display: none"
-        >
-          Sign Out
-        </button>
-        <button
-          class="btn-signin"
-          id="signinBtn"
-          onclick="openModal('signModal')"
-        >
-          Sign In
-        </button>
+        <div class="avatar-btn" id="avatarBtn" onclick="openModal('signModal')"></div>
+        <button class="btn-signout" id="signoutBtn" onclick="signOut()" style="display:none">Sign Out</button>
+        <button class="btn-signin" id="signinBtn" onclick="openModal('signModal')">Sign In</button>
       </div>
     </header>
 
     <main>
-      <div class="page-inner">
-        <div class="about-hero">
-          <h2>Built for <em>real life.</em></h2>
-          <p>
-            HealthQuest is a passion project built by three people who believe
-            small, consistent habits are the foundation of lasting health.
-          </p>
-        </div>
+      <div class="about-page">
 
-        <div class="team-grid">
-          <div class="team-card">
-            <div class="team-avatar">P</div>
-            <div class="team-name">Presiyan</div>
-            <div class="team-role">Co-Founder & CEO</div>
-            <p class="team-bio">
-              Visionary behind HealthQuest. Passionate about making wellness
-              accessible to everyone, everywhere.
-            </p>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">A</div>
-            <div class="team-name">Alexandar</div>
-            <div class="team-role">Co-Founder & CTO</div>
-            <p class="team-bio">
-              The tech architect. Builds the intelligent pose-tracking system
-              and makes the magic happen under the hood.
-            </p>
-          </div>
-          <div class="team-card">
-            <div class="team-avatar">V</div>
-            <div class="team-name">Vilian</div>
-            <div class="team-role">Co-Founder & Design Lead</div>
-            <p class="team-bio">
-              Crafts every pixel with purpose. Believes beautiful design and
-              usability are never at odds.
-            </p>
+        <div class="about-banner">
+          <span class="about-banner-emoji">🌿</span>
+          <h1>Built for <em>real&nbsp;life.</em></h1>
+          <p>StayFit is a passion project created by three friends who believe small, consistent habits are the true foundation of lasting health — no gym required.</p>
+          <div class="about-banner-badges">
+            <span class="about-badge">🆓 Free to use</span>
+            <span class="about-badge">🔒 Privacy first</span>
+            <span class="about-badge">🤖 AI-powered</span>
+            <span class="about-badge">📱 Mobile ready</span>
+            <span class="about-badge">🎮 Quest system</span>
           </div>
         </div>
 
-        <div class="about-values mt2">
-          <h2 class="section-title">Our <em>Values</em></h2>
-          <div class="values-grid mt1">
-            <div class="value-card">
-              <div class="value-icon">🌱</div>
-              <h4>Small Steps, Big Change</h4>
-              <p>
-                We believe in showing up — just a little — every single day.
-                That's where lasting health comes from.
-              </p>
+        <div class="about-stats">
+          <div class="about-stat-card"><div class="about-stat-num">7+</div><div class="about-stat-label">Quest Types</div></div>
+          <div class="about-stat-card"><div class="about-stat-num">100+</div><div class="about-stat-label">Foods Tracked</div></div>
+          <div class="about-stat-card"><div class="about-stat-num">AI</div><div class="about-stat-label">Quest Engine</div></div>
+          <div class="about-stat-card"><div class="about-stat-num">3</div><div class="about-stat-label">Founders</div></div>
+          <div class="about-stat-card"><div class="about-stat-num">0</div><div class="about-stat-label">Ads. Ever.</div></div>
+        </div>
+
+        <div class="mission-strip">
+          <div class="mission-icon">🎯</div>
+          <div class="mission-text">
+            <h3>Our Mission</h3>
+            <p>We want to make fitness feel like a game — rewarding, personal, and something you actually look forward to. StayFit uses AI to generate quests tailored to your body and goals, tracks your movement with real-time pose detection, and celebrates every win along the way.</p>
+          </div>
+        </div>
+
+        <div class="about-section">
+          <h2 class="about-section-title">Meet the <em>Team</em></h2>
+          <p class="about-section-sub">Three co-founders. One shared obsession with building something people actually use.</p>
+          <div class="team-grid">
+            <div class="team-card">
+              <span class="team-card-emoji">💡</span>
+              <div class="team-avatar">P</div>
+              <div class="team-name">Presiyan</div>
+              <div class="team-role">Co-Founder &amp; CEO</div>
+              <p class="team-bio">The visionary. Presiyan shapes the product strategy and makes sure StayFit stays focused on what actually matters — helping real people move more, stress less, and feel better every day.</p>
             </div>
-            <div class="value-card">
-              <div class="value-icon">🤝</div>
-              <h4>For Every Body</h4>
-              <p>
-                Whether you're 8 or 80, HealthQuest meets you where you are.
-                Always accessible, never patronizing.
-              </p>
+            <div class="team-card">
+              <span class="team-card-emoji">⚙️</span>
+              <div class="team-avatar">A</div>
+              <div class="team-name">Alexandar</div>
+              <div class="team-role">Co-Founder &amp; CTO</div>
+              <p class="team-bio">The builder. Alexandar architects the AI pose-tracking system, quest engine, and all the clever bits that make the app feel like magic under the hood.</p>
             </div>
-            <div class="value-card">
-              <div class="value-icon">🔒</div>
-              <h4>Privacy First</h4>
-              <p>
-                No data sold. No tracking. Your health journey belongs to you —
-                we just help you show up for it.
-              </p>
-            </div>
-            <div class="value-card">
-              <div class="value-icon">🎯</div>
-              <h4>Purposeful Design</h4>
-              <p>
-                Every feature serves a real human need. We cut the fluff and
-                keep what matters most.
-              </p>
+            <div class="team-card">
+              <span class="team-card-emoji">🎨</span>
+              <div class="team-avatar">V</div>
+              <div class="team-name">Vilian</div>
+              <div class="team-role">Co-Founder &amp; Design Lead</div>
+              <p class="team-bio">The craftsman. Vilian obsesses over every pixel, interaction, and animation — because he believes beautiful design and usability should never be at odds.</p>
             </div>
           </div>
         </div>
+
+        <div class="about-section">
+          <h2 class="about-section-title">What We <em>Believe</em></h2>
+          <p class="about-section-sub">Four principles that guide every decision we make.</p>
+          <div class="values-grid">
+            <div class="value-card"><div class="value-icon">🌱</div><h4>Small Steps, Big Change</h4><p>Lasting health comes from showing up a little bit, every single day. We celebrate every rep, every quest, every streak — no matter how small.</p></div>
+            <div class="value-card"><div class="value-icon">🤝</div><h4>For Every Body</h4><p>Whether you're 8 or 80, a beginner or a veteran, StayFit meets you exactly where you are. Always accessible. Never patronising.</p></div>
+            <div class="value-card"><div class="value-icon">🔒</div><h4>Privacy First</h4><p>No data sold. No third-party trackers. No ads — ever. Your health journey belongs to you alone. We just help you show up for it.</p></div>
+            <div class="value-card"><div class="value-icon">🎯</div><h4>Purposeful Design</h4><p>Every feature earns its place by serving a real human need. We cut the fluff relentlessly and keep only what matters most.</p></div>
+          </div>
+        </div>
+
+        <div class="about-section">
+          <h2 class="about-section-title">Built <em>With</em></h2>
+          <p class="about-section-sub">The technologies powering StayFit.</p>
+          <div class="tech-grid">
+            <span class="tech-pill">🤖 Gemini AI — Quest Generation</span>
+            <span class="tech-pill">📸 QuickPose — Movement Tracking</span>
+            <span class="tech-pill">🌐 Vanilla JS — Zero frameworks</span>
+            <span class="tech-pill">🎨 CSS Variables — Theming &amp; Dark Mode</span>
+            <span class="tech-pill">🖼️ Canvas API — Jungle Background</span>
+            <span class="tech-pill">📱 Responsive CSS — Mobile First</span>
+            <span class="tech-pill">🔐 LocalStorage — Private by default</span>
+            <span class="tech-pill">🍎 Google Fonts — Fredoka One + Nunito</span>
+          </div>
+        </div>
+
+        <div class="about-cta">
+          <h3>Ready to start your journey? 🚀</h3>
+          <p>Sign up for free and get your first set of AI-generated quests personalised to you in seconds.</p>
+          <div class="about-cta-btns">
+            <a href="index.html" class="about-cta-btn primary">🏠 Go to Home</a>
+            <a href="quests.html" class="about-cta-btn secondary">⚔️ View Quests</a>
+          </div>
+        </div>
+
       </div>
     </main>
 
@@ -169,294 +195,70 @@
         <div id="signInView">
           <h3>Welcome back</h3>
           <p>Sign in to track your quests and progress.</p>
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input
-              class="form-input"
-              id="siUsername"
-              type="text"
-              placeholder="your_username"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input
-              class="form-input"
-              id="siPassword"
-              type="password"
-              placeholder="••••••••"
-            />
-          </div>
+          <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="siUsername" type="text" placeholder="your_username" /></div>
+          <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="siPassword" type="password" placeholder="••••••••" /></div>
           <div class="form-error" id="siError"></div>
-          <button
-            class="btn-primary"
-            style="width: 100%; margin-top: 0.5rem"
-            onclick="signIn()"
-          >
-            Sign In
-          </button>
-          <div class="form-footer">
-            No account?
-            <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span>
-          </div>
+          <button class="btn-primary" style="width:100%;margin-top:0.5rem" onclick="signIn()">Sign In</button>
+          <div class="form-footer">No account? <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span></div>
         </div>
-        <div id="signUpView" style="display: none">
+        <div id="signUpView" style="display:none">
           <h3>Create account</h3>
-          <p>Join HealthQuest and start your journey.</p>
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input
-              class="form-input"
-              id="suUsername"
-              type="text"
-              placeholder="choose_a_username"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input
-              class="form-input"
-              id="suPassword"
-              type="password"
-              placeholder="••••••••"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Age</label>
-            <input
-              class="form-input"
-              id="suAge"
-              type="number"
-              placeholder="25"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Gender</label>
-            <select class="form-input" id="suGender">
-              <option value="">Select gender</option>
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-              <option value="other">Other</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Height (cm)</label>
-            <input
-              class="form-input"
-              id="suHeight"
-              type="number"
-              placeholder="170"
-            />
-          </div>
-          <div class="form-group">
-            <label class="form-label">Weight (kg)</label>
-            <input
-              class="form-input"
-              id="suWeight"
-              type="number"
-              placeholder="70"
-            />
-          </div>
+          <p>Join StayFit and start your journey.</p>
+          <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="suUsername" type="text" placeholder="choose_a_username" /></div>
+          <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="suPassword" type="password" placeholder="••••••••" /></div>
+          <div class="form-group"><label class="form-label">Age</label><input class="form-input" id="suAge" type="number" placeholder="25" /></div>
+          <div class="form-group"><label class="form-label">Gender</label><select class="form-input" id="suGender"><option value="">Select gender</option><option value="male">Male</option><option value="female">Female</option><option value="other">Other</option></select></div>
+          <div class="form-group"><label class="form-label">Height (cm)</label><input class="form-input" id="suHeight" type="number" placeholder="170" /></div>
+          <div class="form-group"><label class="form-label">Weight (kg)</label><input class="form-input" id="suWeight" type="number" placeholder="70" /></div>
           <div class="form-error" id="suError"></div>
-          <button
-            class="btn-primary"
-            style="width: 100%; margin-top: 0.5rem"
-            onclick="signUp()"
-          >
-            Create Account
-          </button>
-          <div class="form-footer">
-            Have an account?
-            <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
-          </div>
+          <button class="btn-primary" style="width:100%;margin-top:0.5rem" onclick="signUp()">Create Account</button>
+          <div class="form-footer">Have an account? <span class="form-toggle" onclick="toggleSignMode()">Sign In</span></div>
         </div>
-        <!-- STEP 2: BODY PROFILE -->
-        <div id="bodyProfileView" style="display: none">
-          <h3>Your Body Profile</h3>
-          <p>Help us personalise your quests with AI.</p>
+        <div id="bodyProfileView" style="display:none">
+          <h3>Your Body Profile</h3><p>Help us personalise your quests with AI.</p>
           <div class="bp-scroll">
-            <div class="bp-row">
-              <div class="form-group">
-                <label class="form-label">Age</label>
-                <input
-                  class="form-input"
-                  id="bpAge"
-                  type="number"
-                  placeholder="25"
-                  min="8"
-                  max="99"
-                />
-              </div>
-            </div>
-            <div class="bp-row">
-              <div class="form-group">
-                <label class="form-label">Weight</label>
-                <input
-                  class="form-input"
-                  id="bpWeight"
-                  type="number"
-                  placeholder="70"
-                />
-              </div>
-              <div class="form-group">
-                <label class="form-label">Unit</label>
-                <select id="bpWeightUnit">
-                  <option value="kg">kg</option>
-                  <option value="lbs">lbs</option>
-                </select>
-              </div>
-            </div>
-            <div class="bp-row">
-              <div class="form-group">
-                <label class="form-label">Height</label>
-                <input
-                  class="form-input"
-                  id="bpHeight"
-                  type="number"
-                  placeholder="175"
-                />
-              </div>
-              <div class="form-group">
-                <label class="form-label">Unit</label>
-                <select id="bpHeightUnit">
-                  <option value="cm">cm</option>
-                  <option value="ft">ft</option>
-                </select>
-              </div>
-            </div>
+            <div class="bp-row"><div class="form-group"><label class="form-label">Age</label><input class="form-input" id="bpAge" type="number" placeholder="25" min="8" max="99" /></div></div>
+            <div class="bp-row"><div class="form-group"><label class="form-label">Weight</label><input class="form-input" id="bpWeight" type="number" placeholder="70" /></div><div class="form-group"><label class="form-label">Unit</label><select id="bpWeightUnit"><option value="kg">kg</option><option value="lbs">lbs</option></select></div></div>
+            <div class="bp-row"><div class="form-group"><label class="form-label">Height</label><input class="form-input" id="bpHeight" type="number" placeholder="175" /></div><div class="form-group"><label class="form-label">Unit</label><select id="bpHeightUnit"><option value="cm">cm</option><option value="ft">ft</option></select></div></div>
             <div class="bp-section-label">Body Type</div>
             <div class="bp-options">
-              <button
-                class="bp-option-btn"
-                data-group="bodyType"
-                data-value="lean"
-                onclick="selectBpOption(this, 'bodyType')"
-              >
-                🪶 Lean
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="bodyType"
-                data-value="average"
-                onclick="selectBpOption(this, 'bodyType')"
-              >
-                ⚖️ Average
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="bodyType"
-                data-value="heavy-set"
-                onclick="selectBpOption(this, 'bodyType')"
-              >
-                🏋️ Heavy-set
-              </button>
+              <button class="bp-option-btn" data-group="bodyType" data-value="lean" onclick="selectBpOption(this,'bodyType')">🪶 Lean</button>
+              <button class="bp-option-btn" data-group="bodyType" data-value="average" onclick="selectBpOption(this,'bodyType')">⚖️ Average</button>
+              <button class="bp-option-btn" data-group="bodyType" data-value="heavy-set" onclick="selectBpOption(this,'bodyType')">🏋️ Heavy-set</button>
             </div>
             <div class="bp-section-label">Fitness Goal</div>
             <div class="bp-options">
-              <button
-                class="bp-option-btn"
-                data-group="goal"
-                data-value="lose-weight"
-                onclick="selectBpOption(this, 'goal')"
-              >
-                🔥 Lose Weight
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="goal"
-                data-value="build-strength"
-                onclick="selectBpOption(this, 'goal')"
-              >
-                💪 Build Strength
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="goal"
-                data-value="stay-active"
-                onclick="selectBpOption(this, 'goal')"
-              >
-                🏃 Stay Active
-              </button>
+              <button class="bp-option-btn" data-group="goal" data-value="lose-weight" onclick="selectBpOption(this,'goal')">🔥 Lose Weight</button>
+              <button class="bp-option-btn" data-group="goal" data-value="build-strength" onclick="selectBpOption(this,'goal')">💪 Build Strength</button>
+              <button class="bp-option-btn" data-group="goal" data-value="stay-active" onclick="selectBpOption(this,'goal')">🏃 Stay Active</button>
             </div>
             <div class="bp-section-label">Activity Level</div>
             <div class="bp-options">
-              <button
-                class="bp-option-btn"
-                data-group="activity"
-                data-value="sedentary"
-                onclick="selectBpOption(this, 'activity')"
-              >
-                🛋️ Sedentary
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="activity"
-                data-value="lightly-active"
-                onclick="selectBpOption(this, 'activity')"
-              >
-                🚶 Lightly Active
-              </button>
-              <button
-                class="bp-option-btn"
-                data-group="activity"
-                data-value="very-active"
-                onclick="selectBpOption(this, 'activity')"
-              >
-                ⚡ Very Active
-              </button>
+              <button class="bp-option-btn" data-group="activity" data-value="sedentary" onclick="selectBpOption(this,'activity')">🛋️ Sedentary</button>
+              <button class="bp-option-btn" data-group="activity" data-value="lightly-active" onclick="selectBpOption(this,'activity')">🚶 Lightly Active</button>
+              <button class="bp-option-btn" data-group="activity" data-value="very-active" onclick="selectBpOption(this,'activity')">⚡ Very Active</button>
             </div>
             <div class="form-error" id="bpError"></div>
-            <button
-              class="btn-primary"
-              style="width: 100%; margin-top: 1.2rem"
-              onclick="finishSignUp()"
-            >
-              Generate My Quests 🤖
-            </button>
-            <div class="form-footer">
-              <span
-                class="form-toggle"
-                onclick="
-                  document.getElementById('bodyProfileView').style.display =
-                    'none';
-                  document.getElementById('signUpView').style.display = 'block';
-                "
-                >← Back</span
-              >
-            </div>
+            <button class="btn-primary" style="width:100%;margin-top:1.2rem" onclick="finishSignUp()">Generate My Quests 🤖</button>
+            <div class="form-footer"><span class="form-toggle" onclick="document.getElementById('bodyProfileView').style.display='none';document.getElementById('signUpView').style.display='block'">← Back</span></div>
           </div>
         </div>
       </div>
     </div>
 
     <div class="modal-overlay" id="questCompleteModal">
-      <div class="modal" style="text-align: center">
-        <button class="modal-close" onclick="closeModal('questCompleteModal')">
-          ✕
-        </button>
+      <div class="modal" style="text-align:center">
+        <button class="modal-close" onclick="closeModal('questCompleteModal')">✕</button>
         <div class="quest-complete-icon">🎉</div>
         <h3>Quest Complete!</h3>
         <p id="questCompleteMsg">You earned stars and XP!</p>
-        <button
-          class="btn-primary"
-          style="width: 100%; margin-top: 1rem"
-          onclick="closeModal('questCompleteModal')"
-        >
-          Awesome!
-        </button>
+        <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="closeModal('questCompleteModal')">Awesome!</button>
       </div>
     </div>
 
-    <!-- TOAST -->
-    <div class="toast" id="toast">
-      <div class="toast-icon" id="toastIcon">✅</div>
-      <div class="toast-msg" id="toastMsg"></div>
-    </div>
+    <div class="toast" id="toast"><div class="toast-icon" id="toastIcon">✅</div><div class="toast-msg" id="toastMsg"></div></div>
 
-    <!-- FOOTER -->
-    <footer>
-      <span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores
-    </footer>
+    <footer><span>Good Health &amp; Well-Being</span> · Privacy-first · FuturiVictores</footer>
 
     <script src="script.js"></script>
   </body>
