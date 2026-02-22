@@ -1,9 +1,8 @@
 // ══════════════════════════════════════════
 // QUICKPOSE API KEY
 // ══════════════════════════════════════════
-const QUICKPOSE_API_KEY = "yhTBfUMuop8mMMQhronmx8vgbDgsCNfq4Mic44oK";
-const OPENROUTER_API_KEY =
-  "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"; // Get a free key at openrouter.ai
+// API key loaded from config.js (gitignored) — never hardcode keys here!
+// GROQ_API_KEY is declared in config.js
 
 // ══════════════════════════════════════════
 // STATE
@@ -496,8 +495,9 @@ async function generateAIQuests() {
     grid.innerHTML = `<div class="quest-generating"><div class="quest-gen-spinner"></div><p>🤖 Generating personalised quests...</p></div>`;
 
   if (
-    !OPENROUTER_API_KEY ||
-    OPENROUTER_API_KEY === "YOUR_OPENROUTER_KEY_HERE"
+    typeof GROQ_API_KEY === "undefined" ||
+    !GROQ_API_KEY ||
+    GROQ_API_KEY === "YOUR_GROQ_KEY_HERE"
   ) {
     renderQuestsGrid();
     return;
@@ -515,17 +515,15 @@ Respond ONLY with raw valid JSON, no markdown, no backticks, no explanation what
 
   try {
     const response = await fetch(
-      "https://openrouter.ai/api/v1/chat/completions",
+      "https://api.groq.com/openai/v1/chat/completions",
       {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
-          "HTTP-Referer": window.location.origin,
-          "X-Title": "StayFit",
+          Authorization: `Bearer ${GROQ_API_KEY}`,
         },
         body: JSON.stringify({
-          model: "meta-llama/llama-3.2-3b-instruct:free",
+          model: "llama-3.3-70b-versatile",
           messages: [{ role: "user", content: prompt }],
           temperature: 0.7,
           max_tokens: 1500,
@@ -880,10 +878,14 @@ function qtPoseLoop(exerciseKey) {
             //   15=L.wrist     16=R.wrist
             //   23=L.hip       24=R.hip
             //   27=L.ankle     28=R.ankle
-            const lShoulder = lm[11], rShoulder = lm[12];
-            const lWrist    = lm[15], rWrist    = lm[16];
-            const lHip      = lm[23], rHip      = lm[24];
-            const lAnkle    = lm[27], rAnkle    = lm[28];
+            const lShoulder = lm[11],
+              rShoulder = lm[12];
+            const lWrist = lm[15],
+              rWrist = lm[16];
+            const lHip = lm[23],
+              rHip = lm[24];
+            const lAnkle = lm[27],
+              rAnkle = lm[28];
 
             if (lShoulder && rShoulder && lWrist && rWrist && lHip && rHip) {
               const hipY = (lHip.y + rHip.y) / 2;
@@ -892,28 +894,31 @@ function qtPoseLoop(exerciseKey) {
               // Used to detect upward jump by comparing current hipY to resting baseline
               if (!qtRepState.hipBaseline) {
                 qtRepState.hipBaseline = hipY;
-                qtRepState.hipSamples  = [hipY];
+                qtRepState.hipSamples = [hipY];
               } else {
                 qtRepState.hipSamples.push(hipY);
-                if (qtRepState.hipSamples.length > 20) qtRepState.hipSamples.shift();
+                if (qtRepState.hipSamples.length > 20)
+                  qtRepState.hipSamples.shift();
                 // Baseline = average of the LOWEST positions (largest Y) seen — i.e. resting state
                 const sorted = [...qtRepState.hipSamples].sort((a, b) => b - a);
-                qtRepState.hipBaseline = sorted.slice(0, 10).reduce((s, v) => s + v, 0) / 10;
+                qtRepState.hipBaseline =
+                  sorted.slice(0, 10).reduce((s, v) => s + v, 0) / 10;
               }
 
               // Jump = hips moved more than 3% of frame height ABOVE baseline
-              const isJumping = (qtRepState.hipBaseline - hipY) > 0.03;
+              const isJumping = qtRepState.hipBaseline - hipY > 0.03;
 
               // Arms UP  = both wrists clearly above their shoulder
-              const armsUp   = lWrist.y < lShoulder.y && rWrist.y < rShoulder.y;
+              const armsUp = lWrist.y < lShoulder.y && rWrist.y < rShoulder.y;
               // Arms DOWN = both wrists clearly below their shoulder
               const armsDown = lWrist.y > lShoulder.y && rWrist.y > rShoulder.y;
 
               // Feet apart = ankle spread wider than shoulder width
               let feetApart = false;
               if (lAnkle && rAnkle) {
-                feetApart = Math.abs(lAnkle.x - rAnkle.x) >
-                            Math.abs(lShoulder.x - rShoulder.x) * 1.1;
+                feetApart =
+                  Math.abs(lAnkle.x - rAnkle.x) >
+                  Math.abs(lShoulder.x - rShoulder.x) * 1.1;
               }
 
               // State machine:
@@ -934,10 +939,11 @@ function qtPoseLoop(exerciseKey) {
               const statusEl = document.getElementById("qtStatus");
               if (statusEl && state.questTracking) {
                 let cue;
-                if (qtRepState.phase === "up")   cue = "⬇️ Land & bring arms down!";
-                else if (armsUp)                 cue = "⬆️ Arms up — now jump!";
-                else if (isJumping)              cue = "⬆️ Raise both arms above shoulders!";
-                else                             cue = "⬆️ Jump & raise arms above shoulders!";
+                if (qtRepState.phase === "up")
+                  cue = "⬇️ Land & bring arms down!";
+                else if (armsUp) cue = "⬆️ Arms up — now jump!";
+                else if (isJumping) cue = "⬆️ Raise both arms above shoulders!";
+                else cue = "⬆️ Jump & raise arms above shoulders!";
                 statusEl.textContent = cue;
                 statusEl.className = "qt-status";
               }
@@ -947,17 +953,22 @@ function qtPoseLoop(exerciseKey) {
               ctx.font = "bold 13px Nunito, sans-serif";
               const lsx = (1 - lShoulder.x) * w;
               const lsy = lShoulder.y * h;
-              ctx.fillText(armsUp ? "✅ arms up" : "🔺 raise wrists", lsx + 6, lsy);
+              ctx.fillText(
+                armsUp ? "✅ arms up" : "🔺 raise wrists",
+                lsx + 6,
+                lsy,
+              );
               if (isJumping) {
                 ctx.fillStyle = "#6abf7b";
                 ctx.fillText("⬆️ jumping!", (1 - lHip.x) * w + 6, lHip.y * h);
               }
             }
-
           } else {
             // ── Standard angle-based counting for push_up / squat / sit_up / lunge ──
             const [ai, bi, ci] = cfg.joints;
-            const pa = lm[ai], pb = lm[bi], pc = lm[ci];
+            const pa = lm[ai],
+              pb = lm[bi],
+              pc = lm[ci];
             if (pa && pb && pc) {
               const angle = qtGetAngle(pa, pb, pc);
 
@@ -965,17 +976,23 @@ function qtPoseLoop(exerciseKey) {
                 qtRepState.phase = "down";
                 qtRepState.downSince = now;
               }
-              if (angle > cfg.upAngle && qtRepState.phase === "down" &&
-                  qtRepState.downSince !== null &&
-                  now - qtRepState.downSince >= qtRepState.MIN_DOWN_MS) {
+              if (
+                angle > cfg.upAngle &&
+                qtRepState.phase === "down" &&
+                qtRepState.downSince !== null &&
+                now - qtRepState.downSince >= qtRepState.MIN_DOWN_MS
+              ) {
                 qtRepState.phase = "up";
                 qtRepState.downSince = null;
                 qtRepState.count++;
               }
               // Came back up too fast → noise, don't count
-              if (angle > cfg.upAngle && qtRepState.phase === "down" &&
-                  qtRepState.downSince !== null &&
-                  now - qtRepState.downSince < qtRepState.MIN_DOWN_MS) {
+              if (
+                angle > cfg.upAngle &&
+                qtRepState.phase === "down" &&
+                qtRepState.downSince !== null &&
+                now - qtRepState.downSince < qtRepState.MIN_DOWN_MS
+              ) {
                 qtRepState.phase = "up";
                 qtRepState.downSince = null;
               }
@@ -983,18 +1000,27 @@ function qtPoseLoop(exerciseKey) {
               const statusEl = document.getElementById("qtStatus");
               if (statusEl && state.questTracking) {
                 const inDown = qtRepState.phase === "down";
-                const held = inDown && qtRepState.downSince
-                  ? Math.round(now - qtRepState.downSince) : 0;
-                const cue = inDown && held < qtRepState.MIN_DOWN_MS
-                  ? `⏬ Hold it... (${held}ms / ${qtRepState.MIN_DOWN_MS}ms)`
-                  : cfg.cue(angle);
+                const held =
+                  inDown && qtRepState.downSince
+                    ? Math.round(now - qtRepState.downSince)
+                    : 0;
+                const cue =
+                  inDown && held < qtRepState.MIN_DOWN_MS
+                    ? `⏬ Hold it... (${held}ms / ${qtRepState.MIN_DOWN_MS}ms)`
+                    : cfg.cue(angle);
                 statusEl.textContent = `${cue}  (${Math.round(angle)}°)`;
-                statusEl.className = cue.includes("⚠️") ? "qt-status bad" : "qt-status";
+                statusEl.className = cue.includes("⚠️")
+                  ? "qt-status bad"
+                  : "qt-status";
               }
 
               ctx.fillStyle = "white";
               ctx.font = "bold 15px Nunito, sans-serif";
-              ctx.fillText(`${Math.round(angle)}°`, (1 - pb.x) * w + 10, pb.y * h);
+              ctx.fillText(
+                `${Math.round(angle)}°`,
+                (1 - pb.x) * w + 10,
+                pb.y * h,
+              );
             }
           }
 
@@ -1108,7 +1134,14 @@ async function startQuestTracking() {
   // Reset all counters
   state.questTracking = true;
   state.questReps = 0;
-  qtRepState = { phase: "down", count: 0, downSince: null, MIN_DOWN_MS: 380, hipBaseline: null, hipSamples: [] };
+  qtRepState = {
+    phase: "down",
+    count: 0,
+    downSince: null,
+    MIN_DOWN_MS: 380,
+    hipBaseline: null,
+    hipSamples: [],
+  };
   qtLastReportedCount = 0;
 
   // Start camera
