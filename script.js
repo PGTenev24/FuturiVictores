@@ -723,7 +723,7 @@ let qtLastReportedCount = 0;
 
 // Rep state — includes hold-time debounce to prevent double-counting
 let qtRepState = {
-  phase: "down",
+  phase: "up",
   count: 0,
   downSince: null,
   MIN_DOWN_MS: 380,
@@ -732,15 +732,20 @@ let qtRepState = {
 };
 
 const QT_EXERCISE_CONFIG = {
+  // Push-up: shoulder(11) → elbow(13) → wrist(15)
+  // Arms extended (top) ≈ 160–170°, arms bent (bottom) ≈ 70–90°
+  // Phase starts "up" (extended) → goes "down" (bent) → comes back "up" = 1 rep
   push_up: {
     joints: [11, 13, 15],
-    downAngle: 75,
-    upAngle: 150,
+    initialPhase: "up",
+    downAngle: 95,   // enter "down" when elbow bends below 95°
+    upAngle: 140,    // count rep when arm extends back above 140°
     cue: (a) =>
-      a < 90 ? "⬆️ Push up!" : a > 145 ? "⬇️ Go lower!" : "✅ Good form!",
+      a < 95 ? "⬆️ Push up!" : a > 140 ? "⬇️ Go lower!" : "✅ Good form!",
   },
   squat: {
     joints: [23, 25, 27],
+    initialPhase: "up",
     downAngle: 95,
     upAngle: 158,
     cue: (a) =>
@@ -748,19 +753,25 @@ const QT_EXERCISE_CONFIG = {
   },
   jumping_jack: {
     joints: [11, 13, 15],
+    initialPhase: "down",
     downAngle: 40,
     upAngle: 120,
     cue: () => "✅ Keep going!",
     custom: true,
   },
+  // Sit-up: shoulder(11) → hip(23) → knee(25)
+  // Lying flat (bottom) ≈ 150–170°, crunched up (top) ≈ 55–80°
+  // Phase starts "up" (lying flat = large angle) → goes "down" (crunch = small angle) → comes back "up" = 1 rep
   sit_up: {
     joints: [11, 23, 25],
-    downAngle: 40,
-    upAngle: 85,
-    cue: (a) => (a < 50 ? "⬆️ Crunch up!" : "⬇️ Lie back!"),
+    initialPhase: "up",
+    downAngle: 80,   // enter "down" (crunched) when angle < 80°
+    upAngle: 120,    // count rep when angle > 120° (back to lying position)
+    cue: (a) => (a < 80 ? "⬆️ Back down slowly!" : a > 120 ? "⬆️ Crunch up!" : "✅ Keep going!"),
   },
   lunge: {
     joints: [23, 25, 27],
+    initialPhase: "up",
     downAngle: 95,
     upAngle: 158,
     cue: (a) => (a < 105 ? "⬆️ Stand up!" : "⬇️ Lunge deeper!"),
@@ -1134,8 +1145,9 @@ async function startQuestTracking() {
   // Reset all counters
   state.questTracking = true;
   state.questReps = 0;
+  const _initCfg = QT_EXERCISE_CONFIG[state.questExercise] || {};
   qtRepState = {
-    phase: "down",
+    phase: _initCfg.initialPhase || "up",
     count: 0,
     downSince: null,
     MIN_DOWN_MS: 380,
