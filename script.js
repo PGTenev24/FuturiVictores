@@ -2,7 +2,8 @@
 // QUICKPOSE API KEY
 // ══════════════════════════════════════════
 const QUICKPOSE_API_KEY = "yhTBfUMuop8mMMQhronmx8vgbDgsCNfq4Mic44oK";
-const GEMINI_API_KEY = "AIzaSyD-ZE_44v0j1sodBc985y64np9HD9FkXQQ";
+const OPENROUTER_API_KEY =
+  "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"; // Get a free key at openrouter.ai
 
 // ══════════════════════════════════════════
 // STATE
@@ -28,42 +29,230 @@ const state = {
 // ══════════════════════════════════════════
 const QUESTS = {
   daily: [
-    { id: "d1", name: "Morning Walk", desc: "Walk for 15 minutes outside.", icon: "🚶", reward: 10, xp: 20, difficulty: "Easy", trackType: "timed", goal: 15 },
-    { id: "d2", name: "Drink Water", desc: "Log 8 glasses of water today.", icon: "💧", reward: 8, xp: 15, difficulty: "Easy", trackType: "manual" },
-    { id: "d3", name: "10 Push-Ups", desc: "Complete 10 push-ups in one session.", icon: "💪", reward: 12, xp: 25, difficulty: "Medium", trackType: "reps", exercise: "push_up", goal: 10 },
-    { id: "d4", name: "15 Squats", desc: "Do 15 squats to power your legs.", icon: "🦵", reward: 10, xp: 20, difficulty: "Easy", trackType: "reps", exercise: "squat", goal: 15 },
-    { id: "d5", name: "Stretch Break", desc: "Do a 5-minute full-body stretch.", icon: "🧘", reward: 8, xp: 15, difficulty: "Easy", trackType: "manual" },
-    { id: "d6", name: "20 Jumping Jacks", desc: "Get your heart pumping with 20 jumping jacks.", icon: "⚡", reward: 12, xp: 22, difficulty: "Easy", trackType: "reps", exercise: "jumping_jack", goal: 20 },
+    {
+      id: "d1",
+      name: "Morning Walk",
+      desc: "Walk for 15 minutes outside.",
+      icon: "🚶",
+      reward: 10,
+      xp: 20,
+      difficulty: "Easy",
+      trackType: "timed",
+      goal: 15,
+    },
+    {
+      id: "d2",
+      name: "Drink Water",
+      desc: "Log 8 glasses of water today.",
+      icon: "💧",
+      reward: 8,
+      xp: 15,
+      difficulty: "Easy",
+      trackType: "manual",
+    },
+    {
+      id: "d3",
+      name: "10 Push-Ups",
+      desc: "Complete 10 push-ups in one session.",
+      icon: "💪",
+      reward: 12,
+      xp: 25,
+      difficulty: "Medium",
+      trackType: "reps",
+      exercise: "push_up",
+      goal: 10,
+    },
+    {
+      id: "d4",
+      name: "15 Squats",
+      desc: "Do 15 squats to power your legs.",
+      icon: "🦵",
+      reward: 10,
+      xp: 20,
+      difficulty: "Easy",
+      trackType: "reps",
+      exercise: "squat",
+      goal: 15,
+    },
+    {
+      id: "d5",
+      name: "Stretch Break",
+      desc: "Do a 5-minute full-body stretch.",
+      icon: "🧘",
+      reward: 8,
+      xp: 15,
+      difficulty: "Easy",
+      trackType: "manual",
+    },
+    {
+      id: "d6",
+      name: "20 Jumping Jacks",
+      desc: "Get your heart pumping with 20 jumping jacks.",
+      icon: "⚡",
+      reward: 12,
+      xp: 22,
+      difficulty: "Easy",
+      trackType: "reps",
+      exercise: "jumping_jack",
+      goal: 20,
+    },
   ],
   weekly: [
-    { id: "w1", name: "5K Steps Daily", desc: "Hit 5,000 steps every day this week.", icon: "👟", reward: 50, xp: 100, difficulty: "Medium", trackType: "manual" },
-    { id: "w2", name: "50 Push-Ups Challenge", desc: "Complete 50 push-ups across the week.", icon: "🏋️", reward: 60, xp: 120, difficulty: "Hard", trackType: "reps", exercise: "push_up", goal: 50 },
-    { id: "w3", name: "Sleep 7hrs", desc: "Get at least 7 hours of sleep 5 nights.", icon: "😴", reward: 40, xp: 80, difficulty: "Medium", trackType: "manual" },
-    { id: "w4", name: "100 Squats Week", desc: "Squat 100 times this week.", icon: "🔥", reward: 70, xp: 140, difficulty: "Hard", trackType: "reps", exercise: "squat", goal: 100 },
+    {
+      id: "w1",
+      name: "5K Steps Daily",
+      desc: "Hit 5,000 steps every day this week.",
+      icon: "👟",
+      reward: 50,
+      xp: 100,
+      difficulty: "Medium",
+      trackType: "manual",
+    },
+    {
+      id: "w2",
+      name: "50 Push-Ups Challenge",
+      desc: "Complete 50 push-ups across the week.",
+      icon: "🏋️",
+      reward: 60,
+      xp: 120,
+      difficulty: "Hard",
+      trackType: "reps",
+      exercise: "push_up",
+      goal: 50,
+    },
+    {
+      id: "w3",
+      name: "Sleep 7hrs",
+      desc: "Get at least 7 hours of sleep 5 nights.",
+      icon: "😴",
+      reward: 40,
+      xp: 80,
+      difficulty: "Medium",
+      trackType: "manual",
+    },
+    {
+      id: "w4",
+      name: "100 Squats Week",
+      desc: "Squat 100 times this week.",
+      icon: "🔥",
+      reward: 70,
+      xp: 140,
+      difficulty: "Hard",
+      trackType: "reps",
+      exercise: "squat",
+      goal: 100,
+    },
   ],
   monthly: [
-    { id: "m1", name: "30-Day Streak", desc: "Complete at least one quest every day for 30 days.", icon: "🔥", reward: 200, xp: 400, difficulty: "Legendary", trackType: "manual" },
-    { id: "m2", name: "500 Rep Master", desc: "Log 500 total reps across all sessions.", icon: "🏆", reward: 150, xp: 300, difficulty: "Hard", trackType: "manual" },
-    { id: "m3", name: "Mindful Month", desc: "Complete a mindfulness activity every week.", icon: "🌿", reward: 120, xp: 250, difficulty: "Medium", trackType: "manual" },
+    {
+      id: "m1",
+      name: "30-Day Streak",
+      desc: "Complete at least one quest every day for 30 days.",
+      icon: "🔥",
+      reward: 200,
+      xp: 400,
+      difficulty: "Legendary",
+      trackType: "manual",
+    },
+    {
+      id: "m2",
+      name: "500 Rep Master",
+      desc: "Log 500 total reps across all sessions.",
+      icon: "🏆",
+      reward: 150,
+      xp: 300,
+      difficulty: "Hard",
+      trackType: "manual",
+    },
+    {
+      id: "m3",
+      name: "Mindful Month",
+      desc: "Complete a mindfulness activity every week.",
+      icon: "🌿",
+      reward: 120,
+      xp: 250,
+      difficulty: "Medium",
+      trackType: "manual",
+    },
   ],
 };
 
 const RANKS = [
-  { name: "Seedling", icon: "🌱", minXp: 0, desc: "Just getting started — every champion was once here." },
-  { name: "Sprout", icon: "🌿", minXp: 100, desc: "You're growing. Keep it up!" },
-  { name: "Runner", icon: "🏃", minXp: 300, desc: "Building momentum and healthy habits." },
-  { name: "Warrior", icon: "⚔️", minXp: 600, desc: "Discipline is your superpower." },
-  { name: "Champion", icon: "🏆", minXp: 1000, desc: "You inspire others just by showing up." },
-  { name: "Legend", icon: "🌟", minXp: 2000, desc: "Elite. You've redefined what's possible." },
+  {
+    name: "Seedling",
+    icon: "🌱",
+    minXp: 0,
+    desc: "Just getting started — every champion was once here.",
+  },
+  {
+    name: "Sprout",
+    icon: "🌿",
+    minXp: 100,
+    desc: "You're growing. Keep it up!",
+  },
+  {
+    name: "Runner",
+    icon: "🏃",
+    minXp: 300,
+    desc: "Building momentum and healthy habits.",
+  },
+  {
+    name: "Warrior",
+    icon: "⚔️",
+    minXp: 600,
+    desc: "Discipline is your superpower.",
+  },
+  {
+    name: "Champion",
+    icon: "🏆",
+    minXp: 1000,
+    desc: "You inspire others just by showing up.",
+  },
+  {
+    name: "Legend",
+    icon: "🌟",
+    minXp: 2000,
+    desc: "Elite. You've redefined what's possible.",
+  },
 ];
 
 const ACHIEVEMENTS = [
-  { id: "a1", name: "First Step", icon: "👣", desc: "Complete your first quest.", reward: 5 },
-  { id: "a2", name: "On a Roll", icon: "🔥", desc: "Complete 3 quests.", reward: 10 },
-  { id: "a3", name: "Quest Master", icon: "🗺️", desc: "Complete 10 quests.", reward: 25 },
+  {
+    id: "a1",
+    name: "First Step",
+    icon: "👣",
+    desc: "Complete your first quest.",
+    reward: 5,
+  },
+  {
+    id: "a2",
+    name: "On a Roll",
+    icon: "🔥",
+    desc: "Complete 3 quests.",
+    reward: 10,
+  },
+  {
+    id: "a3",
+    name: "Quest Master",
+    icon: "🗺️",
+    desc: "Complete 10 quests.",
+    reward: 25,
+  },
   { id: "a4", name: "XP Hunter", icon: "⚡", desc: "Earn 100 XP.", reward: 15 },
-  { id: "a5", name: "Iron Will", icon: "🦾", desc: "Log a 50-rep training session.", reward: 20 },
-  { id: "a6", name: "Century Club", icon: "💯", desc: "Earn 500 XP.", reward: 50 },
+  {
+    id: "a5",
+    name: "Iron Will",
+    icon: "🦾",
+    desc: "Log a 50-rep training session.",
+    reward: 20,
+  },
+  {
+    id: "a6",
+    name: "Century Club",
+    icon: "💯",
+    desc: "Earn 500 XP.",
+    reward: 50,
+  },
 ];
 
 // ══════════════════════════════════════════
@@ -105,22 +294,36 @@ function signIn() {
   if (!usernameEl || !passwordEl) return;
   const username = usernameEl.value.trim().toLowerCase();
   const password = passwordEl.value;
-  if (!username || !password) { if (err) err.textContent = "Please fill in all fields."; return; }
+  if (!username || !password) {
+    if (err) err.textContent = "Please fill in all fields.";
+    return;
+  }
   const account = getAccount(username);
-  if (!account || account.password !== password) { if (err) err.textContent = "Invalid username or password."; return; }
+  if (!account || account.password !== password) {
+    if (err) err.textContent = "Invalid username or password.";
+    return;
+  }
   if (err) err.textContent = "";
   try {
     state.user = loadUserState(username) || account.data;
-    state.user.completedQuests = state.user.completedQuests instanceof Set
-      ? state.user.completedQuests
-      : new Set(Array.isArray(state.user.completedQuests) ? state.user.completedQuests : []);
+    state.user.completedQuests =
+      state.user.completedQuests instanceof Set
+        ? state.user.completedQuests
+        : new Set(
+            Array.isArray(state.user.completedQuests)
+              ? state.user.completedQuests
+              : [],
+          );
     awardedAch.clear();
-    if (Array.isArray(state.user.earnedAchievements)) state.user.earnedAchievements.forEach(id => awardedAch.add(id));
+    if (Array.isArray(state.user.earnedAchievements))
+      state.user.earnedAchievements.forEach((id) => awardedAch.add(id));
     localStorage.setItem("hq_active_user", username);
     afterSignIn();
     closeModal("signModal");
     showToast("👋", `Welcome back, ${state.user.name || username}!`);
-  } catch (e) { if (err) err.textContent = "Something went wrong. Please try again."; }
+  } catch (e) {
+    if (err) err.textContent = "Something went wrong. Please try again.";
+  }
 }
 
 let _pendingSignUp = null;
@@ -133,9 +336,18 @@ function signUp() {
   const name = nameEl ? nameEl.value.trim() : usernameEl.value.trim();
   const username = usernameEl.value.trim().toLowerCase();
   const password = passwordEl.value;
-  if (!username || !password) { if (err) err.textContent = "Please fill in all fields."; return; }
-  if (getAccount(username)) { if (err) err.textContent = "Username already taken."; return; }
-  if (password.length < 4) { if (err) err.textContent = "Password too short (min 4 chars)."; return; }
+  if (!username || !password) {
+    if (err) err.textContent = "Please fill in all fields.";
+    return;
+  }
+  if (getAccount(username)) {
+    if (err) err.textContent = "Username already taken.";
+    return;
+  }
+  if (password.length < 4) {
+    if (err) err.textContent = "Password too short (min 4 chars).";
+    return;
+  }
   if (err) err.textContent = "";
   _pendingSignUp = { name: name || username, username, password };
   const signUpView = document.getElementById("signUpView");
@@ -151,18 +363,43 @@ function finishSignUp() {
   const weightUnit = document.getElementById("bpWeightUnit")?.value || "kg";
   const height = document.getElementById("bpHeight")?.value?.trim();
   const heightUnit = document.getElementById("bpHeightUnit")?.value || "cm";
-  const bodyType = document.querySelector(".bp-option-btn.active[data-group='bodyType']")?.dataset.value;
-  const goal = document.querySelector(".bp-option-btn.active[data-group='goal']")?.dataset.value;
-  const activity = document.querySelector(".bp-option-btn.active[data-group='activity']")?.dataset.value;
+  const bodyType = document.querySelector(
+    ".bp-option-btn.active[data-group='bodyType']",
+  )?.dataset.value;
+  const goal = document.querySelector(
+    ".bp-option-btn.active[data-group='goal']",
+  )?.dataset.value;
+  const activity = document.querySelector(
+    ".bp-option-btn.active[data-group='activity']",
+  )?.dataset.value;
   const bpErr = document.getElementById("bpError");
   if (!age || !weight || !height || !bodyType || !goal || !activity) {
-    if (bpErr) bpErr.textContent = "Please complete all fields and selections."; return;
+    if (bpErr) bpErr.textContent = "Please complete all fields and selections.";
+    return;
   }
   if (bpErr) bpErr.textContent = "";
   const { name, username, password } = _pendingSignUp;
   _pendingSignUp = null;
-  const profile = { age: +age, weight: +weight, weightUnit, height: +height, heightUnit, bodyType, goal, activity };
-  const userData = { name, username, stars: 0, xp: 0, streak: 1, completedQuests: new Set(), earnedAchievements: [], profile };
+  const profile = {
+    age: +age,
+    weight: +weight,
+    weightUnit,
+    height: +height,
+    heightUnit,
+    bodyType,
+    goal,
+    activity,
+  };
+  const userData = {
+    name,
+    username,
+    stars: 0,
+    xp: 0,
+    streak: 1,
+    completedQuests: new Set(),
+    earnedAchievements: [],
+    profile,
+  };
   saveAccount(username, password, userData);
   state.user = userData;
   awardedAch.clear();
@@ -184,15 +421,23 @@ function afterSignIn() {
   const avatarBtn = document.getElementById("avatarBtn");
   if (avatarBtn) {
     avatarBtn.classList.add("visible");
-    avatarBtn.textContent = u.name ? u.name[0].toUpperCase() : u.username ? u.username[0].toUpperCase() : "?";
-    avatarBtn.onclick = () => window.location.href = "settings.html";
+    avatarBtn.textContent = u.name
+      ? u.name[0].toUpperCase()
+      : u.username
+        ? u.username[0].toUpperCase()
+        : "?";
+    avatarBtn.onclick = () => (window.location.href = "settings.html");
   }
   const signoutBtn = document.getElementById("signoutBtn");
   if (signoutBtn) signoutBtn.style.display = "inline-block";
   const settingsSignBtn = document.getElementById("settingsSignBtn");
-  if (settingsSignBtn) { settingsSignBtn.textContent = "Signed In ✓"; settingsSignBtn.disabled = true; }
+  if (settingsSignBtn) {
+    settingsSignBtn.textContent = "Signed In ✓";
+    settingsSignBtn.disabled = true;
+  }
   const settingsAccountDesc = document.getElementById("settingsAccountDesc");
-  if (settingsAccountDesc) settingsAccountDesc.textContent = `Signed in as ${u.username}`;
+  if (settingsAccountDesc)
+    settingsAccountDesc.textContent = `Signed in as ${u.username}`;
   const profileGroup = document.getElementById("profileGroup");
   if (profileGroup) profileGroup.style.display = "block";
   updateHeaderStats();
@@ -204,6 +449,7 @@ function afterSignIn() {
   renderFriendsList();
   renderPendingRequests();
   renderLeaderboard();
+  updateCalorieUI();
 }
 
 function signOut() {
@@ -215,7 +461,10 @@ function signOut() {
   const userStats = document.getElementById("userStats");
   if (userStats) userStats.classList.remove("visible");
   const avatarBtn = document.getElementById("avatarBtn");
-  if (avatarBtn) { avatarBtn.classList.remove("visible"); avatarBtn.textContent = ""; }
+  if (avatarBtn) {
+    avatarBtn.classList.remove("visible");
+    avatarBtn.textContent = "";
+  }
   const signoutBtn = document.getElementById("signoutBtn");
   if (signoutBtn) signoutBtn.style.display = "none";
   renderQuestsGrid();
@@ -245,45 +494,77 @@ async function generateAIQuests() {
   if (!state.user?.profile) return;
   const p = state.user.profile;
   const grid = document.getElementById("questsGrid");
-  if (grid) grid.innerHTML = `<div class="quest-generating"><div class="quest-gen-spinner"></div><p>🤖 Generating personalised quests...</p></div>`;
-  const prompt = `You are a fitness AI for StayFit app. Generate personalised quests for:
-Age: ${p.age}, Weight: ${p.weight}${p.weightUnit}, Height: ${p.height}${p.heightUnit}, Body: ${p.bodyType}, Goal: ${p.goal}, Activity: ${p.activity}.
-Generate exactly 13 quests total: 6 daily, 4 weekly, 3 monthly.
-For quests that involve physical exercises (push-ups, squats, jumping jacks, sit-ups, lunges), include trackType "reps" and the exercise name.
-Available exercise values: push_up, squat, jumping_jack, sit_up, lunge
-Respond ONLY with valid JSON, no markdown:
-{"daily":[{"id":"d1","name":"...","desc":"...","icon":"<emoji>","reward":<5-20>,"xp":<10-40>,"difficulty":"Easy|Medium|Hard","trackType":"reps|manual","exercise":"push_up|squat|jumping_jack|sit_up|lunge|null","goal":<number or null>},...6 total],"weekly":[...4 total],"monthly":[...3 total]}`;
+  if (grid)
+    grid.innerHTML = `<div class="quest-generating"><div class="quest-gen-spinner"></div><p>🤖 Generating personalised quests...</p></div>`;
 
-  if (!GEMINI_API_KEY || GEMINI_API_KEY === "YOUR_GEMINI_KEY_HERE") {
-    renderQuestsGrid(); return;
+  if (
+    !OPENROUTER_API_KEY ||
+    OPENROUTER_API_KEY === "YOUR_OPENROUTER_KEY_HERE"
+  ) {
+    renderQuestsGrid();
+    return;
   }
+
+  const prompt = `You are a fitness AI. The user profile is:
+Age: ${p.age}, Weight: ${p.weight}${p.weightUnit}, Height: ${p.height}${p.heightUnit}, Body: ${p.bodyType}, Goal: ${p.goal}, Activity: ${p.activity}.
+
+Task 1: Calculate a personalised daily calorie goal using Mifflin-St Jeor formula. Activity multipliers: sedentary=1.2, lightly-active=1.375, very-active=1.725. Adjust: lose-weight -300 kcal, build-strength +200 kcal. Return as "calorieGoal" integer.
+
+Task 2: Generate exactly 13 quests: 6 daily, 4 weekly, 3 monthly. Tailor to the user's goal and activity. For exercises use trackType "reps". Available exercise values: push_up, squat, jumping_jack, sit_up, lunge.
+
+Respond ONLY with raw valid JSON, no markdown, no backticks, no explanation whatsoever:
+{"calorieGoal":<integer>,"daily":[{"id":"d1","name":"...","desc":"...","icon":"<emoji>","reward":<5-20>,"xp":<10-40>,"difficulty":"Easy|Medium|Hard","trackType":"reps|manual","exercise":"push_up|squat|jumping_jack|sit_up|lunge|null","goal":<number or null>},...6 total],"weekly":[...4 total],"monthly":[...3 total]}`;
+
   try {
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
-      { method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1400 } }) }
+      "https://openrouter.ai/api/v1/chat/completions",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${OPENROUTER_API_KEY}`,
+          "HTTP-Referer": window.location.origin,
+          "X-Title": "StayFit",
+        },
+        body: JSON.stringify({
+          model: "meta-llama/llama-3.2-3b-instruct:free",
+          messages: [{ role: "user", content: prompt }],
+          temperature: 0.7,
+          max_tokens: 1500,
+        }),
+      },
     );
-    if (!response.ok) throw new Error(`API error ${response.status}`);
+
+    if (!response.ok) {
+      const errBody = await response.json().catch(() => ({}));
+      throw new Error(errBody?.error?.message || `HTTP ${response.status}`);
+    }
+
     const data = await response.json();
-    const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+    const text = data.choices?.[0]?.message?.content || "";
     const clean = text.replace(/```json|```/g, "").trim();
     const generated = JSON.parse(clean);
+
     if (generated.daily && generated.weekly && generated.monthly) {
       state.user.aiQuests = generated;
+      if (generated.calorieGoal && generated.calorieGoal > 0) {
+        if (!state.user.profile) state.user.profile = {};
+        state.user.profile.aiCalorieGoal = generated.calorieGoal;
+      }
       saveUserState();
       QUESTS.daily = generated.daily;
       QUESTS.weekly = generated.weekly;
       QUESTS.monthly = generated.monthly;
       renderQuestsGrid();
+      updateCalorieUI();
       showToast("🤖", "Your personalised quests are ready!");
-    } else throw new Error("Invalid format");
+    } else throw new Error("Invalid format from AI");
   } catch (e) {
     console.error("AI quest generation failed:", e.message);
     renderQuestsGrid();
     showToast("⚠️", `Quest generation failed: ${e.message}`);
   }
 }
-
 function loadAIQuestsIfSaved() {
   if (state.user?.aiQuests) {
     const q = state.user.aiQuests;
@@ -297,11 +578,15 @@ function loadAIQuestsIfSaved() {
 // BODY PROFILE OPTION BUTTONS
 // ══════════════════════════════════════════
 function selectBpOption(btn, group) {
-  document.querySelectorAll(`.bp-option-btn[data-group="${group}"]`).forEach(b => b.classList.remove("active"));
+  document
+    .querySelectorAll(`.bp-option-btn[data-group="${group}"]`)
+    .forEach((b) => b.classList.remove("active"));
   btn.classList.add("active");
 }
 function selectSpOption(btn, group) {
-  document.querySelectorAll(`.sp-option-btn[data-group="${group}"]`).forEach(b => b.classList.remove("active"));
+  document
+    .querySelectorAll(`.sp-option-btn[data-group="${group}"]`)
+    .forEach((b) => b.classList.remove("active"));
   btn.classList.add("active");
 }
 
@@ -312,17 +597,39 @@ async function saveProfile() {
   const weightUnit = document.getElementById("spWeightUnit")?.value || "kg";
   const height = document.getElementById("spHeight")?.value?.trim();
   const heightUnit = document.getElementById("spHeightUnit")?.value || "cm";
-  const bodyType = document.querySelector(".sp-option-btn.active[data-group='bodyType']")?.dataset.value;
-  const goal = document.querySelector(".sp-option-btn.active[data-group='goal']")?.dataset.value;
-  const activity = document.querySelector(".sp-option-btn.active[data-group='activity']")?.dataset.value;
+  const bodyType = document.querySelector(
+    ".sp-option-btn.active[data-group='bodyType']",
+  )?.dataset.value;
+  const goal = document.querySelector(
+    ".sp-option-btn.active[data-group='goal']",
+  )?.dataset.value;
+  const activity = document.querySelector(
+    ".sp-option-btn.active[data-group='activity']",
+  )?.dataset.value;
   const msg = document.getElementById("profileSaveMsg");
   if (!age || !weight || !height || !bodyType || !goal || !activity) {
-    if (msg) { msg.textContent = "Please fill in all fields."; msg.style.color = "#e07a5f"; } return;
+    if (msg) {
+      msg.textContent = "Please fill in all fields.";
+      msg.style.color = "#e07a5f";
+    }
+    return;
   }
-  state.user.profile = { age: +age, weight: +weight, weightUnit, height: +height, heightUnit, bodyType, goal, activity };
+  state.user.profile = {
+    age: +age,
+    weight: +weight,
+    weightUnit,
+    height: +height,
+    heightUnit,
+    bodyType,
+    goal,
+    activity,
+  };
   state.user.aiQuests = null;
   saveUserState();
-  if (msg) { msg.textContent = "Saved! Regenerating your quests..."; msg.style.color = "var(--green)"; }
+  if (msg) {
+    msg.textContent = "Saved! Regenerating your quests...";
+    msg.style.color = "var(--green)";
+  }
   await generateAIQuests();
   if (msg) msg.textContent = "Profile saved and quests updated ✓";
 }
@@ -330,12 +637,21 @@ async function saveProfile() {
 function populateProfileSettings() {
   if (!state.user?.profile) return;
   const p = state.user.profile;
-  const set = (id, val) => { const el = document.getElementById(id); if (el) el.value = val; };
-  set("spAge", p.age); set("spWeight", p.weight); set("spWeightUnit", p.weightUnit);
-  set("spHeight", p.height); set("spHeightUnit", p.heightUnit);
-  ["bodyType", "goal", "activity"].forEach(group => {
-    const val = p[group]; if (!val) return;
-    document.querySelectorAll(`.sp-option-btn[data-group="${group}"]`).forEach(b => b.classList.toggle("active", b.dataset.value === val));
+  const set = (id, val) => {
+    const el = document.getElementById(id);
+    if (el) el.value = val;
+  };
+  set("spAge", p.age);
+  set("spWeight", p.weight);
+  set("spWeightUnit", p.weightUnit);
+  set("spHeight", p.height);
+  set("spHeightUnit", p.heightUnit);
+  ["bodyType", "goal", "activity"].forEach((group) => {
+    const val = p[group];
+    if (!val) return;
+    document
+      .querySelectorAll(`.sp-option-btn[data-group="${group}"]`)
+      .forEach((b) => b.classList.toggle("active", b.dataset.value === val));
   });
 }
 
@@ -344,7 +660,9 @@ function populateProfileSettings() {
 // ══════════════════════════════════════════
 function getRank(xp) {
   let rank = RANKS[0];
-  for (const r of RANKS) { if (xp >= r.minXp) rank = r; }
+  for (const r of RANKS) {
+    if (xp >= r.minXp) rank = r;
+  }
   return rank;
 }
 
@@ -353,7 +671,9 @@ function getRank(xp) {
 // ══════════════════════════════════════════
 function filterQuests(type, btn) {
   state.currentQuestFilter = type;
-  document.querySelectorAll(".quest-tab-btn").forEach(b => b.classList.remove("active"));
+  document
+    .querySelectorAll(".quest-tab-btn")
+    .forEach((b) => b.classList.remove("active"));
   if (btn) btn.classList.add("active");
   renderQuestsGrid();
 }
@@ -363,12 +683,18 @@ function renderQuestsGrid() {
   if (!grid) return;
   const quests = QUESTS[state.currentQuestFilter] || [];
   const completed = state.user ? state.user.completedQuests : new Set();
-  grid.innerHTML = quests.map(q => {
-    const done = completed.has(q.id);
-    const isPhysical = q.trackType === "reps" && q.exercise;
-    const btnLabel = done ? "✓ Completed" : !state.user ? "Sign in to track" :
-      isPhysical ? "🎥 Start Quest" : "✓ Mark Complete";
-    return `<div class="quest-card ${done ? "completed" : ""}">
+  grid.innerHTML = quests
+    .map((q) => {
+      const done = completed.has(q.id);
+      const isPhysical = q.trackType === "reps" && q.exercise;
+      const btnLabel = done
+        ? "✓ Completed"
+        : !state.user
+          ? "Sign in to track"
+          : isPhysical
+            ? "🎥 Start Quest"
+            : "✓ Mark Complete";
+      return `<div class="quest-card ${done ? "completed" : ""}">
       <div class="quest-icon">${q.icon}</div>
       <div class="quest-name">${q.name}</div>
       <div class="quest-desc">${q.desc}</div>
@@ -376,47 +702,76 @@ function renderQuestsGrid() {
         <div class="quest-reward">⭐ ${q.reward} stars · +${q.xp} XP</div>
         <div class="quest-difficulty">${q.difficulty}</div>
       </div>
-      ${isPhysical && q.goal ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;font-weight:700;">🎯 Goal: ${q.goal} ${q.exercise.replace('_',' ')}s</div>` : ''}
+      ${isPhysical && q.goal ? `<div style="font-size:0.78rem;color:var(--text-muted);margin-bottom:0.75rem;font-weight:700;">🎯 Goal: ${q.goal} ${q.exercise.replace("_", " ")}s</div>` : ""}
       <button class="btn-start-quest" ${done || !state.user ? "disabled" : ""} onclick="${isPhysical ? `openQuestTracker('${q.id}')` : `completeQuest('${q.id}')`}">
         ${btnLabel}
       </button>
     </div>`;
-  }).join("");
+    })
+    .join("");
 }
 
 // ══════════════════════════════════════════
 // MEDIAPIPE REAL AI — QUEST TRACKER
 // ══════════════════════════════════════════
-let _mpLoaded        = false;
-let _PoseLandmarker  = null;
-let _DrawingUtils    = null;
+let _mpLoaded = false;
+let _PoseLandmarker = null;
+let _DrawingUtils = null;
 let qtPoseLandmarker = null;
-let qtAnimFrame      = null;
-let qtLastVideoTime  = -1;
-let qtMpRunning      = false;
-let qtOverlayCanvas  = null;
-let qtDrawingUtils   = null;
+let qtAnimFrame = null;
+let qtLastVideoTime = -1;
+let qtMpRunning = false;
+let qtOverlayCanvas = null;
+let qtDrawingUtils = null;
 let qtLastReportedCount = 0;
 
 // Rep state — includes hold-time debounce to prevent double-counting
 let qtRepState = {
-  phase: "up",       // "up" | "down"
+  phase: "up", // "up" | "down"
   count: 0,
-  downSince: null,   // timestamp (ms) when we entered the "down" position
-  MIN_DOWN_MS: 380,  // must stay in "down" at least this long before the up-swing scores a rep
+  downSince: null, // timestamp (ms) when we entered the "down" position
+  MIN_DOWN_MS: 380, // must stay in "down" at least this long before the up-swing scores a rep
 };
 
 const QT_EXERCISE_CONFIG = {
-  push_up:      { joints:[11,13,15], downAngle:75,  upAngle:150, cue:(a)=>a<90?"⬆️ Push up!":a>145?"⬇️ Go lower!":"✅ Good form!" },
-  squat:        { joints:[23,25,27], downAngle:95,  upAngle:158, cue:(a)=>a<105?"⬆️ Stand up!":a>155?"⬇️ Squat lower!":"✅ Good depth!" },
-  jumping_jack: { joints:[11,13,15], downAngle:40,  upAngle:120, cue:()=>"✅ Keep going!" },
-  sit_up:       { joints:[11,23,25], downAngle:40,  upAngle:85,  cue:(a)=>a<50?"⬆️ Crunch up!":"⬇️ Lie back!" },
-  lunge:        { joints:[23,25,27], downAngle:95,  upAngle:158, cue:(a)=>a<105?"⬆️ Stand up!":"⬇️ Lunge deeper!" },
+  push_up: {
+    joints: [11, 13, 15],
+    downAngle: 75,
+    upAngle: 150,
+    cue: (a) =>
+      a < 90 ? "⬆️ Push up!" : a > 145 ? "⬇️ Go lower!" : "✅ Good form!",
+  },
+  squat: {
+    joints: [23, 25, 27],
+    downAngle: 95,
+    upAngle: 158,
+    cue: (a) =>
+      a < 105 ? "⬆️ Stand up!" : a > 155 ? "⬇️ Squat lower!" : "✅ Good depth!",
+  },
+  jumping_jack: {
+    joints: [11, 13, 15],
+    downAngle: 40,
+    upAngle: 120,
+    cue: () => "✅ Keep going!",
+  },
+  sit_up: {
+    joints: [11, 23, 25],
+    downAngle: 40,
+    upAngle: 85,
+    cue: (a) => (a < 50 ? "⬆️ Crunch up!" : "⬇️ Lie back!"),
+  },
+  lunge: {
+    joints: [23, 25, 27],
+    downAngle: 95,
+    upAngle: 158,
+    cue: (a) => (a < 105 ? "⬆️ Stand up!" : "⬇️ Lunge deeper!"),
+  },
 };
 
 function qtGetAngle(a, b, c) {
-  const rad = Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
-  let deg = Math.abs(rad * 180 / Math.PI);
+  const rad =
+    Math.atan2(c.y - b.y, c.x - b.x) - Math.atan2(a.y - b.y, a.x - b.x);
+  let deg = Math.abs((rad * 180) / Math.PI);
   if (deg > 180) deg = 360 - deg;
   return deg;
 }
@@ -424,25 +779,28 @@ function qtGetAngle(a, b, c) {
 async function qtLoadMediaPipe() {
   if (qtPoseLandmarker) return;
   if (!_mpLoaded) {
-    const mod = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
+    const mod =
+      await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
     _PoseLandmarker = mod.PoseLandmarker;
-    _DrawingUtils   = mod.DrawingUtils;
+    _DrawingUtils = mod.DrawingUtils;
     _mpLoaded = true;
   }
-  const { FilesetResolver } = await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
+  const { FilesetResolver } =
+    await import("https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/vision_bundle.mjs");
   const vision = await FilesetResolver.forVisionTasks(
-    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm"
+    "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm",
   );
   qtPoseLandmarker = await _PoseLandmarker.createFromOptions(vision, {
     baseOptions: {
-      modelAssetPath: "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
-      delegate: "GPU"
+      modelAssetPath:
+        "https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_lite/float16/1/pose_landmarker_lite.task",
+      delegate: "GPU",
     },
     runningMode: "VIDEO",
     numPoses: 1,
     minPoseDetectionConfidence: 0.5,
     minPosePresenceConfidence: 0.5,
-    minTrackingConfidence:     0.5,
+    minTrackingConfidence: 0.5,
   });
 }
 
@@ -453,7 +811,8 @@ function qtEnsureCanvas() {
   if (!c) {
     c = document.createElement("canvas");
     c.id = "qtPoseCanvas";
-    c.style.cssText = "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10;";
+    c.style.cssText =
+      "position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:10;";
     box.appendChild(c);
   }
   qtOverlayCanvas = c;
@@ -471,13 +830,17 @@ function qtPoseLoop(exerciseKey) {
     qtLastVideoTime = video.currentTime;
 
     let results;
-    try { results = qtPoseLandmarker.detectForVideo(video, performance.now()); }
-    catch(e) { qtAnimFrame = requestAnimationFrame(() => qtPoseLoop(exerciseKey)); return; }
+    try {
+      results = qtPoseLandmarker.detectForVideo(video, performance.now());
+    } catch (e) {
+      qtAnimFrame = requestAnimationFrame(() => qtPoseLoop(exerciseKey));
+      return;
+    }
 
     if (qtOverlayCanvas) {
-      const w = video.videoWidth  || video.clientWidth;
+      const w = video.videoWidth || video.clientWidth;
       const h = video.videoHeight || video.clientHeight;
-      qtOverlayCanvas.width  = w;
+      qtOverlayCanvas.width = w;
       qtOverlayCanvas.height = h;
       const ctx = qtOverlayCanvas.getContext("2d");
       ctx.clearRect(0, 0, w, h);
@@ -493,22 +856,31 @@ function qtPoseLoop(exerciseKey) {
         ctx.translate(w, 0);
         ctx.scale(-1, 1);
         if (!qtDrawingUtils) qtDrawingUtils = new _DrawingUtils(ctx);
-        qtDrawingUtils.drawLandmarks(lm, { color:"#6abf7b", lineWidth:2, radius:3 });
-        qtDrawingUtils.drawConnectors(lm, _PoseLandmarker.POSE_CONNECTIONS, { color:"#3d7a4f", lineWidth:2 });
+        qtDrawingUtils.drawLandmarks(lm, {
+          color: "#6abf7b",
+          lineWidth: 2,
+          radius: 3,
+        });
+        qtDrawingUtils.drawConnectors(lm, _PoseLandmarker.POSE_CONNECTIONS, {
+          color: "#3d7a4f",
+          lineWidth: 2,
+        });
         ctx.restore();
 
         // ── Rep counting with hold-time debounce ──
         const cfg = QT_EXERCISE_CONFIG[exerciseKey];
         if (cfg) {
           const [ai, bi, ci] = cfg.joints;
-          const pa = lm[ai], pb = lm[bi], pc = lm[ci];
+          const pa = lm[ai],
+            pb = lm[bi],
+            pc = lm[ci];
           if (pa && pb && pc) {
             const angle = qtGetAngle(pa, pb, pc);
-            const now   = performance.now();
+            const now = performance.now();
 
             // Transition to "down"
             if (angle < cfg.downAngle && qtRepState.phase === "up") {
-              qtRepState.phase     = "down";
+              qtRepState.phase = "down";
               qtRepState.downSince = now;
             }
 
@@ -519,18 +891,21 @@ function qtPoseLoop(exerciseKey) {
               angle > cfg.upAngle &&
               qtRepState.phase === "down" &&
               qtRepState.downSince !== null &&
-              (now - qtRepState.downSince) >= qtRepState.MIN_DOWN_MS
+              now - qtRepState.downSince >= qtRepState.MIN_DOWN_MS
             ) {
-              qtRepState.phase     = "up";
+              qtRepState.phase = "up";
               qtRepState.downSince = null;
               qtRepState.count++;
             }
 
             // If they came back up too fast (noise), just reset phase without counting
-            if (angle > cfg.upAngle && qtRepState.phase === "down" &&
-                qtRepState.downSince !== null &&
-                (now - qtRepState.downSince) < qtRepState.MIN_DOWN_MS) {
-              qtRepState.phase     = "up";
+            if (
+              angle > cfg.upAngle &&
+              qtRepState.phase === "down" &&
+              qtRepState.downSince !== null &&
+              now - qtRepState.downSince < qtRepState.MIN_DOWN_MS
+            ) {
+              qtRepState.phase = "up";
               qtRepState.downSince = null;
               // count stays the same — rep not awarded
             }
@@ -549,14 +924,20 @@ function qtPoseLoop(exerciseKey) {
             // Status message
             const statusEl = document.getElementById("qtStatus");
             if (statusEl && state.questTracking) {
-              const inDown   = qtRepState.phase === "down";
-              const held     = inDown && qtRepState.downSince ? Math.round(now - qtRepState.downSince) : 0;
+              const inDown = qtRepState.phase === "down";
+              const held =
+                inDown && qtRepState.downSince
+                  ? Math.round(now - qtRepState.downSince)
+                  : 0;
               const needHold = qtRepState.MIN_DOWN_MS;
-              const cue = inDown && held < needHold
-                ? `⏬ Hold it... (${held}ms / ${needHold}ms)`
-                : cfg.cue(angle);
+              const cue =
+                inDown && held < needHold
+                  ? `⏬ Hold it... (${held}ms / ${needHold}ms)`
+                  : cfg.cue(angle);
               statusEl.textContent = `${cue}  (${Math.round(angle)}°)`;
-              statusEl.className   = cue.includes("⚠️") ? "qt-status bad" : "qt-status";
+              statusEl.className = cue.includes("⚠️")
+                ? "qt-status bad"
+                : "qt-status";
             }
 
             // Draw angle label — mirror the x position to match the flipped video
@@ -569,7 +950,8 @@ function qtPoseLoop(exerciseKey) {
         }
       } else {
         const statusEl = document.getElementById("qtStatus");
-        if (statusEl && state.questTracking) statusEl.textContent = "👁️ Step into frame...";
+        if (statusEl && state.questTracking)
+          statusEl.textContent = "👁️ Step into frame...";
       }
     }
   }
@@ -579,12 +961,15 @@ function qtPoseLoop(exerciseKey) {
 
 function qtStopPose() {
   qtMpRunning = false;
-  if (qtAnimFrame) { cancelAnimationFrame(qtAnimFrame); qtAnimFrame = null; }
+  if (qtAnimFrame) {
+    cancelAnimationFrame(qtAnimFrame);
+    qtAnimFrame = null;
+  }
   const c = document.getElementById("qtPoseCanvas");
   if (c) c.remove();
-  qtOverlayCanvas  = null;
-  qtDrawingUtils   = null;
-  qtLastVideoTime  = -1;
+  qtOverlayCanvas = null;
+  qtDrawingUtils = null;
+  qtLastVideoTime = -1;
 }
 
 // ══════════════════════════════════════════
@@ -593,36 +978,44 @@ function qtStopPose() {
 function openQuestTracker(qid) {
   if (!state.user) return;
   const allQ = [...QUESTS.daily, ...QUESTS.weekly, ...QUESTS.monthly];
-  const q = allQ.find(x => x.id === qid);
+  const q = allQ.find((x) => x.id === qid);
   if (!q) return;
 
   state.activeQuest = q;
-  state.questReps   = 0;
-  state.questGoal   = q.goal || 10;
+  state.questReps = 0;
+  state.questGoal = q.goal || 10;
 
-  const titleEl    = document.getElementById("qtTitle");
-  const descEl     = document.getElementById("qtDesc");
+  const titleEl = document.getElementById("qtTitle");
+  const descEl = document.getElementById("qtDesc");
   const repCountEl = document.getElementById("qtRepCount");
-  const goalEl     = document.getElementById("qtGoalNum");
+  const goalEl = document.getElementById("qtGoalNum");
   const repLabelEl = document.getElementById("qtRepLabel");
   const progressFill = document.getElementById("qtProgressFill");
-  const statusEl   = document.getElementById("qtStatus");
-  const qtOverlay  = document.getElementById("qtOverlay");
+  const statusEl = document.getElementById("qtStatus");
+  const qtOverlay = document.getElementById("qtOverlay");
   const qtOverlayTxt = document.getElementById("qtOverlayTxt");
-  const btnStart   = document.getElementById("qtBtnStart");
-  const btnStop    = document.getElementById("qtBtnStop");
+  const btnStart = document.getElementById("qtBtnStart");
+  const btnStop = document.getElementById("qtBtnStop");
 
-  if (titleEl)      titleEl.textContent = q.name;
-  if (descEl)       descEl.textContent  = q.desc;
-  if (repCountEl)   repCountEl.textContent = "0";
-  if (goalEl)       goalEl.textContent  = state.questGoal;
-  if (repLabelEl)   repLabelEl.textContent = "reps done";
+  if (titleEl) titleEl.textContent = q.name;
+  if (descEl) descEl.textContent = q.desc;
+  if (repCountEl) repCountEl.textContent = "0";
+  if (goalEl) goalEl.textContent = state.questGoal;
+  if (repLabelEl) repLabelEl.textContent = "reps done";
   if (progressFill) progressFill.style.width = "0%";
-  if (statusEl)     { statusEl.textContent = "Ready when you are 🌿"; statusEl.className = "qt-status"; }
-  if (qtOverlay)    qtOverlay.classList.remove("hidden");
-  if (qtOverlayTxt) qtOverlayTxt.textContent = "Press Start to activate camera & begin tracking";
-  if (btnStart)     { btnStart.style.display = "inline-block"; btnStart.disabled = false; }
-  if (btnStop)      btnStop.classList.remove("visible");
+  if (statusEl) {
+    statusEl.textContent = "Ready when you are 🌿";
+    statusEl.className = "qt-status";
+  }
+  if (qtOverlay) qtOverlay.classList.remove("hidden");
+  if (qtOverlayTxt)
+    qtOverlayTxt.textContent =
+      "Press Start to activate camera & begin tracking";
+  if (btnStart) {
+    btnStart.style.display = "inline-block";
+    btnStart.disabled = false;
+  }
+  if (btnStop) btnStop.classList.remove("visible");
 
   const modal = document.getElementById("questTrackerModal");
   if (modal) modal.classList.add("visible");
@@ -639,37 +1032,46 @@ let questPoseTimer = null;
 
 async function startQuestTracking() {
   if (!state.activeQuest) return;
-  const q       = state.activeQuest;
-  const btnStart  = document.getElementById("qtBtnStart");
-  const btnStop   = document.getElementById("qtBtnStop");
-  const statusEl  = document.getElementById("qtStatus");
+  const q = state.activeQuest;
+  const btnStart = document.getElementById("qtBtnStart");
+  const btnStop = document.getElementById("qtBtnStop");
+  const statusEl = document.getElementById("qtStatus");
 
   if (btnStart) btnStart.style.display = "none";
-  if (btnStop)  btnStop.classList.add("visible");
-  if (statusEl) { statusEl.textContent = "🔄 Loading AI model..."; statusEl.className = "qt-status"; }
+  if (btnStop) btnStop.classList.add("visible");
+  if (statusEl) {
+    statusEl.textContent = "🔄 Loading AI model...";
+    statusEl.className = "qt-status";
+  }
 
   // Reset all counters
-  state.questTracking     = true;
-  state.questReps         = 0;
-  qtRepState              = { phase:"up", count:0, downSince:null, MIN_DOWN_MS:380 };
-  qtLastReportedCount     = 0;
+  state.questTracking = true;
+  state.questReps = 0;
+  qtRepState = { phase: "up", count: 0, downSince: null, MIN_DOWN_MS: 380 };
+  qtLastReportedCount = 0;
 
   // Start camera
   try {
-    const stream = await navigator.mediaDevices.getUserMedia({ video:{ width:640, height:480, facingMode:"user" } });
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: { width: 640, height: 480, facingMode: "user" },
+    });
     state.questStream = stream;
     const video = document.getElementById("qtVideo");
     if (video) {
       video.srcObject = stream;
-      await new Promise(r => { video.onloadedmetadata = r; });
+      await new Promise((r) => {
+        video.onloadedmetadata = r;
+      });
       await video.play();
     }
     const overlay = document.getElementById("qtOverlay");
     if (overlay) overlay.classList.add("hidden");
-  } catch(e) {
+  } catch (e) {
     showToast("📷", "Camera access denied — please allow camera permissions.");
-    if (btnStart) { btnStart.style.display = "inline-block"; }
-    if (btnStop)  btnStop.classList.remove("visible");
+    if (btnStart) {
+      btnStart.style.display = "inline-block";
+    }
+    if (btnStop) btnStop.classList.remove("visible");
     state.questTracking = false;
     return;
   }
@@ -677,28 +1079,36 @@ async function startQuestTracking() {
   // Load MediaPipe
   try {
     await qtLoadMediaPipe();
-  } catch(e) {
+  } catch (e) {
     console.error("MediaPipe failed to load:", e);
-    showToast("⚠️", "AI model failed to load — check your connection and try again.");
+    showToast(
+      "⚠️",
+      "AI model failed to load — check your connection and try again.",
+    );
     stopQuestTracking();
     return;
   }
 
   qtEnsureCanvas();
   qtMpRunning = true;
-  if (statusEl) { statusEl.textContent = "👁️ AI is watching — do your reps!"; statusEl.className = "qt-status"; }
+  if (statusEl) {
+    statusEl.textContent = "👁️ AI is watching — do your reps!";
+    statusEl.className = "qt-status";
+  }
   qtPoseLoop(q.exercise || "squat");
 }
 
 function updateQuestRepUI() {
   state.questReps++;
-  const repCountEl   = document.getElementById("qtRepCount");
+  const repCountEl = document.getElementById("qtRepCount");
   const progressFill = document.getElementById("qtProgressFill");
   const pct = Math.min(100, (state.questReps / state.questGoal) * 100);
   if (repCountEl) {
     repCountEl.textContent = state.questReps;
     repCountEl.style.transform = "scale(1.35)";
-    setTimeout(() => { if (repCountEl) repCountEl.style.transform = "scale(1)"; }, 200);
+    setTimeout(() => {
+      if (repCountEl) repCountEl.style.transform = "scale(1)";
+    }, 200);
   }
   if (progressFill) progressFill.style.width = pct + "%";
 }
@@ -721,16 +1131,19 @@ function stopQuestTracking() {
   qtStopPose();
 
   if (state.questStream) {
-    state.questStream.getTracks().forEach(t => t.stop());
+    state.questStream.getTracks().forEach((t) => t.stop());
     state.questStream = null;
     const video = document.getElementById("qtVideo");
     if (video) video.srcObject = null;
   }
 
   const btnStart = document.getElementById("qtBtnStart");
-  const btnStop  = document.getElementById("qtBtnStop");
-  if (btnStart) { btnStart.style.display = "inline-block"; btnStart.disabled = false; }
-  if (btnStop)  btnStop.classList.remove("visible");
+  const btnStop = document.getElementById("qtBtnStop");
+  if (btnStart) {
+    btnStart.style.display = "inline-block";
+    btnStart.disabled = false;
+  }
+  if (btnStop) btnStop.classList.remove("visible");
 
   const overlay = document.getElementById("qtOverlay");
   if (overlay) overlay.classList.remove("hidden");
@@ -752,10 +1165,23 @@ function launchConfetti() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
   canvas.style.display = "block";
-  const colors = ["#3d7a4f","#6abf7b","#f59e0b","#ef4444","#3b82f6","#a855f7","#ec4899","#ffffff","#74cc82","#fbbf24"];
+  const colors = [
+    "#3d7a4f",
+    "#6abf7b",
+    "#f59e0b",
+    "#ef4444",
+    "#3b82f6",
+    "#a855f7",
+    "#ec4899",
+    "#ffffff",
+    "#74cc82",
+    "#fbbf24",
+  ];
   const pieces = Array.from({ length: 150 }, () => ({
-    x: Math.random() * canvas.width, y: -10 - Math.random() * 200,
-    w: 6 + Math.random() * 8, h: 10 + Math.random() * 8,
+    x: Math.random() * canvas.width,
+    y: -10 - Math.random() * 200,
+    w: 6 + Math.random() * 8,
+    h: 10 + Math.random() * 8,
     color: colors[Math.floor(Math.random() * colors.length)],
     rotation: Math.random() * Math.PI * 2,
     rotSpeed: (Math.random() - 0.5) * 0.18,
@@ -767,8 +1193,11 @@ function launchConfetti() {
   function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     let alive = false;
-    pieces.forEach(p => {
-      p.x += p.vx; p.y += p.vy; p.vy += 0.07; p.rotation += p.rotSpeed;
+    pieces.forEach((p) => {
+      p.x += p.vx;
+      p.y += p.vy;
+      p.vy += 0.07;
+      p.rotation += p.rotSpeed;
       if (frame > 80) p.opacity -= 0.018;
       if (p.y < canvas.height && p.opacity > 0) alive = true;
       ctx.save();
@@ -781,7 +1210,10 @@ function launchConfetti() {
     });
     frame++;
     if (alive) requestAnimationFrame(draw);
-    else { ctx.clearRect(0, 0, canvas.width, canvas.height); canvas.style.display = "none"; }
+    else {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      canvas.style.display = "none";
+    }
   }
   draw();
 }
@@ -832,7 +1264,7 @@ function completeQuest(qid) {
   if (!state.user) return;
   if (state.user.completedQuests.has(qid)) return;
   const allQuests = [...QUESTS.daily, ...QUESTS.weekly, ...QUESTS.monthly];
-  const q = allQuests.find(x => x.id === qid);
+  const q = allQuests.find((x) => x.id === qid);
   if (!q) return;
   const rankBefore = getRank(state.user.xp);
   state.user.completedQuests.add(qid);
@@ -850,7 +1282,8 @@ function completeQuest(qid) {
     setTimeout(() => showLevelUp(rankAfter), 600);
   } else {
     const msgEl = document.getElementById("questCompleteMsg");
-    if (msgEl) msgEl.textContent = `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
+    if (msgEl)
+      msgEl.textContent = `+${q.reward} ⭐ stars and +${q.xp} XP earned!`;
     openModal("questCompleteModal");
   }
 }
@@ -862,7 +1295,7 @@ const awardedAch = new Set();
 function checkAchievements(repSession) {
   if (!state.user) return;
   const u = state.user;
-  ACHIEVEMENTS.forEach(a => {
+  ACHIEVEMENTS.forEach((a) => {
     if (a.id === "a1" && u.completedQuests.size >= 1) awardAch(a);
     if (a.id === "a2" && u.completedQuests.size >= 3) awardAch(a);
     if (a.id === "a3" && u.completedQuests.size >= 10) awardAch(a);
@@ -901,11 +1334,17 @@ function renderAchievements() {
   if (xpCurrent) xpCurrent.textContent = xp;
   if (xpNext) xpNext.textContent = nextRank ? nextRank.minXp : "MAX";
   if (xpBar) {
-    const pct = nextRank ? Math.min(100, ((xp - currentRank.minXp) / (nextRank.minXp - currentRank.minXp)) * 100) : 100;
+    const pct = nextRank
+      ? Math.min(
+          100,
+          ((xp - currentRank.minXp) / (nextRank.minXp - currentRank.minXp)) *
+            100,
+        )
+      : 100;
     xpBar.style.width = pct + "%";
   }
   if (ranksList) {
-    ranksList.innerHTML = RANKS.map(r => {
+    ranksList.innerHTML = RANKS.map((r) => {
       const achieved = xp >= r.minXp;
       const isCurrent = r.name === currentRank.name;
       return `<div class="rank-item ${isCurrent ? "current" : achieved ? "achieved" : "locked-rank"}">
@@ -915,7 +1354,7 @@ function renderAchievements() {
     }).join("");
   }
   if (grid) {
-    grid.innerHTML = ACHIEVEMENTS.map(a => {
+    grid.innerHTML = ACHIEVEMENTS.map((a) => {
       const unlocked = awardedAch.has(a.id);
       return `<div class="ach-card ${unlocked ? "" : "locked"}">
         <div class="ach-badge ${unlocked ? "" : "locked-badge"}">${unlocked ? "Unlocked" : "Locked"}</div>
@@ -935,7 +1374,17 @@ function getPublicProfile(username) {
   const saved = localStorage.getItem(`hq_user_${username}`);
   if (!saved) return null;
   const d = JSON.parse(saved);
-  return { username, name: d.name || username, xp: d.xp || 0, stars: d.stars || 0, streak: d.streak || 0, completedQuests: Array.isArray(d.completedQuests) ? d.completedQuests.length : 0, rank: getRank(d.xp || 0) };
+  return {
+    username,
+    name: d.name || username,
+    xp: d.xp || 0,
+    stars: d.stars || 0,
+    streak: d.streak || 0,
+    completedQuests: Array.isArray(d.completedQuests)
+      ? d.completedQuests.length
+      : 0,
+    rank: getRank(d.xp || 0),
+  };
 }
 function getAllUsernames() {
   const accounts = JSON.parse(localStorage.getItem("hq_accounts") || "{}");
@@ -943,52 +1392,82 @@ function getAllUsernames() {
 }
 function getSocialData(username) {
   const raw = localStorage.getItem(`hq_social_${username}`);
-  return raw ? JSON.parse(raw) : { friends: [], incoming: [], outgoing: [], nudges: [] };
+  return raw
+    ? JSON.parse(raw)
+    : { friends: [], incoming: [], outgoing: [], nudges: [] };
 }
-function saveSocialData(username, data) { localStorage.setItem(`hq_social_${username}`, JSON.stringify(data)); }
+function saveSocialData(username, data) {
+  localStorage.setItem(`hq_social_${username}`, JSON.stringify(data));
+}
 function sendFriendRequest(toUsername) {
   if (!state.user) return;
   const me = state.user.username;
-  if (toUsername === me) { showToast("😅", "You can't add yourself!"); return; }
+  if (toUsername === me) {
+    showToast("😅", "You can't add yourself!");
+    return;
+  }
   const myData = getSocialData(me);
   const theirData = getSocialData(toUsername);
-  if (myData.friends.includes(toUsername)) { showToast("👥", "Already friends!"); return; }
-  if (myData.outgoing.includes(toUsername)) { showToast("⏳", "Request already sent!"); return; }
-  if (myData.incoming.includes(toUsername)) { acceptFriendRequest(toUsername); return; }
-  myData.outgoing.push(toUsername); theirData.incoming.push(me);
-  saveSocialData(me, myData); saveSocialData(toUsername, theirData);
+  if (myData.friends.includes(toUsername)) {
+    showToast("👥", "Already friends!");
+    return;
+  }
+  if (myData.outgoing.includes(toUsername)) {
+    showToast("⏳", "Request already sent!");
+    return;
+  }
+  if (myData.incoming.includes(toUsername)) {
+    acceptFriendRequest(toUsername);
+    return;
+  }
+  myData.outgoing.push(toUsername);
+  theirData.incoming.push(me);
+  saveSocialData(me, myData);
+  saveSocialData(toUsername, theirData);
   showToast("📨", `Friend request sent to ${toUsername}!`);
-  renderFriendsList(); renderPendingRequests(); updateFriendBadge();
+  renderFriendsList();
+  renderPendingRequests();
+  updateFriendBadge();
 }
 function acceptFriendRequest(fromUsername) {
   if (!state.user) return;
   const me = state.user.username;
-  const myData = getSocialData(me); const theirData = getSocialData(fromUsername);
-  myData.incoming = myData.incoming.filter(u => u !== fromUsername);
-  theirData.outgoing = theirData.outgoing.filter(u => u !== me);
+  const myData = getSocialData(me);
+  const theirData = getSocialData(fromUsername);
+  myData.incoming = myData.incoming.filter((u) => u !== fromUsername);
+  theirData.outgoing = theirData.outgoing.filter((u) => u !== me);
   if (!myData.friends.includes(fromUsername)) myData.friends.push(fromUsername);
   if (!theirData.friends.includes(me)) theirData.friends.push(me);
-  saveSocialData(me, myData); saveSocialData(fromUsername, theirData);
+  saveSocialData(me, myData);
+  saveSocialData(fromUsername, theirData);
   showToast("🎉", `You and ${fromUsername} are now friends!`);
-  renderFriendsList(); renderPendingRequests(); updateFriendBadge();
+  renderFriendsList();
+  renderPendingRequests();
+  updateFriendBadge();
 }
 function declineFriendRequest(fromUsername) {
   if (!state.user) return;
   const me = state.user.username;
-  const myData = getSocialData(me); const theirData = getSocialData(fromUsername);
-  myData.incoming = myData.incoming.filter(u => u !== fromUsername);
-  theirData.outgoing = theirData.outgoing.filter(u => u !== me);
-  saveSocialData(me, myData); saveSocialData(fromUsername, theirData);
-  renderPendingRequests(); updateFriendBadge();
+  const myData = getSocialData(me);
+  const theirData = getSocialData(fromUsername);
+  myData.incoming = myData.incoming.filter((u) => u !== fromUsername);
+  theirData.outgoing = theirData.outgoing.filter((u) => u !== me);
+  saveSocialData(me, myData);
+  saveSocialData(fromUsername, theirData);
+  renderPendingRequests();
+  updateFriendBadge();
 }
 function removeFriend(username) {
   if (!state.user) return;
   const me = state.user.username;
-  const myData = getSocialData(me); const theirData = getSocialData(username);
-  myData.friends = myData.friends.filter(u => u !== username);
-  theirData.friends = theirData.friends.filter(u => u !== me);
-  saveSocialData(me, myData); saveSocialData(username, theirData);
-  showToast("👋", `Removed ${username} from friends.`); renderFriendsList();
+  const myData = getSocialData(me);
+  const theirData = getSocialData(username);
+  myData.friends = myData.friends.filter((u) => u !== username);
+  theirData.friends = theirData.friends.filter((u) => u !== me);
+  saveSocialData(me, myData);
+  saveSocialData(username, theirData);
+  showToast("👋", `Removed ${username} from friends.`);
+  renderFriendsList();
 }
 function updateFriendBadge() {
   const badge = document.getElementById("friendBadge");
@@ -1004,63 +1483,102 @@ function searchUsers() {
   const results = document.getElementById("searchResults");
   if (!input || !results || !state.user) return;
   const query = input.value.trim().toLowerCase();
-  if (!query) { results.innerHTML = ""; return; }
+  if (!query) {
+    results.innerHTML = "";
+    return;
+  }
   const me = state.user.username;
   const myData = getSocialData(me);
-  const allUsers = getAllUsernames().filter(u => u !== me && u.includes(query));
-  if (allUsers.length === 0) { results.innerHTML = `<div class="search-empty">No users found for "${query}"</div>`; return; }
-  results.innerHTML = allUsers.map(u => {
-    const profile = getPublicProfile(u);
-    if (!profile) return "";
-    const isFriend = myData.friends.includes(u);
-    const isPending = myData.outgoing.includes(u);
-    const hasRequested = myData.incoming.includes(u);
-    let btn = "";
-    if (isFriend) btn = `<button class="social-btn friend-btn" disabled>✓ Friends</button>`;
-    else if (isPending) btn = `<button class="social-btn pending-btn" disabled>⏳ Pending</button>`;
-    else if (hasRequested) btn = `<button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}')">✓ Accept</button>`;
-    else btn = `<button class="social-btn add-btn" onclick="sendFriendRequest('${u}')">+ Add</button>`;
-    return `<div class="search-result-card"><div class="sr-avatar">${profile.name[0].toUpperCase()}</div><div class="sr-info"><div class="sr-name">${profile.name}</div><div class="sr-username">@${u}</div><div class="sr-stats">${profile.rank.icon} ${profile.rank.name} · 🔥 ${profile.streak} · ⭐ ${profile.stars}</div></div>${btn}</div>`;
-  }).join("");
+  const allUsers = getAllUsernames().filter(
+    (u) => u !== me && u.includes(query),
+  );
+  if (allUsers.length === 0) {
+    results.innerHTML = `<div class="search-empty">No users found for "${query}"</div>`;
+    return;
+  }
+  results.innerHTML = allUsers
+    .map((u) => {
+      const profile = getPublicProfile(u);
+      if (!profile) return "";
+      const isFriend = myData.friends.includes(u);
+      const isPending = myData.outgoing.includes(u);
+      const hasRequested = myData.incoming.includes(u);
+      let btn = "";
+      if (isFriend)
+        btn = `<button class="social-btn friend-btn" disabled>✓ Friends</button>`;
+      else if (isPending)
+        btn = `<button class="social-btn pending-btn" disabled>⏳ Pending</button>`;
+      else if (hasRequested)
+        btn = `<button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}')">✓ Accept</button>`;
+      else
+        btn = `<button class="social-btn add-btn" onclick="sendFriendRequest('${u}')">+ Add</button>`;
+      return `<div class="search-result-card"><div class="sr-avatar">${profile.name[0].toUpperCase()}</div><div class="sr-info"><div class="sr-name">${profile.name}</div><div class="sr-username">@${u}</div><div class="sr-stats">${profile.rank.icon} ${profile.rank.name} · 🔥 ${profile.streak} · ⭐ ${profile.stars}</div></div>${btn}</div>`;
+    })
+    .join("");
 }
 function renderFriendsList() {
   const container = document.getElementById("friendsList");
   if (!container || !state.user) return;
   const myData = getSocialData(state.user.username);
-  if (myData.friends.length === 0) { container.innerHTML = `<div class="social-empty">No friends yet. Search for users above to get started! 👆</div>`; return; }
-  const friends = myData.friends.map(u => getPublicProfile(u)).filter(Boolean).sort((a, b) => b.xp - a.xp);
-  container.innerHTML = friends.map((f, i) => `<div class="friend-card"><div class="friend-rank-num">#${i+1}</div><div class="friend-avatar">${f.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${f.name} <span class="friend-username">@${f.username}</span></div><div class="friend-stats">${f.rank.icon} ${f.rank.name} &nbsp;·&nbsp; 🔥 ${f.streak} day streak &nbsp;·&nbsp; ✅ ${f.completedQuests} quests</div><div class="friend-xp-bar-wrap"><div class="friend-xp-bar" style="width:${Math.min(100,(f.xp/2000)*100)}%"></div></div></div><div class="friend-stars">⭐ ${f.stars}</div><button class="social-btn remove-btn" onclick="removeFriend('${f.username}')">✕</button></div>`).join("");
+  if (myData.friends.length === 0) {
+    container.innerHTML = `<div class="social-empty">No friends yet. Search for users above to get started! 👆</div>`;
+    return;
+  }
+  const friends = myData.friends
+    .map((u) => getPublicProfile(u))
+    .filter(Boolean)
+    .sort((a, b) => b.xp - a.xp);
+  container.innerHTML = friends
+    .map(
+      (f, i) =>
+        `<div class="friend-card"><div class="friend-rank-num">#${i + 1}</div><div class="friend-avatar">${f.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${f.name} <span class="friend-username">@${f.username}</span></div><div class="friend-stats">${f.rank.icon} ${f.rank.name} &nbsp;·&nbsp; 🔥 ${f.streak} day streak &nbsp;·&nbsp; ✅ ${f.completedQuests} quests</div><div class="friend-xp-bar-wrap"><div class="friend-xp-bar" style="width:${Math.min(100, (f.xp / 2000) * 100)}%"></div></div></div><div class="friend-stars">⭐ ${f.stars}</div><button class="social-btn remove-btn" onclick="removeFriend('${f.username}')">✕</button></div>`,
+    )
+    .join("");
 }
 function renderPendingRequests() {
   const container = document.getElementById("pendingRequests");
   if (!container || !state.user) return;
   const myData = getSocialData(state.user.username);
-  if (myData.incoming.length === 0) { container.innerHTML = `<div class="social-empty">No pending requests.</div>`; return; }
-  container.innerHTML = myData.incoming.map(u => {
-    const profile = getPublicProfile(u);
-    if (!profile) return "";
-    return `<div class="request-card"><div class="friend-avatar">${profile.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${profile.name} <span class="friend-username">@${u}</span></div><div class="friend-stats">${profile.rank.icon} ${profile.rank.name} · ⭐ ${profile.stars}</div></div><button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}')">✓ Accept</button><button class="social-btn decline-btn" onclick="declineFriendRequest('${u}')">✕</button></div>`;
-  }).join("");
+  if (myData.incoming.length === 0) {
+    container.innerHTML = `<div class="social-empty">No pending requests.</div>`;
+    return;
+  }
+  container.innerHTML = myData.incoming
+    .map((u) => {
+      const profile = getPublicProfile(u);
+      if (!profile) return "";
+      return `<div class="request-card"><div class="friend-avatar">${profile.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${profile.name} <span class="friend-username">@${u}</span></div><div class="friend-stats">${profile.rank.icon} ${profile.rank.name} · ⭐ ${profile.stars}</div></div><button class="social-btn accept-btn" onclick="acceptFriendRequest('${u}')">✓ Accept</button><button class="social-btn decline-btn" onclick="declineFriendRequest('${u}')">✕</button></div>`;
+    })
+    .join("");
 }
 function renderLeaderboard(filterFriends = false) {
   const container = document.getElementById("leaderboardList");
   if (!container) return;
-  let users = getAllUsernames().map(u => getPublicProfile(u)).filter(Boolean);
+  let users = getAllUsernames()
+    .map((u) => getPublicProfile(u))
+    .filter(Boolean);
   if (filterFriends && state.user) {
     const myData = getSocialData(state.user.username);
     const friendSet = new Set([...myData.friends, state.user.username]);
-    users = users.filter(u => friendSet.has(u.username));
+    users = users.filter((u) => friendSet.has(u.username));
   }
   users.sort((a, b) => b.xp - a.xp);
-  if (users.length === 0) { container.innerHTML = `<div class="social-empty">No users to show yet.</div>`; return; }
-  const medals = ["🥇","🥈","🥉"];
-  container.innerHTML = users.map((u, i) => {
-    const isMe = state.user && u.username === state.user.username;
-    return `<div class="lb-card ${isMe ? "lb-me" : ""}"><div class="lb-pos">${medals[i] || `#${i+1}`}</div><div class="friend-avatar">${u.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${u.name} ${isMe ? "<span class='lb-you'>you</span>" : ""}</div><div class="friend-stats">${u.rank.icon} ${u.rank.name} · 🔥 ${u.streak} · ✅ ${u.completedQuests} quests</div></div><div class="friend-stars">⭐ ${u.stars}<br><span style="font-size:0.72rem;color:var(--text-muted)">${u.xp} XP</span></div></div>`;
-  }).join("");
+  if (users.length === 0) {
+    container.innerHTML = `<div class="social-empty">No users to show yet.</div>`;
+    return;
+  }
+  const medals = ["🥇", "🥈", "🥉"];
+  container.innerHTML = users
+    .map((u, i) => {
+      const isMe = state.user && u.username === state.user.username;
+      return `<div class="lb-card ${isMe ? "lb-me" : ""}"><div class="lb-pos">${medals[i] || `#${i + 1}`}</div><div class="friend-avatar">${u.name[0].toUpperCase()}</div><div class="friend-info"><div class="friend-name">${u.name} ${isMe ? "<span class='lb-you'>you</span>" : ""}</div><div class="friend-stats">${u.rank.icon} ${u.rank.name} · 🔥 ${u.streak} · ✅ ${u.completedQuests} quests</div></div><div class="friend-stars">⭐ ${u.stars}<br><span style="font-size:0.72rem;color:var(--text-muted)">${u.xp} XP</span></div></div>`;
+    })
+    .join("");
 }
 function switchLeaderboard(type, btn) {
-  document.querySelectorAll(".lb-tab-btn").forEach(b => b.classList.remove("active"));
+  document
+    .querySelectorAll(".lb-tab-btn")
+    .forEach((b) => b.classList.remove("active"));
   btn.classList.add("active");
   renderLeaderboard(type === "friends");
 }
@@ -1068,9 +1586,18 @@ function switchLeaderboard(type, btn) {
 // ══════════════════════════════════════════
 // MODALS
 // ══════════════════════════════════════════
-function openModal(id) { const el = document.getElementById(id); if (el) el.classList.add("visible"); }
-function closeModal(id) { const el = document.getElementById(id); if (el) el.classList.remove("visible"); }
-document.addEventListener("click", e => { if (e.target.classList.contains("modal-overlay")) e.target.classList.remove("visible"); });
+function openModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.add("visible");
+}
+function closeModal(id) {
+  const el = document.getElementById(id);
+  if (el) el.classList.remove("visible");
+}
+document.addEventListener("click", (e) => {
+  if (e.target.classList.contains("modal-overlay"))
+    e.target.classList.remove("visible");
+});
 function toggleSignMode() {
   const signIn = document.getElementById("signInView");
   const signUp = document.getElementById("signUpView");
@@ -1101,7 +1628,8 @@ function showToast(icon, msg) {
 // ══════════════════════════════════════════
 function setTheme(theme) {
   // Add transition class to body for smooth switch
-  document.body.style.transition = 'background-color 0.5s ease, color 0.4s ease';
+  document.body.style.transition =
+    "background-color 0.5s ease, color 0.4s ease";
   document.documentElement.setAttribute("data-theme", theme);
   localStorage.setItem("hq_theme", theme);
   const lightBtn = document.getElementById("themeLight");
@@ -1130,26 +1658,35 @@ function initCanvas() {
   }
 
   function buildScene() {
-    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark";
 
     // Floating leaves
     leaves = Array.from({ length: 22 }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
+      x: Math.random() * w,
+      y: Math.random() * h,
       size: 8 + Math.random() * 14,
       angle: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.02,
       dx: (Math.random() - 0.5) * 0.3,
       dy: -0.2 - Math.random() * 0.3,
       alpha: 0.25 + Math.random() * 0.35,
-      color: isDark ? ["#3d7a3d","#2a5a2a","#4a8a4a","#5a9a5a"][Math.floor(Math.random()*4)] :
-                      ["#4caf60","#81c784","#2e7d32","#66bb6a"][Math.floor(Math.random()*4)],
+      color: isDark
+        ? ["#3d7a3d", "#2a5a2a", "#4a8a4a", "#5a9a5a"][
+            Math.floor(Math.random() * 4)
+          ]
+        : ["#4caf60", "#81c784", "#2e7d32", "#66bb6a"][
+            Math.floor(Math.random() * 4)
+          ],
     }));
 
     // Fireflies / particles (night mode = fireflies, day = light dapples)
     fireflies = Array.from({ length: isDark ? 30 : 15 }, () => ({
-      x: Math.random() * w, y: Math.random() * h,
+      x: Math.random() * w,
+      y: Math.random() * h,
       r: isDark ? 2 + Math.random() * 3 : 3 + Math.random() * 5,
-      dx: (Math.random() - 0.5) * 0.5, dy: (Math.random() - 0.5) * 0.5,
+      dx: (Math.random() - 0.5) * 0.5,
+      dy: (Math.random() - 0.5) * 0.5,
       alpha: Math.random(),
       alphaDir: (Math.random() > 0.5 ? 1 : -1) * 0.02,
       color: isDark ? "#fbbf24" : "rgba(200,255,180,0.6)",
@@ -1192,7 +1729,14 @@ function initCanvas() {
       ctx.fillRect(0, 0, w, h);
 
       // Moon glow
-      const moonGrad = ctx.createRadialGradient(w * 0.8, h * 0.15, 0, w * 0.8, h * 0.15, 180);
+      const moonGrad = ctx.createRadialGradient(
+        w * 0.8,
+        h * 0.15,
+        0,
+        w * 0.8,
+        h * 0.15,
+        180,
+      );
       moonGrad.addColorStop(0, "rgba(255,255,200,0.08)");
       moonGrad.addColorStop(1, "transparent");
       ctx.fillStyle = moonGrad;
@@ -1207,7 +1751,14 @@ function initCanvas() {
       ctx.fillRect(0, 0, w, h);
 
       // Sun glow top right
-      const sunGrad = ctx.createRadialGradient(w * 0.85, h * 0.1, 0, w * 0.85, h * 0.1, 280);
+      const sunGrad = ctx.createRadialGradient(
+        w * 0.85,
+        h * 0.1,
+        0,
+        w * 0.85,
+        h * 0.1,
+        280,
+      );
       sunGrad.addColorStop(0, "rgba(255,240,150,0.25)");
       sunGrad.addColorStop(1, "transparent");
       ctx.fillStyle = sunGrad;
@@ -1218,30 +1769,36 @@ function initCanvas() {
   let tick = 0;
   function draw() {
     tick++;
-    const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+    const isDark =
+      document.documentElement.getAttribute("data-theme") === "dark";
     ctx.clearRect(0, 0, w, h);
 
     drawBackground(isDark);
 
     // Draw floating leaves
-    leaves.forEach(l => {
+    leaves.forEach((l) => {
       l.x += l.dx + Math.sin(tick * 0.01 + l.angle) * 0.15;
       l.y += l.dy;
       l.angle += l.rotSpeed;
-      if (l.y < -30) { l.y = h + 20; l.x = Math.random() * w; }
+      if (l.y < -30) {
+        l.y = h + 20;
+        l.x = Math.random() * w;
+      }
       if (l.x < -30) l.x = w + 20;
       if (l.x > w + 30) l.x = -20;
       drawLeaf(ctx, l.x, l.y, l.size, l.angle, l.color, l.alpha);
     });
 
     // Draw fireflies / dapples
-    fireflies.forEach(f => {
+    fireflies.forEach((f) => {
       f.x += f.dx + Math.sin(tick * 0.008 + f.r) * 0.2;
       f.y += f.dy + Math.cos(tick * 0.007 + f.r) * 0.2;
       f.alpha += f.alphaDir;
       if (f.alpha > 0.9 || f.alpha < 0.05) f.alphaDir *= -1;
-      if (f.x < 0) f.x = w; if (f.x > w) f.x = 0;
-      if (f.y < 0) f.y = h; if (f.y > h) f.y = 0;
+      if (f.x < 0) f.x = w;
+      if (f.x > w) f.x = 0;
+      if (f.y < 0) f.y = h;
+      if (f.y > h) f.y = 0;
       ctx.save();
       ctx.globalAlpha = f.alpha * (isDark ? 0.9 : 0.4);
       if (isDark) {
@@ -1267,7 +1824,9 @@ function initCanvas() {
     animId = requestAnimationFrame(draw);
   }
 
-  window._canvasCleanup = () => { cancelAnimationFrame(animId); };
+  window._canvasCleanup = () => {
+    cancelAnimationFrame(animId);
+  };
   resize();
   draw();
   window.addEventListener("resize", resize);
@@ -1286,48 +1845,122 @@ function toggleAccordion(headerBtn) {
 // ══════════════════════════════════════════
 // FOOD
 // ══════════════════════════════════════════
-const foodLog = [];
-const CALORIE_GOAL = 2000;
-const customQuickFoods = JSON.parse(localStorage.getItem("hq_custom_foods") || "[]");
+function getTodayKey() {
+  return "hq_food_" + new Date().toISOString().slice(0, 10);
+}
+function loadFoodLog() {
+  const s = localStorage.getItem(getTodayKey());
+  return s ? JSON.parse(s) : [];
+}
+function saveFoodLog() {
+  localStorage.setItem(getTodayKey(), JSON.stringify(foodLog));
+}
+const foodLog = loadFoodLog();
+
+function getCalorieGoal() {
+  if (state.user && state.user.profile && state.user.profile.aiCalorieGoal)
+    return state.user.profile.aiCalorieGoal;
+  if (state.user && state.user.profile) {
+    const p = state.user.profile;
+    let weight = p.weight || 70;
+    let height = p.height || 170;
+    const age = p.age || 25;
+    if (p.weightUnit === "lbs") weight = weight * 0.453592;
+    if (p.heightUnit === "ft") height = height * 30.48;
+    const bmr =
+      10 * weight +
+      6.25 * height -
+      5 * age +
+      (p.gender === "female" ? -161 : 5);
+    const mult =
+      { sedentary: 1.2, "lightly-active": 1.375, "very-active": 1.725 }[
+        p.activity
+      ] || 1.375;
+    let tdee = Math.round(bmr * mult);
+    if (p.goal === "lose-weight") tdee -= 300;
+    if (p.goal === "build-strength") tdee += 200;
+    return Math.max(1200, tdee);
+  }
+  return 2000;
+}
+
+const customQuickFoods = JSON.parse(
+  localStorage.getItem("hq_custom_foods") || "[]",
+);
 function updateCalorieUI() {
+  const CALORIE_GOAL = getCalorieGoal();
   const total = foodLog.reduce((sum, f) => sum + f.calories, 0);
   const remaining = Math.max(0, CALORIE_GOAL - total);
   const pct = Math.min(100, (total / CALORIE_GOAL) * 100);
+  const goalEl = document.getElementById("calorieGoal");
   const consumed = document.getElementById("calorieConsumed");
   const rem = document.getElementById("calorieRemaining");
   const bar = document.getElementById("calorieBar");
+  if (goalEl) goalEl.textContent = CALORIE_GOAL;
   if (consumed) consumed.textContent = total;
   if (rem) rem.textContent = remaining;
-  if (bar) { bar.style.width = pct + "%"; bar.style.background = pct > 100 ? "#e07a5f" : pct > 75 ? "#f0a500" : "var(--green)"; }
+  if (bar) {
+    bar.style.width = pct + "%";
+    bar.style.background =
+      pct > 100 ? "#e07a5f" : pct > 75 ? "#f0a500" : "var(--green)";
+  }
   const logCard = document.getElementById("foodLogCard");
   const logItems = document.getElementById("foodLogItems");
   const logTotal = document.getElementById("foodLogTotal");
   if (foodLog.length > 0) {
     if (logCard) logCard.style.display = "block";
-    if (logItems) logItems.innerHTML = foodLog.slice().reverse().map((f, i) =>
-      `<div class="log-item"><span>${f.name}</span><span class="log-reps">${f.calories} kcal<button onclick="removeFood(${foodLog.length-1-i})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);margin-left:0.5rem;font-size:0.9rem;">✕</button></span></div>`
-    ).join("");
+    if (logItems)
+      logItems.innerHTML = foodLog
+        .slice()
+        .reverse()
+        .map((f, reversedI) => {
+          const actualIndex = foodLog.length - 1 - reversedI;
+          return `<div class="log-item"><span>${f.name}</span><span class="log-reps">${f.calories} kcal<button onclick="removeFood(${actualIndex})" style="background:none;border:none;cursor:pointer;color:var(--text-muted);margin-left:0.5rem;font-size:0.9rem;">✕</button></span></div>`;
+        })
+        .join("");
     if (logTotal) logTotal.textContent = total;
-  } else { if (logCard) logCard.style.display = "none"; }
+  } else {
+    if (logCard) logCard.style.display = "none";
+  }
 }
 function addFood() {
   const nameEl = document.getElementById("foodName");
   const calEl = document.getElementById("foodCalories");
   const name = nameEl.value.trim();
   const calories = parseInt(calEl.value);
-  if (!name || isNaN(calories) || calories <= 0) { showToast("⚠️", "Please enter a valid food name and calories."); return; }
+  if (!name || isNaN(calories) || calories <= 0) {
+    showToast("⚠️", "Please enter a valid food name and calories.");
+    return;
+  }
   foodLog.push({ name, calories });
-  nameEl.value = ""; calEl.value = "";
-  updateCalorieUI(); showToast("🍽️", `Added ${name} — ${calories} kcal`);
+  nameEl.value = "";
+  calEl.value = "";
+  saveFoodLog();
+  updateCalorieUI();
+  showToast("🍽️", `Added ${name} — ${calories} kcal`);
 }
-function quickAdd(name, calories) { foodLog.push({ name, calories }); updateCalorieUI(); showToast("🍽️", `Added ${name} — ${calories} kcal`); }
-function removeFood(index) { foodLog.splice(index, 1); updateCalorieUI(); }
-function clearFoodLog() { foodLog.length = 0; updateCalorieUI(); showToast("🗑️", "Food log cleared."); }
+function quickAdd(name, calories) {
+  foodLog.push({ name, calories });
+  saveFoodLog();
+  updateCalorieUI();
+  showToast("🍽️", `Added ${name} — ${calories} kcal`);
+}
+function removeFood(index) {
+  foodLog.splice(index, 1);
+  saveFoodLog();
+  updateCalorieUI();
+}
+function clearFoodLog() {
+  foodLog.length = 0;
+  saveFoodLog();
+  updateCalorieUI();
+  showToast("🗑️", "Food log cleared.");
+}
 function renderCustomQuickFoods() {
   const container = document.getElementById("quickFoodsContainer");
   const accordion = document.getElementById("customAccordion");
   if (!container) return;
-  container.querySelectorAll(".custom-quick-btn").forEach(e => e.remove());
+  container.querySelectorAll(".custom-quick-btn").forEach((e) => e.remove());
   customQuickFoods.forEach((f, i) => {
     const btn = document.createElement("button");
     btn.className = "quick-food-btn custom-quick-btn";
@@ -1336,17 +1969,24 @@ function renderCustomQuickFoods() {
     container.appendChild(btn);
   });
   // Show/hide the custom accordion
-  if (accordion) accordion.style.display = customQuickFoods.length > 0 ? "block" : "none";
+  if (accordion)
+    accordion.style.display = customQuickFoods.length > 0 ? "block" : "none";
 }
 function addCustomQuickFood() {
   const name = document.getElementById("customFoodName").value.trim();
-  const calories = parseInt(document.getElementById("customFoodCalories").value);
-  if (!name || isNaN(calories) || calories <= 0) { showToast("⚠️", "Please enter a valid name and calories."); return; }
+  const calories = parseInt(
+    document.getElementById("customFoodCalories").value,
+  );
+  if (!name || isNaN(calories) || calories <= 0) {
+    showToast("⚠️", "Please enter a valid name and calories.");
+    return;
+  }
   customQuickFoods.push({ name, calories });
   localStorage.setItem("hq_custom_foods", JSON.stringify(customQuickFoods));
   document.getElementById("customFoodName").value = "";
   document.getElementById("customFoodCalories").value = "";
-  renderCustomQuickFoods(); showToast("✅", `${name} added to Quick Add!`);
+  renderCustomQuickFoods();
+  showToast("✅", `${name} added to Quick Add!`);
 }
 function removeCustomQuickFood(index) {
   customQuickFoods.splice(index, 1);
@@ -1366,11 +2006,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const acc = getAccount(lastUser);
     if (acc) {
       state.user = loadUserState(lastUser) || acc.data;
-      state.user.completedQuests = state.user.completedQuests instanceof Set
-        ? state.user.completedQuests
-        : new Set(state.user.completedQuests || []);
+      state.user.completedQuests =
+        state.user.completedQuests instanceof Set
+          ? state.user.completedQuests
+          : new Set(state.user.completedQuests || []);
       awardedAch.clear();
-      if (state.user.earnedAchievements) state.user.earnedAchievements.forEach(id => awardedAch.add(id));
+      if (state.user.earnedAchievements)
+        state.user.earnedAchievements.forEach((id) => awardedAch.add(id));
       afterSignIn();
     }
   }
@@ -1390,7 +2032,7 @@ document.addEventListener("DOMContentLoaded", () => {
       headerNav.classList.toggle("open");
     });
     // Close on nav link click
-    headerNav.querySelectorAll(".nav-tab").forEach(tab => {
+    headerNav.querySelectorAll(".nav-tab").forEach((tab) => {
       tab.addEventListener("click", () => {
         hamburger.classList.remove("open");
         headerNav.classList.remove("open");

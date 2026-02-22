@@ -8,7 +8,7 @@
       href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap"
       rel="stylesheet"
     />
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <canvas id="bg"></canvas>
@@ -19,10 +19,13 @@
           <img src="logo.png" alt="logo" />
         </div>
       </div>
-      <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-  <nav class="header-nav">
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav">
         <a href="index.html" class="nav-tab">🏠 Home</a>
         <a href="quests.html" class="nav-tab">⚔️ Quests</a>
+        <a href="training.html" class="nav-tab">🏋️ Training</a>
         <a href="food.html" class="nav-tab active">🍎 Food</a>
         <a href="achievements.html" class="nav-tab">🏆 Achievements</a>
         <a href="about.html" class="nav-tab">🌿 About</a>
@@ -43,269 +46,954 @@
             🏅 <span id="headerRank">Seedling</span>
           </div>
         </div>
-        <div class="avatar-btn" id="avatarBtn" onclick="openModal('signModal')"></div>
-        <button class="btn-signout" id="signoutBtn" onclick="signOut()" style="display: none">Sign Out</button>
-        <button class="btn-signin" id="signinBtn" onclick="openModal('signModal')">Sign In</button>
+        <div
+          class="avatar-btn"
+          id="avatarBtn"
+          onclick="openModal('signModal')"
+        ></div>
+        <button
+          class="btn-signout"
+          id="signoutBtn"
+          onclick="signOut()"
+          style="display: none"
+        >
+          Sign Out
+        </button>
+        <button
+          class="btn-signin"
+          id="signinBtn"
+          onclick="openModal('signModal')"
+        >
+          Sign In
+        </button>
       </div>
     </header>
 
     <main>
       <div class="page-inner">
-        <h1 class="page-heading" style="text-align:center"><em>Food</em> Tracker</h1>
-        <p class="page-sub" style="text-align:center">Log your meals and track your daily calorie intake.</p>
+        <h1 class="page-heading" style="text-align: center">
+          <em>Food</em> Tracker
+        </h1>
+        <p class="page-sub" style="text-align: center">
+          Log your meals and track your daily calorie intake.
+        </p>
 
         <div class="food-goal-bar">
           <div class="food-goal-info">
             <span>Daily Goal: <strong id="calorieGoal">2000</strong> kcal</span>
             <span>Consumed: <strong id="calorieConsumed">0</strong> kcal</span>
-            <span>Remaining: <strong id="calorieRemaining">2000</strong> kcal</span>
+            <span
+              >Remaining: <strong id="calorieRemaining">2000</strong> kcal</span
+            >
           </div>
           <div class="progress-bar-wrap">
-            <div class="progress-bar-fill" id="calorieBar" style="width: 0%"></div>
+            <div
+              class="progress-bar-fill"
+              id="calorieBar"
+              style="width: 0%"
+            ></div>
           </div>
         </div>
 
         <div class="food-add-card">
           <h3>Add Food</h3>
           <div class="food-inputs">
-            <input class="form-input" id="foodName" type="text" placeholder="Food name (e.g. Banana)" />
-            <input class="form-input" id="foodCalories" type="number" placeholder="Calories (kcal)" />
+            <input
+              class="form-input"
+              id="foodName"
+              type="text"
+              placeholder="Food name (e.g. Banana)"
+            />
+            <input
+              class="form-input"
+              id="foodCalories"
+              type="number"
+              placeholder="Calories (kcal)"
+            />
             <button class="btn-primary" onclick="addFood()">Add</button>
           </div>
 
-        <h4 style="margin: 1.5rem 0 0.5rem; font-family: 'Fredoka One', cursive;">Save Custom Food</h4>
-        <div class="food-inputs" style="margin-bottom: 1.5rem;">
-          <input class="form-input" id="customFoodName" type="text" placeholder="Food name" />
-          <input class="form-input" id="customFoodCalories" type="number" placeholder="Calories (kcal)" />
-          <button class="btn-primary" onclick="addCustomQuickFood()">+ Save</button>
+          <h4
+            style="
+              margin: 1.5rem 0 0.5rem;
+              font-family: &quot;Fredoka One&quot;, cursive;
+            "
+          >
+            Save Custom Food
+          </h4>
+          <div class="food-inputs" style="margin-bottom: 1.5rem">
+            <input
+              class="form-input"
+              id="customFoodName"
+              type="text"
+              placeholder="Food name"
+            />
+            <input
+              class="form-input"
+              id="customFoodCalories"
+              type="number"
+              placeholder="Calories (kcal)"
+            />
+            <button class="btn-primary" onclick="addCustomQuickFood()">
+              + Save
+            </button>
+          </div>
+
+          <h4
+            style="
+              margin: 0.5rem 0 0.75rem;
+              font-family: &quot;Fredoka One&quot;, cursive;
+            "
+          >
+            Quick Add
+          </h4>
+          <div class="food-accordions">
+            <!-- Fruits & Veg -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🍎 Fruits &amp; Vegetables</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍌 Banana (medium)', 89)"
+                  >
+                    🍌 Banana <span>89</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍎 Apple (medium)', 72)"
+                  >
+                    🍎 Apple <span>72</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍊 Orange (medium)', 62)"
+                  >
+                    🍊 Orange <span>62</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥭 Mango (100g)', 60)"
+                  >
+                    🥭 Mango <span>60</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍇 Grapes (100g)', 69)"
+                  >
+                    🍇 Grapes <span>69</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍓 Strawberries (100g)', 32)"
+                  >
+                    🍓 Strawberries <span>32</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫐 Blueberries (100g)', 57)"
+                  >
+                    🫐 Blueberries <span>57</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍑 Peach (medium)', 59)"
+                  >
+                    🍑 Peach <span>59</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍒 Cherries (100g)', 50)"
+                  >
+                    🍒 Cherries <span>50</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍋 Lemon (medium)', 17)"
+                  >
+                    🍋 Lemon <span>17</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍍 Pineapple (100g)', 50)"
+                  >
+                    🍍 Pineapple <span>50</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥝 Kiwi (medium)', 42)"
+                  >
+                    🥝 Kiwi <span>42</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍉 Watermelon (100g)', 30)"
+                  >
+                    🍉 Watermelon <span>30</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥑 Avocado (half)', 120)"
+                  >
+                    🥑 Avocado ½ <span>120</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍅 Tomato (medium)', 22)"
+                  >
+                    🍅 Tomato <span>22</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥦 Broccoli (100g)', 34)"
+                  >
+                    🥦 Broccoli <span>34</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥬 Spinach (100g)', 23)"
+                  >
+                    🥬 Spinach <span>23</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥕 Carrot (medium)', 25)"
+                  >
+                    🥕 Carrot <span>25</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍠 Sweet Potato (medium)', 103)"
+                  >
+                    🍠 Sweet Potato <span>103</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌽 Corn (1 ear)', 132)"
+                  >
+                    🌽 Corn <span>132</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥒 Cucumber (100g)', 16)"
+                  >
+                    🥒 Cucumber <span>16</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧅 Onion (medium)', 44)"
+                  >
+                    🧅 Onion <span>44</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧄 Garlic (clove)', 4)"
+                  >
+                    🧄 Garlic <span>4</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥑 Edamame (100g)', 121)"
+                  >
+                    🫘 Edamame <span>121</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫑 Bell Pepper (medium)', 31)"
+                  >
+                    🫑 Bell Pepper <span>31</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥑 Lettuce (100g)', 15)"
+                  >
+                    🥗 Lettuce <span>15</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍄 Mushrooms (100g)', 22)"
+                  >
+                    🍄 Mushrooms <span>22</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Protein -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🍗 Protein</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍗 Chicken Breast (100g)', 165)"
+                  >
+                    🍗 Chicken Breast <span>165</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍖 Chicken Thigh (100g)', 209)"
+                  >
+                    🍖 Chicken Thigh <span>209</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥩 Ground Beef 80% (100g)', 254)"
+                  >
+                    🥩 Ground Beef <span>254</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥩 Steak (100g)', 271)"
+                  >
+                    🥩 Steak <span>271</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥓 Bacon (2 strips)', 86)"
+                  >
+                    🥓 Bacon <span>86</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌭 Sausage (1 link)', 150)"
+                  >
+                    🌭 Sausage <span>150</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🦃 Turkey Breast (100g)', 135)"
+                  >
+                    🦃 Turkey Breast <span>135</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🐟 Salmon (100g)', 208)"
+                  >
+                    🐟 Salmon <span>208</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🐠 Tuna in water (100g)', 116)"
+                  >
+                    🐠 Tuna <span>116</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍤 Shrimp (100g)', 99)"
+                  >
+                    🍤 Shrimp <span>99</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🦐 Crab (100g)', 97)"
+                  >
+                    🦐 Crab <span>97</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥚 Egg (large)', 78)"
+                  >
+                    🥚 Egg <span>78</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥚 Egg Whites (100g)', 52)"
+                  >
+                    🥚 Egg Whites <span>52</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫙 Greek Yogurt (170g)', 100)"
+                  >
+                    🫙 Greek Yogurt <span>100</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧀 Cottage Cheese (100g)', 98)"
+                  >
+                    🧀 Cottage Cheese <span>98</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫘 Tofu (100g)', 76)"
+                  >
+                    🫘 Tofu <span>76</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫘 Black Beans (100g)', 132)"
+                  >
+                    🫘 Black Beans <span>132</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫘 Chickpeas (100g)', 164)"
+                  >
+                    🫘 Chickpeas <span>164</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫘 Lentils (100g)', 116)"
+                  >
+                    🫘 Lentils <span>116</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('💪 Whey Protein (30g scoop)', 120)"
+                  >
+                    💪 Whey Protein <span>120</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Carbs & Grains -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🍚 Carbs &amp; Grains</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍚 White Rice (100g cooked)', 130)"
+                  >
+                    🍚 White Rice <span>130</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍚 Brown Rice (100g cooked)', 112)"
+                  >
+                    🍚 Brown Rice <span>112</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍝 Pasta (100g cooked)', 131)"
+                  >
+                    🍝 Pasta <span>131</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍞 Whole Wheat Bread (slice)', 69)"
+                  >
+                    🍞 Wheat Bread <span>69</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍞 White Bread (slice)', 79)"
+                  >
+                    🍞 White Bread <span>79</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥣 Oats dry (100g)', 389)"
+                  >
+                    🥣 Oats dry <span>389</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥣 Oatmeal cooked (240ml)', 158)"
+                  >
+                    🥣 Oatmeal <span>158</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌾 Quinoa (100g cooked)', 120)"
+                  >
+                    🌾 Quinoa <span>120</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥔 Potato (medium, baked)', 161)"
+                  >
+                    🥔 Potato <span>161</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫓 Tortilla Wrap (large)', 146)"
+                  >
+                    🫓 Tortilla Wrap <span>146</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥯 Bagel (plain)', 245)"
+                  >
+                    🥯 Bagel <span>245</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥣 Granola (100g)', 471)"
+                  >
+                    🥣 Granola <span>471</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥞 Pancake (medium)', 86)"
+                  >
+                    🥞 Pancake <span>86</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧇 Waffle (medium)', 218)"
+                  >
+                    🧇 Waffle <span>218</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍕 Pizza slice (cheese)', 272)"
+                  >
+                    🍕 Pizza Slice <span>272</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌮 Corn Tortilla (small)', 52)"
+                  >
+                    🌮 Corn Tortilla <span>52</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥐 Croissant', 231)"
+                  >
+                    🥐 Croissant <span>231</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥖 Baguette (100g)', 270)"
+                  >
+                    🥖 Baguette <span>270</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Dairy & Fats -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🧀 Dairy &amp; Fats</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥛 Whole Milk (250ml)', 149)"
+                  >
+                    🥛 Whole Milk <span>149</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥛 Skim Milk (250ml)', 83)"
+                  >
+                    🥛 Skim Milk <span>83</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥛 Oat Milk (250ml)', 120)"
+                  >
+                    🥛 Oat Milk <span>120</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥛 Almond Milk (250ml)', 39)"
+                  >
+                    🥛 Almond Milk <span>39</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧀 Cheddar (30g)', 113)"
+                  >
+                    🧀 Cheddar <span>113</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧀 Mozzarella (30g)', 85)"
+                  >
+                    🧀 Mozzarella <span>85</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧀 Parmesan (15g)', 61)"
+                  >
+                    🧀 Parmesan <span>61</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍦 Ice Cream (100g)', 207)"
+                  >
+                    🍦 Ice Cream <span>207</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧈 Butter (10g)', 72)"
+                  >
+                    🧈 Butter <span>72</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫙 Olive Oil (1 tbsp)', 119)"
+                  >
+                    🫙 Olive Oil <span>119</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥜 Peanut Butter (2 tbsp)', 188)"
+                  >
+                    🥜 Peanut Butter <span>188</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌰 Almonds (28g)', 164)"
+                  >
+                    🌰 Almonds <span>164</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌰 Walnuts (28g)', 185)"
+                  >
+                    🌰 Walnuts <span>185</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌰 Cashews (28g)', 157)"
+                  >
+                    🌰 Cashews <span>157</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥜 Mixed Nuts (28g)', 172)"
+                  >
+                    🥜 Mixed Nuts <span>172</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Drinks -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>☕ Drinks</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍊 Orange Juice (250ml)', 110)"
+                  >
+                    🍊 Orange Juice <span>110</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍎 Apple Juice (250ml)', 113)"
+                  >
+                    🍎 Apple Juice <span>113</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('☕ Black Coffee (240ml)', 2)"
+                  >
+                    ☕ Black Coffee <span>2</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('☕ Latte (300ml)', 150)"
+                  >
+                    ☕ Latte <span>150</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('☕ Cappuccino (240ml)', 80)"
+                  >
+                    ☕ Cappuccino <span>80</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍵 Green Tea (240ml)', 2)"
+                  >
+                    🍵 Green Tea <span>2</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍵 Matcha Latte (300ml)', 190)"
+                  >
+                    🍵 Matcha Latte <span>190</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧃 Smoothie fruit (300ml)', 180)"
+                  >
+                    🧃 Fruit Smoothie <span>180</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥤 Cola (330ml)', 139)"
+                  >
+                    🥤 Cola <span>139</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍺 Beer (330ml)', 153)"
+                  >
+                    🍺 Beer <span>153</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍷 Red Wine (150ml)', 125)"
+                  >
+                    🍷 Red Wine <span>125</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍹 Cocktail (avg)', 180)"
+                  >
+                    🍹 Cocktail <span>180</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧋 Bubble Tea (500ml)', 320)"
+                  >
+                    🧋 Bubble Tea <span>320</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('⚡ Energy Drink (250ml)', 112)"
+                  >
+                    ⚡ Energy Drink <span>112</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Snacks & Sweets -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🍫 Snacks &amp; Sweets</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍫 Dark Chocolate (30g)', 170)"
+                  >
+                    🍫 Dark Choc <span>170</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍫 Milk Chocolate (30g)', 159)"
+                  >
+                    🍫 Milk Choc <span>159</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍪 Cookie (medium)', 78)"
+                  >
+                    🍪 Cookie <span>78</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧁 Muffin (medium)', 340)"
+                  >
+                    🧁 Muffin <span>340</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍰 Cake slice (100g)', 347)"
+                  >
+                    🍰 Cake Slice <span>347</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍩 Doughnut (glazed)', 269)"
+                  >
+                    🍩 Doughnut <span>269</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍬 Gummy Bears (30g)', 103)"
+                  >
+                    🍬 Gummy Bears <span>103</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍿 Popcorn (30g)', 110)"
+                  >
+                    🍿 Popcorn <span>110</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍌 Banana Chips (30g)', 147)"
+                  >
+                    🍌 Banana Chips <span>147</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫓 Rice Cake (plain)', 35)"
+                  >
+                    🫓 Rice Cake <span>35</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🫙 Hummus (2 tbsp)', 52)"
+                  >
+                    🫙 Hummus <span>52</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('💪 Protein Bar', 200)"
+                  >
+                    💪 Protein Bar <span>200</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Fast Food -->
+            <div class="food-accordion">
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>🍔 Fast Food</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods">
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍔 Cheeseburger', 535)"
+                  >
+                    🍔 Cheeseburger <span>535</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍟 French Fries (medium)', 365)"
+                  >
+                    🍟 Fries (medium) <span>365</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍕 Pizza slice (pepperoni)', 298)"
+                  >
+                    🍕 Pepperoni Pizza <span>298</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌮 Beef Taco', 170)"
+                  >
+                    🌮 Beef Taco <span>170</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🌯 Burrito (chicken)', 490)"
+                  >
+                    🌯 Chicken Burrito <span>490</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥪 Sandwich (turkey)', 360)"
+                  >
+                    🥪 Turkey Sandwich <span>360</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥙 Falafel Wrap', 420)"
+                  >
+                    🥙 Falafel Wrap <span>420</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍜 Ramen (bowl)', 436)"
+                  >
+                    🍜 Ramen <span>436</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍛 Chicken Curry (300g)', 390)"
+                  >
+                    🍛 Chicken Curry <span>390</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🥗 Caesar Salad (300g)', 360)"
+                  >
+                    🥗 Caesar Salad <span>360</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🍣 Sushi (6 pcs)', 300)"
+                  >
+                    🍣 Sushi (6 pcs) <span>300</span>
+                  </button>
+                  <button
+                    class="quick-food-btn"
+                    onclick="quickAdd('🧆 Falafel (3 pcs)', 180)"
+                  >
+                    🧆 Falafel <span>180</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Custom saved foods -->
+            <div
+              class="food-accordion"
+              id="customAccordion"
+              style="display: none"
+            >
+              <button
+                class="food-accordion-header"
+                onclick="toggleAccordion(this)"
+              >
+                <span>⭐ My Saved Foods</span>
+                <span class="accordion-arrow">▾</span>
+              </button>
+              <div class="food-accordion-body">
+                <div class="quick-foods" id="quickFoodsContainer"></div>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <h4 style="margin: 0.5rem 0 0.75rem; font-family: 'Fredoka One', cursive;">Quick Add</h4>
-        <div class="food-accordions">
-
-          <!-- Fruits & Veg -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🍎 Fruits &amp; Vegetables</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍌 Banana (medium)', 89)">🍌 Banana <span>89</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍎 Apple (medium)', 72)">🍎 Apple <span>72</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍊 Orange (medium)', 62)">🍊 Orange <span>62</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥭 Mango (100g)', 60)">🥭 Mango <span>60</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍇 Grapes (100g)', 69)">🍇 Grapes <span>69</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍓 Strawberries (100g)', 32)">🍓 Strawberries <span>32</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫐 Blueberries (100g)', 57)">🫐 Blueberries <span>57</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍑 Peach (medium)', 59)">🍑 Peach <span>59</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍒 Cherries (100g)', 50)">🍒 Cherries <span>50</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍋 Lemon (medium)', 17)">🍋 Lemon <span>17</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍍 Pineapple (100g)', 50)">🍍 Pineapple <span>50</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥝 Kiwi (medium)', 42)">🥝 Kiwi <span>42</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍉 Watermelon (100g)', 30)">🍉 Watermelon <span>30</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥑 Avocado (half)', 120)">🥑 Avocado ½ <span>120</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍅 Tomato (medium)', 22)">🍅 Tomato <span>22</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥦 Broccoli (100g)', 34)">🥦 Broccoli <span>34</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥬 Spinach (100g)', 23)">🥬 Spinach <span>23</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥕 Carrot (medium)', 25)">🥕 Carrot <span>25</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍠 Sweet Potato (medium)', 103)">🍠 Sweet Potato <span>103</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌽 Corn (1 ear)', 132)">🌽 Corn <span>132</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥒 Cucumber (100g)', 16)">🥒 Cucumber <span>16</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧅 Onion (medium)', 44)">🧅 Onion <span>44</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧄 Garlic (clove)', 4)">🧄 Garlic <span>4</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥑 Edamame (100g)', 121)">🫘 Edamame <span>121</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫑 Bell Pepper (medium)', 31)">🫑 Bell Pepper <span>31</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥑 Lettuce (100g)', 15)">🥗 Lettuce <span>15</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍄 Mushrooms (100g)', 22)">🍄 Mushrooms <span>22</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Protein -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🍗 Protein</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍗 Chicken Breast (100g)', 165)">🍗 Chicken Breast <span>165</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍖 Chicken Thigh (100g)', 209)">🍖 Chicken Thigh <span>209</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥩 Ground Beef 80% (100g)', 254)">🥩 Ground Beef <span>254</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥩 Steak (100g)', 271)">🥩 Steak <span>271</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥓 Bacon (2 strips)', 86)">🥓 Bacon <span>86</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌭 Sausage (1 link)', 150)">🌭 Sausage <span>150</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🦃 Turkey Breast (100g)', 135)">🦃 Turkey Breast <span>135</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🐟 Salmon (100g)', 208)">🐟 Salmon <span>208</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🐠 Tuna in water (100g)', 116)">🐠 Tuna <span>116</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍤 Shrimp (100g)', 99)">🍤 Shrimp <span>99</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🦐 Crab (100g)', 97)">🦐 Crab <span>97</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥚 Egg (large)', 78)">🥚 Egg <span>78</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥚 Egg Whites (100g)', 52)">🥚 Egg Whites <span>52</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫙 Greek Yogurt (170g)', 100)">🫙 Greek Yogurt <span>100</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧀 Cottage Cheese (100g)', 98)">🧀 Cottage Cheese <span>98</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫘 Tofu (100g)', 76)">🫘 Tofu <span>76</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫘 Black Beans (100g)', 132)">🫘 Black Beans <span>132</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫘 Chickpeas (100g)', 164)">🫘 Chickpeas <span>164</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫘 Lentils (100g)', 116)">🫘 Lentils <span>116</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('💪 Whey Protein (30g scoop)', 120)">💪 Whey Protein <span>120</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Carbs & Grains -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🍚 Carbs &amp; Grains</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍚 White Rice (100g cooked)', 130)">🍚 White Rice <span>130</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍚 Brown Rice (100g cooked)', 112)">🍚 Brown Rice <span>112</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍝 Pasta (100g cooked)', 131)">🍝 Pasta <span>131</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍞 Whole Wheat Bread (slice)', 69)">🍞 Wheat Bread <span>69</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍞 White Bread (slice)', 79)">🍞 White Bread <span>79</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥣 Oats dry (100g)', 389)">🥣 Oats dry <span>389</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥣 Oatmeal cooked (240ml)', 158)">🥣 Oatmeal <span>158</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌾 Quinoa (100g cooked)', 120)">🌾 Quinoa <span>120</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥔 Potato (medium, baked)', 161)">🥔 Potato <span>161</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫓 Tortilla Wrap (large)', 146)">🫓 Tortilla Wrap <span>146</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥯 Bagel (plain)', 245)">🥯 Bagel <span>245</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥣 Granola (100g)', 471)">🥣 Granola <span>471</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥞 Pancake (medium)', 86)">🥞 Pancake <span>86</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧇 Waffle (medium)', 218)">🧇 Waffle <span>218</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍕 Pizza slice (cheese)', 272)">🍕 Pizza Slice <span>272</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌮 Corn Tortilla (small)', 52)">🌮 Corn Tortilla <span>52</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥐 Croissant', 231)">🥐 Croissant <span>231</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥖 Baguette (100g)', 270)">🥖 Baguette <span>270</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Dairy & Fats -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🧀 Dairy &amp; Fats</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🥛 Whole Milk (250ml)', 149)">🥛 Whole Milk <span>149</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥛 Skim Milk (250ml)', 83)">🥛 Skim Milk <span>83</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥛 Oat Milk (250ml)', 120)">🥛 Oat Milk <span>120</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥛 Almond Milk (250ml)', 39)">🥛 Almond Milk <span>39</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧀 Cheddar (30g)', 113)">🧀 Cheddar <span>113</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧀 Mozzarella (30g)', 85)">🧀 Mozzarella <span>85</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧀 Parmesan (15g)', 61)">🧀 Parmesan <span>61</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍦 Ice Cream (100g)', 207)">🍦 Ice Cream <span>207</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧈 Butter (10g)', 72)">🧈 Butter <span>72</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫙 Olive Oil (1 tbsp)', 119)">🫙 Olive Oil <span>119</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥜 Peanut Butter (2 tbsp)', 188)">🥜 Peanut Butter <span>188</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌰 Almonds (28g)', 164)">🌰 Almonds <span>164</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌰 Walnuts (28g)', 185)">🌰 Walnuts <span>185</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌰 Cashews (28g)', 157)">🌰 Cashews <span>157</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥜 Mixed Nuts (28g)', 172)">🥜 Mixed Nuts <span>172</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Drinks -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>☕ Drinks</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍊 Orange Juice (250ml)', 110)">🍊 Orange Juice <span>110</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍎 Apple Juice (250ml)', 113)">🍎 Apple Juice <span>113</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('☕ Black Coffee (240ml)', 2)">☕ Black Coffee <span>2</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('☕ Latte (300ml)', 150)">☕ Latte <span>150</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('☕ Cappuccino (240ml)', 80)">☕ Cappuccino <span>80</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍵 Green Tea (240ml)', 2)">🍵 Green Tea <span>2</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍵 Matcha Latte (300ml)', 190)">🍵 Matcha Latte <span>190</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧃 Smoothie fruit (300ml)', 180)">🧃 Fruit Smoothie <span>180</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥤 Cola (330ml)', 139)">🥤 Cola <span>139</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍺 Beer (330ml)', 153)">🍺 Beer <span>153</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍷 Red Wine (150ml)', 125)">🍷 Red Wine <span>125</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍹 Cocktail (avg)', 180)">🍹 Cocktail <span>180</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧋 Bubble Tea (500ml)', 320)">🧋 Bubble Tea <span>320</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('⚡ Energy Drink (250ml)', 112)">⚡ Energy Drink <span>112</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Snacks & Sweets -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🍫 Snacks &amp; Sweets</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍫 Dark Chocolate (30g)', 170)">🍫 Dark Choc <span>170</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍫 Milk Chocolate (30g)', 159)">🍫 Milk Choc <span>159</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍪 Cookie (medium)', 78)">🍪 Cookie <span>78</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧁 Muffin (medium)', 340)">🧁 Muffin <span>340</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍰 Cake slice (100g)', 347)">🍰 Cake Slice <span>347</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍩 Doughnut (glazed)', 269)">🍩 Doughnut <span>269</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍬 Gummy Bears (30g)', 103)">🍬 Gummy Bears <span>103</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍿 Popcorn (30g)', 110)">🍿 Popcorn <span>110</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍌 Banana Chips (30g)', 147)">🍌 Banana Chips <span>147</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫓 Rice Cake (plain)', 35)">🫓 Rice Cake <span>35</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🫙 Hummus (2 tbsp)', 52)">🫙 Hummus <span>52</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('💪 Protein Bar', 200)">💪 Protein Bar <span>200</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Fast Food -->
-          <div class="food-accordion">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>🍔 Fast Food</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods">
-                <button class="quick-food-btn" onclick="quickAdd('🍔 Cheeseburger', 535)">🍔 Cheeseburger <span>535</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍟 French Fries (medium)', 365)">🍟 Fries (medium) <span>365</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍕 Pizza slice (pepperoni)', 298)">🍕 Pepperoni Pizza <span>298</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌮 Beef Taco', 170)">🌮 Beef Taco <span>170</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🌯 Burrito (chicken)', 490)">🌯 Chicken Burrito <span>490</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥪 Sandwich (turkey)', 360)">🥪 Turkey Sandwich <span>360</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥙 Falafel Wrap', 420)">🥙 Falafel Wrap <span>420</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍜 Ramen (bowl)', 436)">🍜 Ramen <span>436</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍛 Chicken Curry (300g)', 390)">🍛 Chicken Curry <span>390</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🥗 Caesar Salad (300g)', 360)">🥗 Caesar Salad <span>360</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🍣 Sushi (6 pcs)', 300)">🍣 Sushi (6 pcs) <span>300</span></button>
-                <button class="quick-food-btn" onclick="quickAdd('🧆 Falafel (3 pcs)', 180)">🧆 Falafel <span>180</span></button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Custom saved foods -->
-          <div class="food-accordion" id="customAccordion" style="display:none">
-            <button class="food-accordion-header" onclick="toggleAccordion(this)">
-              <span>⭐ My Saved Foods</span>
-              <span class="accordion-arrow">▾</span>
-            </button>
-            <div class="food-accordion-body">
-              <div class="quick-foods" id="quickFoodsContainer"></div>
-            </div>
-          </div>
-
-        </div>
-        </div>
-
-        <div class="food-log-card" id="foodLogCard" style="display:none">
+        <div class="food-log-card" id="foodLogCard" style="display: none">
           <h3>Today's Log</h3>
           <div id="foodLogItems"></div>
           <div class="food-log-total">
             Total: <strong id="foodLogTotal">0</strong> kcal
           </div>
-          <button class="btn-signout" style="margin-top:1rem" onclick="clearFoodLog()">Clear Log</button>
+          <button
+            class="btn-signout"
+            style="margin-top: 1rem"
+            onclick="clearFoodLog()"
+          >
+            Clear Log
+          </button>
         </div>
       </div>
     </main>
@@ -319,16 +1007,33 @@
           <p>Sign in to track your quests and progress.</p>
           <div class="form-group">
             <label class="form-label">Username</label>
-            <input class="form-input" id="siUsername" type="text" placeholder="your_username" />
+            <input
+              class="form-input"
+              id="siUsername"
+              type="text"
+              placeholder="your_username"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Password</label>
-            <input class="form-input" id="siPassword" type="password" placeholder="••••••••" />
+            <input
+              class="form-input"
+              id="siPassword"
+              type="password"
+              placeholder="••••••••"
+            />
           </div>
           <div class="form-error" id="siError"></div>
-          <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signIn()">Sign In</button>
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signIn()"
+          >
+            Sign In
+          </button>
           <div class="form-footer">
-            No account? <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span>
+            No account?
+            <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span>
           </div>
         </div>
         <div id="signUpView" style="display: none">
@@ -336,15 +1041,30 @@
           <p>Join StayFit and start your journey.</p>
           <div class="form-group">
             <label class="form-label">Username</label>
-            <input class="form-input" id="suUsername" type="text" placeholder="choose_a_username" />
+            <input
+              class="form-input"
+              id="suUsername"
+              type="text"
+              placeholder="choose_a_username"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Password</label>
-            <input class="form-input" id="suPassword" type="password" placeholder="••••••••" />
+            <input
+              class="form-input"
+              id="suPassword"
+              type="password"
+              placeholder="••••••••"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Age</label>
-            <input class="form-input" id="suAge" type="number" placeholder="25" />
+            <input
+              class="form-input"
+              id="suAge"
+              type="number"
+              placeholder="25"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Gender</label>
@@ -357,16 +1077,33 @@
           </div>
           <div class="form-group">
             <label class="form-label">Height (cm)</label>
-            <input class="form-input" id="suHeight" type="number" placeholder="170" />
+            <input
+              class="form-input"
+              id="suHeight"
+              type="number"
+              placeholder="170"
+            />
           </div>
           <div class="form-group">
             <label class="form-label">Weight (kg)</label>
-            <input class="form-input" id="suWeight" type="number" placeholder="70" />
+            <input
+              class="form-input"
+              id="suWeight"
+              type="number"
+              placeholder="70"
+            />
           </div>
           <div class="form-error" id="suError"></div>
-          <button class="btn-primary" style="width: 100%; margin-top: 0.5rem" onclick="signUp()">Create Account</button>
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signUp()"
+          >
+            Create Account
+          </button>
           <div class="form-footer">
-            Have an account? <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
+            Have an account?
+            <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
           </div>
         </div>
       </div>
@@ -374,11 +1111,19 @@
 
     <div class="modal-overlay" id="questCompleteModal">
       <div class="modal" style="text-align: center">
-        <button class="modal-close" onclick="closeModal('questCompleteModal')">✕</button>
+        <button class="modal-close" onclick="closeModal('questCompleteModal')">
+          ✕
+        </button>
         <div class="quest-complete-icon">🎉</div>
         <h3>Quest Complete!</h3>
         <p id="questCompleteMsg">You earned stars and XP!</p>
-        <button class="btn-primary" style="width: 100%; margin-top: 1rem" onclick="closeModal('questCompleteModal')">Awesome!</button>
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 1rem"
+          onclick="closeModal('questCompleteModal')"
+        >
+          Awesome!
+        </button>
       </div>
     </div>
 

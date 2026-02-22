@@ -1,180 +1,439 @@
 <!doctype html>
 <html lang="en" data-theme="light">
-<head>
-  <script>!(function(){var t=localStorage.getItem("hq_theme");if(t)document.documentElement.setAttribute("data-theme",t);})();</script>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>StayFit – Quests</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="styles.css"/>
-</head>
-<body>
-<canvas id="bg"></canvas>
-<canvas id="confettiCanvas" style="position:fixed;inset:0;z-index:9998;pointer-events:none;display:none;"></canvas>
+  <head>
+    <script>
+      !(function () {
+        var t = localStorage.getItem("hq_theme");
+        if (t) document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StayFit – Quests</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:ital,wght@0,400;0,600;0,700;0,800;1,400&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <canvas id="bg"></canvas>
+    <canvas
+      id="confettiCanvas"
+      style="
+        position: fixed;
+        inset: 0;
+        z-index: 9998;
+        pointer-events: none;
+        display: none;
+      "
+    ></canvas>
 
-<header>
-  <div class="brand" onclick="window.location.href='index.html'">
-    <div class="logo-box"><img src="logo.png" alt="logo"/></div>
-  </div>
-  <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
-  <nav class="header-nav">
-    <a href="index.html" class="nav-tab">🏠 Home</a>
-    <a href="quests.html" class="nav-tab active">⚔️ Quests</a>
-    <a href="food.html" class="nav-tab">🍎 Food</a>
-    <a href="achievements.html" class="nav-tab">🏆 Achievements</a>
-    <a href="about.html" class="nav-tab">🌿 About</a>
-    <a href="social.html" class="nav-tab">👥 Social <span class="friend-badge" id="friendBadge"></span></a>
-    <a href="settings.html" class="nav-tab">⚙️ Settings</a>
-  </nav>
-  <div class="header-right">
-    <div class="user-stats" id="userStats">
-      <div class="stat-pill" title="Streak">🔥 <span id="headerStreak">0</span></div>
-      <div class="stat-pill" title="Stars">⭐ <span id="headerStars">0</span></div>
-      <div class="stat-pill" title="Rank">🏅 <span id="headerRank">Seedling</span></div>
-    </div>
-    <div class="avatar-btn" id="avatarBtn" onclick="openModal('signModal')"></div>
-    <button class="btn-signout" id="signoutBtn" onclick="signOut()" style="display:none">Sign Out</button>
-    <button class="btn-signin" id="signinBtn" onclick="openModal('signModal')">Sign In</button>
-  </div>
-</header>
+    <header>
+      <div class="brand" onclick="window.location.href = 'index.html'">
+        <div class="logo-box"><img src="logo.png" alt="logo" /></div>
+      </div>
+      <button class="hamburger" id="hamburger" aria-label="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <nav class="header-nav">
+        <a href="index.html" class="nav-tab">🏠 Home</a>
+        <a href="quests.html" class="nav-tab active">⚔️ Quests</a>
+        <a href="food.html" class="nav-tab">🍎 Food</a>
+        <a href="achievements.html" class="nav-tab">🏆 Achievements</a>
+        <a href="about.html" class="nav-tab">🌿 About</a>
+        <a href="social.html" class="nav-tab"
+          >👥 Social <span class="friend-badge" id="friendBadge"></span
+        ></a>
+        <a href="settings.html" class="nav-tab">⚙️ Settings</a>
+      </nav>
+      <div class="header-right">
+        <div class="user-stats" id="userStats">
+          <div class="stat-pill" title="Streak">
+            🔥 <span id="headerStreak">0</span>
+          </div>
+          <div class="stat-pill" title="Stars">
+            ⭐ <span id="headerStars">0</span>
+          </div>
+          <div class="stat-pill" title="Rank">
+            🏅 <span id="headerRank">Seedling</span>
+          </div>
+        </div>
+        <div
+          class="avatar-btn"
+          id="avatarBtn"
+          onclick="openModal('signModal')"
+        ></div>
+        <button
+          class="btn-signout"
+          id="signoutBtn"
+          onclick="signOut()"
+          style="display: none"
+        >
+          Sign Out
+        </button>
+        <button
+          class="btn-signin"
+          id="signinBtn"
+          onclick="openModal('signModal')"
+        >
+          Sign In
+        </button>
+      </div>
+    </header>
 
-<main>
-  <div class="page-inner">
-    <h1 class="page-heading">Your <em>Quests</em></h1>
-    <p class="page-sub">Complete quests with live camera tracking to earn ⭐ stars and climb the ranks.</p>
+    <main>
+      <div class="page-inner">
+        <h1 class="page-heading">Your <em>Quests</em></h1>
+        <p class="page-sub">
+          Complete quests with live camera tracking to earn ⭐ stars and climb
+          the ranks.
+        </p>
 
-    <div class="quest-tabs">
-      <button class="quest-tab-btn active" onclick="filterQuests('daily',this)">Daily</button>
-      <button class="quest-tab-btn" onclick="filterQuests('weekly',this)">Weekly</button>
-      <button class="quest-tab-btn" onclick="filterQuests('monthly',this)">Monthly</button>
-    </div>
+        <div class="quest-tabs">
+          <button
+            class="quest-tab-btn active"
+            onclick="filterQuests('daily', this)"
+          >
+            Daily
+          </button>
+          <button class="quest-tab-btn" onclick="filterQuests('weekly', this)">
+            Weekly
+          </button>
+          <button class="quest-tab-btn" onclick="filterQuests('monthly', this)">
+            Monthly
+          </button>
+        </div>
 
-    <div class="quests-grid" id="questsGrid"></div>
-  </div>
-</main>
+        <div class="quests-grid" id="questsGrid"></div>
+      </div>
+    </main>
 
-<!-- ── QUEST CAMERA TRACKER MODAL ── -->
-<div class="quest-tracker-modal" id="questTrackerModal">
-  <div class="quest-tracker-inner">
-    <button class="qt-btn-close" onclick="closeQuestTracker()">✕</button>
-    <div class="quest-tracker-title" id="qtTitle">Quest Title</div>
-    <div class="quest-tracker-desc" id="qtDesc">Quest description</div>
+    <!-- ── QUEST CAMERA TRACKER MODAL ── -->
+    <div class="quest-tracker-modal" id="questTrackerModal">
+      <div class="quest-tracker-inner">
+        <button class="qt-btn-close" onclick="closeQuestTracker()">✕</button>
+        <div class="quest-tracker-title" id="qtTitle">Quest Title</div>
+        <div class="quest-tracker-desc" id="qtDesc">Quest description</div>
 
-    <div class="qt-camera-box">
-      <video id="qtVideo" autoplay playsinline muted></video>
-      <div class="qt-overlay" id="qtOverlay">
-        <div class="qt-overlay-icon">📷</div>
-        <div class="qt-overlay-txt" id="qtOverlayTxt">Press Start to activate camera & begin tracking</div>
+        <div class="qt-camera-box">
+          <video id="qtVideo" autoplay playsinline muted></video>
+          <div class="qt-overlay" id="qtOverlay">
+            <div class="qt-overlay-icon">📷</div>
+            <div class="qt-overlay-txt" id="qtOverlayTxt">
+              Press Start to activate camera & begin tracking
+            </div>
+          </div>
+        </div>
+
+        <div class="qt-progress">
+          <div>
+            <div class="qt-rep-big" id="qtRepCount">0</div>
+            <div class="qt-rep-label" id="qtRepLabel">reps done</div>
+          </div>
+          <div>
+            <div style="font-size: 2rem; opacity: 0.3">→</div>
+          </div>
+          <div class="qt-goal-wrap">
+            <div class="qt-goal-num" id="qtGoalNum">?</div>
+            <div class="qt-goal-label">goal</div>
+          </div>
+        </div>
+
+        <div class="qt-progress-bar">
+          <div
+            class="qt-progress-fill"
+            id="qtProgressFill"
+            style="width: 0%"
+          ></div>
+        </div>
+
+        <div class="qt-status" id="qtStatus">Ready when you are 🌿</div>
+
+        <div class="qt-btns">
+          <button
+            class="qt-btn-start"
+            id="qtBtnStart"
+            onclick="startQuestTracking()"
+          >
+            📷 Start Tracking
+          </button>
+          <button
+            class="qt-btn-stop"
+            id="qtBtnStop"
+            onclick="stopQuestTracking()"
+          >
+            Stop
+          </button>
+        </div>
       </div>
     </div>
 
-    <div class="qt-progress">
-      <div>
-        <div class="qt-rep-big" id="qtRepCount">0</div>
-        <div class="qt-rep-label" id="qtRepLabel">reps done</div>
+    <!-- SIGN MODAL -->
+    <div class="modal-overlay" id="signModal">
+      <div class="modal">
+        <button class="modal-close" onclick="closeModal('signModal')">✕</button>
+        <div id="signInView">
+          <h3>Welcome back</h3>
+          <p>Sign in to track your quests and progress.</p>
+          <div class="form-group">
+            <label class="form-label">Username</label
+            ><input
+              class="form-input"
+              id="siUsername"
+              type="text"
+              placeholder="your_username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label
+            ><input
+              class="form-input"
+              id="siPassword"
+              type="password"
+              placeholder="••••••••"
+            />
+          </div>
+          <div class="form-error" id="siError"></div>
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signIn()"
+          >
+            Sign In
+          </button>
+          <div class="form-footer">
+            No account?
+            <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span>
+          </div>
+        </div>
+        <div id="signUpView" style="display: none">
+          <h3>Create account</h3>
+          <p>Join StayFit and start your journey.</p>
+          <div class="form-group">
+            <label class="form-label">Name</label
+            ><input
+              class="form-input"
+              id="suName"
+              type="text"
+              placeholder="Your Name"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Username</label
+            ><input
+              class="form-input"
+              id="suUsername"
+              type="text"
+              placeholder="choose_a_username"
+            />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label
+            ><input
+              class="form-input"
+              id="suPassword"
+              type="password"
+              placeholder="••••••••"
+            />
+          </div>
+          <div class="form-error" id="suError"></div>
+          <button
+            class="btn-primary"
+            style="width: 100%; margin-top: 0.5rem"
+            onclick="signUp()"
+          >
+            Create Account
+          </button>
+          <div class="form-footer">
+            Have an account?
+            <span class="form-toggle" onclick="toggleSignMode()">Sign In</span>
+          </div>
+        </div>
+        <div id="bodyProfileView" style="display: none">
+          <h3>Your Body Profile</h3>
+          <p>Help us personalise your quests with AI.</p>
+          <div class="bp-scroll">
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Age</label
+                ><input
+                  class="form-input"
+                  id="bpAge"
+                  type="number"
+                  placeholder="25"
+                  min="8"
+                  max="99"
+                />
+              </div>
+            </div>
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Weight</label
+                ><input
+                  class="form-input"
+                  id="bpWeight"
+                  type="number"
+                  placeholder="70"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Unit</label
+                ><select id="bpWeightUnit">
+                  <option value="kg">kg</option>
+                  <option value="lbs">lbs</option>
+                </select>
+              </div>
+            </div>
+            <div class="bp-row">
+              <div class="form-group">
+                <label class="form-label">Height</label
+                ><input
+                  class="form-input"
+                  id="bpHeight"
+                  type="number"
+                  placeholder="175"
+                />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Unit</label
+                ><select id="bpHeightUnit">
+                  <option value="cm">cm</option>
+                  <option value="ft">ft</option>
+                </select>
+              </div>
+            </div>
+            <div class="bp-section-label">Body Type</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="lean"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                🪶 Lean
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="average"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                ⚖️ Average
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="bodyType"
+                data-value="heavy-set"
+                onclick="selectBpOption(this, 'bodyType')"
+              >
+                🏋️ Heavy-set
+              </button>
+            </div>
+            <div class="bp-section-label">Fitness Goal</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="lose-weight"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                🔥 Lose Weight
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="build-strength"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                💪 Build Strength
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="goal"
+                data-value="stay-active"
+                onclick="selectBpOption(this, 'goal')"
+              >
+                🏃 Stay Active
+              </button>
+            </div>
+            <div class="bp-section-label">Activity Level</div>
+            <div class="bp-options">
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="sedentary"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                🛋️ Sedentary
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="lightly-active"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                🚶 Lightly Active
+              </button>
+              <button
+                class="bp-option-btn"
+                data-group="activity"
+                data-value="very-active"
+                onclick="selectBpOption(this, 'activity')"
+              >
+                ⚡ Very Active
+              </button>
+            </div>
+            <div class="form-error" id="bpError"></div>
+            <button
+              class="btn-primary"
+              style="width: 100%; margin-top: 1.2rem"
+              onclick="finishSignUp()"
+            >
+              Generate My Quests 🤖
+            </button>
+            <div class="form-footer">
+              <span
+                class="form-toggle"
+                onclick="
+                  document.getElementById('bodyProfileView').style.display =
+                    'none';
+                  document.getElementById('signUpView').style.display = 'block';
+                "
+                >← Back</span
+              >
+            </div>
+          </div>
+        </div>
       </div>
-      <div>
-        <div style="font-size:2rem; opacity:0.3">→</div>
-      </div>
-      <div class="qt-goal-wrap">
-        <div class="qt-goal-num" id="qtGoalNum">?</div>
-        <div class="qt-goal-label">goal</div>
-      </div>
     </div>
 
-    <div class="qt-progress-bar">
-      <div class="qt-progress-fill" id="qtProgressFill" style="width:0%"></div>
-    </div>
-
-    <div class="qt-status" id="qtStatus">Ready when you are 🌿</div>
-
-    <div class="qt-btns">
-      <button class="qt-btn-start" id="qtBtnStart" onclick="startQuestTracking()">📷 Start Tracking</button>
-      <button class="qt-btn-stop" id="qtBtnStop" onclick="stopQuestTracking()">Stop</button>
-    </div>
-  </div>
-</div>
-
-<!-- SIGN MODAL -->
-<div class="modal-overlay" id="signModal">
-  <div class="modal">
-    <button class="modal-close" onclick="closeModal('signModal')">✕</button>
-    <div id="signInView">
-      <h3>Welcome back</h3>
-      <p>Sign in to track your quests and progress.</p>
-      <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="siUsername" type="text" placeholder="your_username"/></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="siPassword" type="password" placeholder="••••••••"/></div>
-      <div class="form-error" id="siError"></div>
-      <button class="btn-primary" style="width:100%;margin-top:0.5rem" onclick="signIn()">Sign In</button>
-      <div class="form-footer">No account? <span class="form-toggle" onclick="toggleSignMode()">Sign Up</span></div>
-    </div>
-    <div id="signUpView" style="display:none">
-      <h3>Create account</h3>
-      <p>Join StayFit and start your journey.</p>
-      <div class="form-group"><label class="form-label">Name</label><input class="form-input" id="suName" type="text" placeholder="Your Name"/></div>
-      <div class="form-group"><label class="form-label">Username</label><input class="form-input" id="suUsername" type="text" placeholder="choose_a_username"/></div>
-      <div class="form-group"><label class="form-label">Password</label><input class="form-input" id="suPassword" type="password" placeholder="••••••••"/></div>
-      <div class="form-error" id="suError"></div>
-      <button class="btn-primary" style="width:100%;margin-top:0.5rem" onclick="signUp()">Create Account</button>
-      <div class="form-footer">Have an account? <span class="form-toggle" onclick="toggleSignMode()">Sign In</span></div>
-    </div>
-    <div id="bodyProfileView" style="display:none">
-      <h3>Your Body Profile</h3>
-      <p>Help us personalise your quests with AI.</p>
-      <div class="bp-scroll">
-        <div class="bp-row">
-          <div class="form-group"><label class="form-label">Age</label><input class="form-input" id="bpAge" type="number" placeholder="25" min="8" max="99"/></div>
-        </div>
-        <div class="bp-row">
-          <div class="form-group"><label class="form-label">Weight</label><input class="form-input" id="bpWeight" type="number" placeholder="70"/></div>
-          <div class="form-group"><label class="form-label">Unit</label><select id="bpWeightUnit"><option value="kg">kg</option><option value="lbs">lbs</option></select></div>
-        </div>
-        <div class="bp-row">
-          <div class="form-group"><label class="form-label">Height</label><input class="form-input" id="bpHeight" type="number" placeholder="175"/></div>
-          <div class="form-group"><label class="form-label">Unit</label><select id="bpHeightUnit"><option value="cm">cm</option><option value="ft">ft</option></select></div>
-        </div>
-        <div class="bp-section-label">Body Type</div>
-        <div class="bp-options">
-          <button class="bp-option-btn" data-group="bodyType" data-value="lean" onclick="selectBpOption(this,'bodyType')">🪶 Lean</button>
-          <button class="bp-option-btn" data-group="bodyType" data-value="average" onclick="selectBpOption(this,'bodyType')">⚖️ Average</button>
-          <button class="bp-option-btn" data-group="bodyType" data-value="heavy-set" onclick="selectBpOption(this,'bodyType')">🏋️ Heavy-set</button>
-        </div>
-        <div class="bp-section-label">Fitness Goal</div>
-        <div class="bp-options">
-          <button class="bp-option-btn" data-group="goal" data-value="lose-weight" onclick="selectBpOption(this,'goal')">🔥 Lose Weight</button>
-          <button class="bp-option-btn" data-group="goal" data-value="build-strength" onclick="selectBpOption(this,'goal')">💪 Build Strength</button>
-          <button class="bp-option-btn" data-group="goal" data-value="stay-active" onclick="selectBpOption(this,'goal')">🏃 Stay Active</button>
-        </div>
-        <div class="bp-section-label">Activity Level</div>
-        <div class="bp-options">
-          <button class="bp-option-btn" data-group="activity" data-value="sedentary" onclick="selectBpOption(this,'activity')">🛋️ Sedentary</button>
-          <button class="bp-option-btn" data-group="activity" data-value="lightly-active" onclick="selectBpOption(this,'activity')">🚶 Lightly Active</button>
-          <button class="bp-option-btn" data-group="activity" data-value="very-active" onclick="selectBpOption(this,'activity')">⚡ Very Active</button>
-        </div>
-        <div class="form-error" id="bpError"></div>
-        <button class="btn-primary" style="width:100%;margin-top:1.2rem" onclick="finishSignUp()">Generate My Quests 🤖</button>
-        <div class="form-footer"><span class="form-toggle" onclick="document.getElementById('bodyProfileView').style.display='none';document.getElementById('signUpView').style.display='block'">← Back</span></div>
+    <div class="modal-overlay" id="questCompleteModal">
+      <div class="modal" style="text-align: center">
+        <button class="modal-close" onclick="closeModal('questCompleteModal')">
+          ✕
+        </button>
+        <div class="quest-complete-icon">🎉</div>
+        <h3>Quest Complete!</h3>
+        <p id="questCompleteMsg">You earned stars and XP!</p>
+        <button
+          class="btn-primary"
+          style="width: 100%; margin-top: 1rem"
+          onclick="closeModal('questCompleteModal')"
+        >
+          Awesome!
+        </button>
       </div>
     </div>
-  </div>
-</div>
 
-<div class="modal-overlay" id="questCompleteModal">
-  <div class="modal" style="text-align:center">
-    <button class="modal-close" onclick="closeModal('questCompleteModal')">✕</button>
-    <div class="quest-complete-icon">🎉</div>
-    <h3>Quest Complete!</h3>
-    <p id="questCompleteMsg">You earned stars and XP!</p>
-    <button class="btn-primary" style="width:100%;margin-top:1rem" onclick="closeModal('questCompleteModal')">Awesome!</button>
-  </div>
-</div>
+    <div class="toast" id="toast">
+      <div class="toast-icon" id="toastIcon">✅</div>
+      <div class="toast-msg" id="toastMsg"></div>
+    </div>
 
-<div class="toast" id="toast">
-  <div class="toast-icon" id="toastIcon">✅</div>
-  <div class="toast-msg" id="toastMsg"></div>
-</div>
-
-<footer><span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores</footer>
-<script src="script.js"></script>
-</body>
+    <footer>
+      <span>Good Health & Well-Being</span> · Privacy-first · FuturiVictores
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>
